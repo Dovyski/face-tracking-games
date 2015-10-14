@@ -16,7 +16,7 @@ FTG.ExpressionDetector = function() {
 		requestAnimFrame(step);
 
 		if(mDebug) {
-			mCanvas.clearRect(0, 0, 400, 300); // TODO: get canvas size
+			mCanvas.clearRect(0, 0, mCanvas.canvas.width, mCanvas.canvas.height);
 
 			if (mCtrack.getCurrentPosition()) {
 				mCtrack.draw(mOverlay);
@@ -79,5 +79,19 @@ FTG.ExpressionDetector = function() {
 
 	this.getEmotions = function() {
 		return mMeasure;
+	};
+
+	this.getDominantEmotion = function() {
+		var i,
+			aSize = mMeasure.length,
+			aGreater = 0;
+
+		for(i = 0; i < aSize; i++) {
+			if(mMeasure[i].value > mMeasure[aGreater].value) {
+				aGreater = i;
+			}
+		}
+
+		return mMeasure[aGreater];
 	};
 };

@@ -14,6 +14,12 @@
 				max-width: 1150px;
 			}
 
+			#debug {
+				position: absolute;
+				top: 100px;
+				left: 100px;
+			}
+
 			#overlay {
 				position: absolute;
 				top: 0px;
@@ -99,27 +105,7 @@
 			#icon1, #icon2, #icon3, #icon4, #icon5, #icon6 {
 				visibility : hidden;
 			}
-
-			/* d3 */
-			.bar {
-				fill : steelblue;
-				fill-opacity : .9;
-			}
-
 		</style>
-		<script type="text/javascript">
-
-			//var _gaq = _gaq || [];
-			//_gaq.push(['_setAccount', 'UA-32642923-1']);
-			//_gaq.push(['_trackPageview']);
-
-			(function() {
-				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			})();
-
-		</script>
 	</head>
 	<body>
 		<script src="../js/ftg.camera.js"></script>
@@ -136,41 +122,49 @@
 
 		<div id="content">
 			<div id="container"></div>
+			<div id="debug">s</div>
 
-			<div id="emotion_container">
-				<div id="emotion_icons">
-					<img class="emotion_icon" id="icon1" src="../js/3rdparty/clmtrackr/examples/media/icon_angry.png">
-					<img class="emotion_icon" id="icon2" src="../js/3rdparty/clmtrackr/examples/media/icon_sad.png">
-					<img class="emotion_icon" id="icon3" src="../js/3rdparty/clmtrackr/examples/media/icon_surprised.png">
-					<img class="emotion_icon" id="icon4" src="../js/3rdparty/clmtrackr/examples/media/icon_happy.png">
-				</div>
-				<div id='emotion_chart'></div>
-			</div>
-			<div id="controls">
-				<input class="btn" type="button" value="wait, loading video" disabled="disabled" onclick="startVideo()" id="startbutton"></input>
-			</div>
-			<a href="https://github.com/auduno/clmtrackr"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
 			<script>
 				var aExpression = new FTG.ExpressionDetector();
 
-				// TODO: replace onload with something more reliable (jQuery or http://stackoverflow.com/questions/9274374/best-way-of-unobtrusive-onload-in-plain-javascript)
-				window.onload = function(e) {
+				function startParty() {
+					// Initialize the expression detector
+					// and make it run in a loop.
 					aExpression.init(function() {
 						aExpression.start();
 					});
-				};
+				}
 
-				// stats
-				stats = new Stats();
-				stats.domElement.style.position = 'absolute';
-				stats.domElement.style.top = '0px';
-				document.getElementById('container').appendChild( stats.domElement );
+				// Start the whole thing when the DOM is ready
+				if(document.attachEvent) {
+					document.attachEvent('onreadystatechange', startParty);
+				} else {
+					document.addEventListener('DOMContentLoaded', startParty, false);
+				}
 
-				// update stats on every iteration
+				// Listen to every interaction of the expression detector
 				document.addEventListener('clmtrackrIteration', function(event) {
-					stats.update();
+					aStats.update();
+
+					var aEmotions = aExpression.getEmotions();
+					var aOut = '';
+
+					for(var i = 0, aSize = aEmotions.length; i < aSize; i++) {
+						aOut += aEmotions[i].emotion + ' : ' + aEmotions[i].value + '<br>';
+					}
+
+					var aDominant = aExpression.getDominantEmotion();
+
+					if(aDominant) {
+						document.getElementById('debug').innerHTML = aDominant.emotion + ': ' + aDominant.value;
+					}
 				}, false);
 
+				// stats
+				var aStats = new Stats();
+				aStats.domElement.style.position = 'absolute';
+				aStats.domElement.style.top = '0px';
+				document.getElementById('container').appendChild( aStats.domElement);
 			</script>
 		</div>
 	</body>
