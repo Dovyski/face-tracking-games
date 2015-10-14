@@ -7,8 +7,10 @@ FTG.ExpressionDetector = function(theConfig) {
 	var mCanvas;
 	var mEmotionClassifier;
 	var mCtrack;
-	var mMeasure;
+	var mMeasure = [];
 	var mDebug;
+	var mInitiated = false;
+	var mInitiating = false;
 
 	var mDefaultConfig = {
 		container: '',			// id of the element where the video/canvas tag should be attached to
@@ -36,19 +38,14 @@ FTG.ExpressionDetector = function(theConfig) {
 	var mConfig = mergeObjects(mDefaultConfig, theConfig);
 
 	var step = function() {
-		var i;
-
 		requestAnimFrame(step);
 
-		if(mDebug) {
-			mCanvas.clearRect(0, 0, mCanvas.canvas.width, mCanvas.canvas.height);
-
-			if (mCtrack.getCurrentPosition()) {
-				mCtrack.draw(mOverlay);
-			}
+		// Abort if anything is not initialized
+		if(!init()) {
+			return;
 		}
 
-		mMeasure = mEmotionClassifier.meanPredict(mCtrack.getCurrentParameters());
+		mSelf.update();
 	};
 
 	var createDebugElements = function() {
@@ -62,9 +59,25 @@ FTG.ExpressionDetector = function(theConfig) {
 		mCanvas = mOverlay.getContext('2d');
 	};
 
-	this.init = function(theCallback) {
+	var init = function(theCallback) {
+		if(mInitiated) {
+			// If we are already initialized, so there is nothing
+			// else to be done here. The show must go on!
+			return true;
+
+		} if(mInitiating) {
+			// We are initializing. We cannot initialize once again,
+			// so let's return false to indicate things cannot go
+			// on.
+			return false;
+		}
+
 		console.debug('Expression init');
 
+		// Prevent double initalization
+		mInitiating = true;
+
+		// Start the init process itself...
 		mCamera	= new FTG.Camera(mConfig);
 
 		mCamera.init(function() {
@@ -84,18 +97,49 @@ FTG.ExpressionDetector = function(theConfig) {
 
 			console.debug('Known emotions:', mEmotionClassifier.getEmotions());
 
+			// start video
+			mCamera.playVideo();
+
+			// start tracking
+			mCtrack.start(mCamera.getVideo());
+
+			// Ready to party!
+			mInitiated = true;
+
 			// Tell everyone we are ready to rock!
-			theCallback();
+			if(theCallback) {
+				theCallback();
+			}
 		});
 	};
 
-	this.start = function() {
-		// start video
-		mCamera.playVideo();
-		// start tracking
-		mCtrack.start(mCamera.getVideo());
-		// start loop to draw face
-		step();
+	// Will track the face only after each call to this method is performed.
+	// It's useful if you want to use in conjunction with a game loop, for instance.
+	this.update = function() {
+		// Wait until everything is initialized
+		if(!init()) {
+			return;
+		}
+
+		if(mDebug) {
+			mCanvas.clearRect(0, 0, mCanvas.canvas.width, mCanvas.canvas.height);
+
+			if (mCtrack.getCurrentPosition()) {
+				mCtrack.draw(mOverlay);
+			}
+		}
+
+		mMeasure = mEmotionClassifier.meanPredict(mCtrack.getCurrentParameters());
+	};
+
+	// Will make the detector loop (using requestAnimFrame) and keep on tracking the face.
+	this.start = function(theCallback) {
+		init(function() {
+			if(theCallback) {
+				theCallback();
+			}
+			step();
+		});
 	};
 
 	this.debug = function(theStatus) {

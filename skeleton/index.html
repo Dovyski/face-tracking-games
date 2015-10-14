@@ -130,11 +130,8 @@
 				});
 
 				function startParty() {
-					// Initialize the expression detector
-					// and make it run in a loop.
-					aExpression.init(function() {
-						aExpression.start();
-					});
+					// Make the detector run in a loop.
+					aExpression.start();
 				}
 
 				// Start the whole thing when the DOM is ready
