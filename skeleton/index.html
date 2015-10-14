@@ -125,7 +125,9 @@
 			<div id="debug">s</div>
 
 			<script>
-				var aExpression = new FTG.ExpressionDetector();
+				var aExpression = new FTG.ExpressionDetector({
+					container: 'container'
+				});
 
 				function startParty() {
 					// Initialize the expression detector

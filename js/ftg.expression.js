@@ -1,6 +1,6 @@
 var FTG = FTG || {};
 
-FTG.ExpressionDetector = function() {
+FTG.ExpressionDetector = function(theConfig) {
 	var mSelf = this;
 	var mCamera;
 	var mOverlay;
@@ -9,6 +9,31 @@ FTG.ExpressionDetector = function() {
 	var mCtrack;
 	var mMeasure;
 	var mDebug;
+
+	var mDefaultConfig = {
+		container: '',			// id of the element where the video/canvas tag should be attached to
+		width: 400,				// width of the video/canvas element
+		height: 300,			// height of the video/canvas element
+		videoId: 'videoel',		// id of the video tag that will be added to handle the camera input
+		canvasId: 'overlay',	// id of the canvas tag that will be added to handle the visual debug
+	};
+
+	var mergeObjects = function(theA, theB) {
+		var aResult = {},
+			i;
+
+		for(i in theA) {
+			aResult[i] = theA[i];
+		}
+
+		for(i in theB) {
+			aResult[i] = theB[i];
+		}
+
+		return aResult;
+	};
+
+	var mConfig = mergeObjects(mDefaultConfig, theConfig);
 
 	var step = function() {
 		var i;
@@ -29,10 +54,10 @@ FTG.ExpressionDetector = function() {
 	var createDebugElements = function() {
 		mOverlay = document.createElement('canvas');
 
-		mOverlay.id = 'overlay';
-		mOverlay.setAttribute('width', 400);
-		mOverlay.setAttribute('height', 300);
-		document.getElementById('container').appendChild(mOverlay); // TODO: allow user to specify the element to append to.
+		mOverlay.id = mConfig.canvasId;
+		mOverlay.setAttribute('width', mConfig.width);
+		mOverlay.setAttribute('height', mConfig.height);
+		document.getElementById(mConfig.container).appendChild(mOverlay);
 
 		mCanvas = mOverlay.getContext('2d');
 	};
@@ -40,7 +65,7 @@ FTG.ExpressionDetector = function() {
 	this.init = function(theCallback) {
 		console.debug('Expression init');
 
-		mCamera	= new FTG.Camera();
+		mCamera	= new FTG.Camera(mConfig);
 
 		mCamera.init(function() {
 			console.debug('Video is ready!');

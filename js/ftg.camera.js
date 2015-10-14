@@ -1,8 +1,9 @@
 var FTG = FTG || {};
 
-FTG.Camera = function() {
+FTG.Camera = function(theConfig) {
 	var mSelf = this;
 	var mVideo;
+	var mConfig = theConfig;
 
 	// Code from:
 	// 	https://github.com/auduno/clmtrackr/tree/dev/examples
@@ -40,18 +41,26 @@ FTG.Camera = function() {
 		}
 	};
 
+	var createAndAttachVideoElement = function() {
+		var aVideo;
+
+		aVideo = document.createElement('video');
+		aVideo.id = mConfig.videoId;
+		aVideo.setAttribute('width', mConfig.width);
+		aVideo.setAttribute('height', mConfig.height);
+
+		document.getElementById(mConfig.container).appendChild(aVideo);
+
+		return aVideo;
+	};
+
 	this.init = function(theCallback) {
 		console.debug('Camera init');
 
-		mVideo = document.createElement('video');
-		mVideo.id = 'videoel';
-		mVideo.setAttribute('width', 400);
-		mVideo.setAttribute('height', 300);
-
-		document.getElementById('container').appendChild(mVideo); // TODO: allow user to specify the element to append to.
+		mVideo = createAndAttachVideoElement();
+		mVideo.addEventListener('canplay', theCallback, false);
 
 		initUserMediaStuff();
-		mVideo.addEventListener('canplay', theCallback, false);
 	};
 
 	this.playVideo = function() {
