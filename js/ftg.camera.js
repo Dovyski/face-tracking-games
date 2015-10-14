@@ -3,8 +3,6 @@ var FTG = FTG || {};
 FTG.Camera = function() {
 	var mSelf = this;
 	var mVideo;
-	var mOverlay;
-	var mCanvas;
 
 	// Code from:
 	// 	https://github.com/auduno/clmtrackr/tree/dev/examples
@@ -42,18 +40,15 @@ FTG.Camera = function() {
 		}
 	};
 
-	this.init = function(theVideoElement, theOverlay, theCallback) {
+	this.init = function(theVideoElement, theCallback) {
 		console.debug('Camera init');
 
-		mVideo 	 = document.getElementById(theVideoElement);
-		mOverlay = document.getElementById(theOverlay);
-		mCanvas  = mOverlay.getContext('2d');
-
+		mVideo = document.getElementById(theVideoElement);
 		initUserMediaStuff();
 		mVideo.addEventListener('canplay', theCallback, false);
 	};
 
-	this.playCameraFeed = function() {
+	this.playVideo = function() {
 		mVideo.play();
 	};
 

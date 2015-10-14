@@ -118,6 +118,7 @@
 	</head>
 	<body>
 		<script src="../js/ftg.camera.js"></script>
+		<script src="../js/ftg.expression.js"></script>
 
 		<script src="../js/3rdparty/clmtrackr/js/utils.js"></script>
 		<script src="../js/3rdparty/clmtrackr/js/clmtrackr.js"></script>
@@ -151,64 +152,20 @@
 			<a href="https://github.com/auduno/clmtrackr"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub"></a>
 			<script>
 				var aCamera = new FTG.Camera();
+				var aExpression = new FTG.ExpressionDetector();
 
 				// TODO: replace onload with something more reliable (jQuery or http://stackoverflow.com/questions/9274374/best-way-of-unobtrusive-onload-in-plain-javascript)
 				window.onload = function(e) {
-					aCamera.init('videoel', 'overlay', function() {
-						var startbutton = document.getElementById('startbutton');
-						startbutton.value = "start";
-						startbutton.disabled = null;
-
+					aCamera.init('videoel', function() {
 						console.debug('Video is ready!');
+						aExpression.init('overlay', aCamera);
+						aExpression.start();
+
+						aExpression.debug(true);
 					});
 				};
 
-				var ec = new emotionClassifier();
-				ec.init(emotionModel);
-
-				console.log(ec.getEmotions());
-
-				// setup of emotion detection
-
-				var ctrack = new clm.tracker({useWebGL : true});
-				ctrack.init(pModel);
-
-				function startVideo() {
-					// start video
-					aCamera.playCameraFeed();
-					// start tracking
-					ctrack.start(aCamera.getVideo());
-					// start loop to draw face
-					drawLoop();
-				}
-
-				function drawLoop() {
-					requestAnimFrame(drawLoop);
-					overlayCC.clearRect(0, 0, 400, 300);
-					//psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
-					if (ctrack.getCurrentPosition()) {
-						ctrack.draw(overlay);
-					}
-					var cp = ctrack.getCurrentParameters();
-
-					var er = ec.meanPredict(cp);
-					if (er) {
-						//updateData(er);
-						for (var i = 0;i < er.length;i++) {
-							if (er[i].value > 0.4) {
-								document.getElementById('icon'+(i+1)).style.visibility = 'visible';
-							} else {
-								document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
-							}
-
-							console.log(er[i].emotion, er[i].value);
-						}
-					}
-				}
-
-
 				// stats
-
 				stats = new Stats();
 				stats.domElement.style.position = 'absolute';
 				stats.domElement.style.top = '0px';
