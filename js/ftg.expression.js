@@ -10,33 +10,6 @@ FTG.ExpressionDetector = function() {
 	var mMeasure;
 	var mDebug;
 
-	var drawDebug = function() {
-		var i;
-
-		requestAnimFrame(drawDebug);
-		mCanvas.clearRect(0, 0, 400, 300); // TODO: get canvas size
-
-		if (mCtrack.getCurrentPosition()) {
-			mCtrack.draw(mOverlay);
-		}
-
-		mMeasure = mEmotionClassifier.meanPredict(mCtrack.getCurrentParameters());
-
-		/*
-		if (aMeasure) {
-			for (i = 0; i < aMeasure.length; i++) {
-				if (er[i].value > 0.4) {
-					document.getElementById('icon'+(i+1)).style.visibility = 'visible';
-				} else {
-					document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
-				}
-
-				console.log(er[i].emotion, er[i].value);
-			}
-		}
-		*/
-	}
-
 	var step = function() {
 		var i;
 
@@ -51,24 +24,44 @@ FTG.ExpressionDetector = function() {
 		}
 
 		mMeasure = mEmotionClassifier.meanPredict(mCtrack.getCurrentParameters());
-	}
+	};
 
-	this.init = function(theOverlay, theCamera) {
+	var createDebugElements = function() {
+		mOverlay = document.createElement('canvas');
+
+		mOverlay.id = 'overlay';
+		mOverlay.setAttribute('width', 400);
+		mOverlay.setAttribute('height', 300);
+		document.getElementById('container').appendChild(mOverlay); // TODO: allow user to specify the element to append to.
+
+		mCanvas = mOverlay.getContext('2d');
+	};
+
+	this.init = function(theCallback) {
 		console.debug('Expression init');
 
-		mCamera	 = theCamera;
-		mOverlay = document.getElementById(theOverlay);
-		mCanvas  = mOverlay.getContext('2d');
-		mDebug	 = true;
+		mCamera	= new FTG.Camera();
 
-		mEmotionClassifier = new emotionClassifier();
-		mEmotionClassifier.init(emotionModel);
+		mCamera.init(function() {
+			console.debug('Video is ready!');
 
-		// setup of emotion detection
-		mCtrack = new clm.tracker({useWebGL : true});
-		mCtrack.init(pModel);
+			// Setup internal stuff
+			createDebugElements();
+			mDebug = true;
 
-		console.debug('Known emotions:', mEmotionClassifier.getEmotions());
+			// Setup emotion classifier
+			mEmotionClassifier = new emotionClassifier();
+			mEmotionClassifier.init(emotionModel);
+
+			// Setup of emotion detection
+			mCtrack = new clm.tracker({useWebGL : true});
+			mCtrack.init(pModel);
+
+			console.debug('Known emotions:', mEmotionClassifier.getEmotions());
+
+			// Tell everyone we are ready to rock!
+			theCallback();
+		});
 	};
 
 	this.start = function() {

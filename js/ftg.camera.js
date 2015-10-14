@@ -40,10 +40,16 @@ FTG.Camera = function() {
 		}
 	};
 
-	this.init = function(theVideoElement, theCallback) {
+	this.init = function(theCallback) {
 		console.debug('Camera init');
 
-		mVideo = document.getElementById(theVideoElement);
+		mVideo = document.createElement('video');
+		mVideo.id = 'videoel';
+		mVideo.setAttribute('width', 400);
+		mVideo.setAttribute('height', 300);
+
+		document.getElementById('container').appendChild(mVideo); // TODO: allow user to specify the element to append to.
+
 		initUserMediaStuff();
 		mVideo.addEventListener('canplay', theCallback, false);
 	};
