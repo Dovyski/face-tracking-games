@@ -5,10 +5,17 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'card-flipper', { preload: preload, create: create });
 
 
-function create() {
-	var image = new Card(game, game.world.centerX, game.world.centerY);
+var mCards; // group with all the cards
 
-	game.add.existing(image);
+function create() {
+	var i, aCard;
+
+	mCards = game.add.group();
+
+	for(var i = 0; i < Constants.MAX_CARDS; i++) {
+		aCard = new Card(game, 50 * i, game.world.centerY);
+		mCards.add(aCard);
+	}
 }
 
 function preload () {
