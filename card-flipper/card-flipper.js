@@ -25,5 +25,5 @@ function create() {
 }
 
 function preload () {
-	game.load.image('card-blue', 'assets/card_blue.png'); // By jeffshee, CC-BY 3.0, http://opengameart.org/content/colorful-poker-card-back
+	game.load.spritesheet('card', 'assets/card.png', 145, 207); // By jeffshee, CC-BY 3.0, http://opengameart.org/content/colorful-poker-card-back
 }
