@@ -4,27 +4,13 @@
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'card-flipper', { preload: preload, create: create });
 
-var text;
-var counter = 0;
-
-function preload () {
-	game.load.image('einstein', 'assets/ra_einstein.png');
-}
 
 function create() {
-	var image = game.add.sprite(game.world.centerX, game.world.centerY, 'einstein');
+	var image = new Card(game, game.world.centerX, game.world.centerY);
 
-	//  Moves the image anchor to the middle, so it centers inside the game properly
-	image.anchor.set(0.5);
-
-	//  Enables all kind of input actions on this image (click, etc)
-	image.inputEnabled = true;
-	image.events.onInputDown.add(listener, this);
-
-	text = game.add.text(250, 16, '', { fill: '#ffffff' });
+	game.add.existing(image);
 }
 
-function listener () {
-	counter++;
-	text.text = "You clicked " + counter + " times!";
+function preload () {
+	game.load.image('card-blue', 'assets/card_blue.png'); // By jeffshee, CC-BY 3.0, http://opengameart.org/content/colorful-poker-card-back
 }
