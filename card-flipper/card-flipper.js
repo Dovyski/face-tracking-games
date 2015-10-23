@@ -14,7 +14,7 @@ function create() {
 
 	mCards = game.add.group();
 
-	for(i = 0; i < Constants.MAX_CARDS; i++) {
+	for(i = 0; i < Constants.CARDS_MAX; i++) {
 		if(i != 0 && (i % Constants.CARDS_PER_ROW) == 0) {
 			j++;
 		}
