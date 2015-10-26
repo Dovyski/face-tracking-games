@@ -13,6 +13,7 @@ var LoadState = function() {
 		// Load all JS required to make the face tracking thing work.
 		Game.load.script('camera.js', '../js/ftg.camera.js');
 		Game.load.script('ftg.expression.js', '../js/ftg.expression.js');
+		Game.load.script('ftg.collector.js', '../js/ftg.collector.js');
 		Game.load.script('utils.js', '../js/3rdparty/clmtrackr/js/utils.js');
 		Game.load.script('clmtrackr.js', '../js/3rdparty/clmtrackr/js/clmtrackr.js');
 		Game.load.script('Stats.js', '../js/3rdparty/clmtrackr/js/Stats.js');

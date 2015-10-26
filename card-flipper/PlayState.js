@@ -8,6 +8,7 @@ var PlayState = function() {
 	var mFlipTimer;			// interval, in seconds, between card flips
 	var mQuestionTimer;		// interval, in seconds, between questions
 	var mQuestion;			// Info about the current question
+	var mUuid;				// Identifier for this player
 
 	this.create = function() {
 		var i,
@@ -38,6 +39,8 @@ var PlayState = function() {
 
 		mHud = new Hud();
 		Game.add.existing(mHud);
+
+		mUuid = Game.rnd.uuid();
 	};
 
 	this.update = function() {
@@ -59,9 +62,11 @@ var PlayState = function() {
 
 		var aEmotions = ExpressionDetector.getEmotions();
 
+		// Emotions are available for reading?
 		if(aEmotions.length > 0) {
-			// Emotions are available for reading
-			console.log(ExpressionDetector.getDominantEmotion().emotion);
+			// Yeah, they are, collect them
+			Collector.log(aEmotions); // TODO: add game info here too
+			Collector.send(mUuid);
 		}
 	};
 

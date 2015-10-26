@@ -6,6 +6,10 @@
 // variable, so it can be used anywhere in the game.
 var ExpressionDetector;
 
+// Make the data collector a global variable, so it
+// can be used anywhere in the game.
+var Collector;
+
 var SetupState = function() {
 	this.create = function() {
 		var aConfig = {
@@ -19,7 +23,15 @@ var SetupState = function() {
 		// Make the detector run in a loop.
 		ExpressionDetector.start();
 
-		// TODO: start the game only when emotions are available
-		Game.state.start('play');
+		// Init the data collector.
+		Collector = new FTG.Collector();
+	};
+
+	this.update = function() {
+		// Check if facial detections is working
+		if(ExpressionDetector.getEmotions().length > 0) {
+			// Yes, it is. Time to start the game.
+			Game.state.start('play');
+		}
 	};
 };
