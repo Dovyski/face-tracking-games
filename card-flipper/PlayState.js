@@ -56,6 +56,13 @@ var PlayState = function() {
 			generateNewQuestion();
 			mQuestionTimer = Game.rnd.realInRange(Constants.QUESTION_MIN_INTERVAL, Constants.QUESTION_MAX_INTERVAL);
 		}
+
+		var aEmotions = ExpressionDetector.getEmotions();
+
+		if(aEmotions.length > 0) {
+			// Emotions are available for reading
+			console.log(ExpressionDetector.getDominantEmotion().emotion);
+		}
 	};
 
 	var flipRandomCard = function() {
