@@ -73,10 +73,6 @@ var PlayState = function() {
 		mHud.refresh();
 	};
 
-	this.preload = function() {
-		Game.load.spritesheet('card', 'assets/card.png', 145, 207); // By jeffshee, CC-BY 3.0, http://opengameart.org/content/colorful-poker-card-back
-	};
-
 	// Getters
 
 	this.getQuestion = function() {
