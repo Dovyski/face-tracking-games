@@ -3,11 +3,11 @@
  */
 
 var PlayState = function() {
+	var mHud; 				// Game hud
 	var mCards; 			// group with all the cards
 	var mFlipTimer;			// interval, in seconds, between card flips
 	var mQuestionTimer;		// interval, in seconds, between questions
 	var mQuestion;			// Info about the current question
-	var mQuestionText;		// Text about the current question
 
 	this.create = function() {
 		var i,
@@ -36,7 +36,8 @@ var PlayState = function() {
 			odd: true
 		};
 
-		mQuestionText = Game.add.text(Game.world.width * 0.7, 20, '');
+		mHud = new Hud();
+		Game.add.existing(mHud);
 	};
 
 	this.update = function() {
@@ -66,15 +67,10 @@ var PlayState = function() {
 	};
 
 	generateNewQuestion = function() {
-		var aStyle;
-
 		mQuestion.odd 	= Game.rnd.real() <= 0.5;
 		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
 
-		aStyle = {fill: Constants.CARDS_COLORS[mQuestion.color].value};
-
-		mQuestionText.text = (mQuestion.odd ? 'Odd' : 'Even');
-		mQuestionText.setStyle(aStyle);
+		mHud.refresh();
 	};
 
 	this.preload = function() {
