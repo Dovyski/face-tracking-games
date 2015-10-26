@@ -57,7 +57,11 @@ function update () {
 }
 
 function flipRandomCard() {
-	console.log('Flip card!');
+	var aCard = mCards.getRandom();
+
+	if(aCard) {
+		aCard.flip();
+	}
 }
 
 function generateNewQuestion() {

@@ -5,6 +5,7 @@ Card = function (theGame, theX, theY) {
     // Properties
     this.mGame = theGame;
     this.mText = null;
+    this.mFlipUpCounter = 0;
 
     // Constructor
     Phaser.Sprite.call(this, theGame, theX, theY, 'card');
@@ -38,20 +39,47 @@ Card.prototype.isFlipped = function() {
 
 // Randomize the content of the card (number, color, etc)
 Card.prototype.randomize = function() {
-    this.mText.text = this.mGame.rnd.integerInRange(1, Constants.CARDS_MAX_NUMBER);
-    this.frame = this.mGame.rnd.integerInRange(1, Constants.CARDS_MAX_COLORS);
+    var aRand = this.mGame.rnd;
+
+    this.mText.text     = aRand.integerInRange(1, Constants.CARDS_MAX_NUMBER);
+    this.frame          = aRand.integerInRange(1, Constants.CARDS_MAX_COLORS);
 };
 
-Card.prototype.onClick = function() {
+Card.prototype.flip = function() {
     if(this.isFlipped()) {
-        this.frame = 0;
-        this.mText.visible = 0;
+        this.flipDown();
 
     } else {
+        this.flipUp();
+    }
+};
+
+Card.prototype.flipUp = function() {
+    if(!this.isFlipped()) {
         this.randomize();
+
+        this.mFlipUpCounter = this.mGame.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
         this.mText.visible = true;
     }
 };
 
+Card.prototype.flipDown = function() {
+    if(this.isFlipped()) {
+        this.frame = 0;
+        this.mText.visible = 0;
+    }
+};
+
+Card.prototype.onClick = function() {
+    console.log('card clicked!');
+};
+
 Card.prototype.update = function() {
+    if(this.isFlipped()) {
+        this.mFlipUpCounter -= this.mGame.time.elapsed;
+
+        if(this.mFlipUpCounter <= 0) {
+            this.flipDown();
+        }
+    }
 };
