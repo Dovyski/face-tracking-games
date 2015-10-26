@@ -7,6 +7,7 @@ var PlayState = function() {
 	var mFlipTimer;			// interval, in seconds, between card flips
 	var mQuestionTimer;		// interval, in seconds, between questions
 	var mQuestion;			// Info about the current question
+	var mQuestionText;		// Text about the current question
 
 	this.create = function() {
 		var i,
@@ -34,6 +35,8 @@ var PlayState = function() {
 			color: 1,
 			odd: true
 		};
+
+		mQuestionText = Game.add.text(Game.world.width * 0.7, 20, '');
 	};
 
 	this.update = function() {
@@ -63,10 +66,24 @@ var PlayState = function() {
 	};
 
 	generateNewQuestion = function() {
-		console.log('Change question');
+		var aStyle;
+
+		mQuestion.odd 	= Game.rnd.real() <= 0.5;
+		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
+
+		aStyle = {fill: Constants.CARDS_COLORS[mQuestion.color].value};
+
+		mQuestionText.text = (mQuestion.odd ? 'Odd' : 'Even');
+		mQuestionText.setStyle(aStyle);
 	};
 
 	this.preload = function() {
 		Game.load.spritesheet('card', 'assets/card.png', 145, 207); // By jeffshee, CC-BY 3.0, http://opengameart.org/content/colorful-poker-card-back
+	};
+
+	// Getters
+
+	this.getQuestion = function() {
+		return mQuestion;
 	};
 };

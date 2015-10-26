@@ -41,7 +41,7 @@ Card.prototype.randomize = function() {
     var aRand = Game.rnd;
 
     this.mText.text     = aRand.integerInRange(1, Constants.CARDS_MAX_NUMBER);
-    this.frame          = aRand.integerInRange(1, Constants.CARDS_MAX_COLORS);
+    this.frame          = aRand.integerInRange(1, Constants.CARDS_COLORS.length - 1);
 };
 
 Card.prototype.flip = function() {
@@ -54,23 +54,36 @@ Card.prototype.flip = function() {
 };
 
 Card.prototype.flipUp = function() {
-    if(!this.isFlipped()) {
-        this.randomize();
+    this.randomize();
 
-        this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
-        this.mText.visible = true;
-    }
+    this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
+    this.mText.visible = true;
 };
 
 Card.prototype.flipDown = function() {
-    if(this.isFlipped()) {
-        this.frame = 0;
-        this.mText.visible = 0;
-    }
+    this.frame = 0;
+    this.mText.visible = false;
+};
+
+// Check if the card content answers the current question
+Card.prototype.answersQuestion = function(theQuestion) {
+    var aOurNumberIsOdd = (parseInt(this.mText.text) % 2) != 0;
+    return (this.frame == theQuestion.color) && ((theQuestion.odd && aOurNumberIsOdd) || (!theQuestion.odd && !aOurNumberIsOdd));
 };
 
 Card.prototype.onClick = function() {
-    console.log('card clicked!');
+    var aState      = Game.state.states[Game.state.current],
+        aQuestion   = aState.getQuestion();
+
+    // Check for the right answer only if the Card
+    // is flipped up
+    if(this.isFlipped()) {
+        if(this.answersQuestion(aQuestion)) {
+            console.log('Correct!');
+        } else {
+            console.log('Wrong!');
+        }
+    }
 };
 
 Card.prototype.update = function() {
