@@ -1,14 +1,13 @@
 /**
  * This class describes a card in the game
  */
-Card = function (theGame, theX, theY) {
+Card = function (theX, theY) {
     // Properties
-    this.mGame = theGame;
     this.mText = null;
     this.mFlipUpCounter = 0;
 
     // Constructor
-    Phaser.Sprite.call(this, theGame, theX, theY, 'card');
+    Phaser.Sprite.call(this, Game, theX, theY, 'card');
     this.init();
 };
 
@@ -19,7 +18,7 @@ Card.prototype.constructor = Card;
 // Public methods
 
 Card.prototype.init = function() {
-    this.mText = this.mGame.add.text(0, 0, '5', {font: "50px Arial", fill: "#ffffff", align: "center"});
+    this.mText = Game.add.text(0, 0, '5', {font: "50px Arial", fill: "#ffffff", align: "center"});
     this.mText.visible = false;
     this.mText.anchor.set(0.5);
     this.mText.position.x = this.position.x;
@@ -39,7 +38,7 @@ Card.prototype.isFlipped = function() {
 
 // Randomize the content of the card (number, color, etc)
 Card.prototype.randomize = function() {
-    var aRand = this.mGame.rnd;
+    var aRand = Game.rnd;
 
     this.mText.text     = aRand.integerInRange(1, Constants.CARDS_MAX_NUMBER);
     this.frame          = aRand.integerInRange(1, Constants.CARDS_MAX_COLORS);
@@ -58,7 +57,7 @@ Card.prototype.flipUp = function() {
     if(!this.isFlipped()) {
         this.randomize();
 
-        this.mFlipUpCounter = this.mGame.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
+        this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
         this.mText.visible = true;
     }
 };
@@ -76,7 +75,7 @@ Card.prototype.onClick = function() {
 
 Card.prototype.update = function() {
     if(this.isFlipped()) {
-        this.mFlipUpCounter -= this.mGame.time.elapsed;
+        this.mFlipUpCounter -= Game.time.elapsed;
 
         if(this.mFlipUpCounter <= 0) {
             this.flipDown();
