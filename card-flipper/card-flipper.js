@@ -9,6 +9,7 @@ Game.state.add('play', PlayState);
 Game.state.add('setup', SetupState);
 Game.state.add('load', LoadState);
 Game.state.add('over', GameOverState);
+Game.state.add('menu', MenuState);
 
 // Start the initial state
 Game.state.start('load');

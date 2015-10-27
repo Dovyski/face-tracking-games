@@ -31,7 +31,7 @@ var SetupState = function() {
 		// Check if facial detection is working
 		if(GlobalInfo.expression.getEmotions().length > 0) {
 			// Yes, it is. Time to start the game.
-			Game.state.start('play');
+			Game.state.start('menu');
 		}
 	};
 };
