@@ -62,13 +62,13 @@ var PlayState = function() {
 			mQuestionTimer = Game.rnd.realInRange(Constants.QUESTION_MIN_INTERVAL, Constants.QUESTION_MAX_INTERVAL);
 		}
 
-		var aEmotions = ExpressionDetector.getEmotions();
+		var aEmotions = GlobalInfo.expression.getEmotions();
 
 		// Emotions are available for reading?
-		if(aEmotions.length > 0) {
+		if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
 			// Yeah, they are, collect them
-			Collector.log(aEmotions); // TODO: add game info here too
-			Collector.send(mUuid);
+			GlobalInfo.data.log(aEmotions); // TODO: add game info here too
+			GlobalInfo.data.send(GlobalInfo.uuid);
 		}
 
 		// Update match time

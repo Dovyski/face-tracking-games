@@ -2,13 +2,13 @@
  * Setups everything required for the face tracking thing to work.
  */
 
-// Make the expression detector a global
-// variable, so it can be used anywhere in the game.
-var ExpressionDetector;
-
-// Make the data collector a global variable, so it
-// can be used anywhere in the game.
-var Collector;
+// Define some global information that should persist
+// throughout the application.
+var GlobalInfo = {
+	expression: null,	// instance of the expression detector
+	data: null,			// instance of the data collector
+	uuid: null			// a random id used for anonymous data collection
+};
 
 var SetupState = function() {
 	this.create = function() {
@@ -18,18 +18,18 @@ var SetupState = function() {
 			overlay: 'overlay'
 		};
 
-		ExpressionDetector = new FTG.ExpressionDetector(aConfig);
+		// Init all global stuff
+		GlobalInfo.expression = new FTG.ExpressionDetector(aConfig);
+		GlobalInfo.data = new FTG.Collector();
+		GlobalInfo.uuid = Game.rnd.uuid();
 
-		// Make the detector run in a loop.
-		ExpressionDetector.start();
-
-		// Init the data collector.
-		Collector = new FTG.Collector();
+		// Make the facial detector run in a loop.
+		GlobalInfo.expression.start();
 	};
 
 	this.update = function() {
-		// Check if facial detections is working
-		if(ExpressionDetector.getEmotions().length > 0) {
+		// Check if facial detection is working
+		if(GlobalInfo.expression.getEmotions().length > 0) {
 			// Yes, it is. Time to start the game.
 			Game.state.start('play');
 		}
