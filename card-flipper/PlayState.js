@@ -90,4 +90,8 @@ var PlayState = function() {
 	this.getQuestion = function() {
 		return mQuestion;
 	};
+
+	this.getHud = function() {
+		return mHud;
+	};
 };

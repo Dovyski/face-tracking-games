@@ -8,6 +8,10 @@ var LoadState = function() {
 	};
 
 	this.preload = function() {
+		// Assets made by myself
+		Game.load.spritesheet('right-wrong', 'assets/right_wrong.png', 145, 207); // By Fernando Bevilacqua, public domain
+
+		// Assets from external authors
 		Game.load.spritesheet('card', 'assets/card.png', 145, 207); // By jeffshee, CC-BY 3.0, http://opengameart.org/content/colorful-poker-card-back
 
 		// Load all JS required to make the face tracking thing work.

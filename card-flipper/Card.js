@@ -73,15 +73,16 @@ Card.prototype.answersQuestion = function(theQuestion) {
 
 Card.prototype.onClick = function() {
     var aState      = Game.state.states[Game.state.current],
-        aQuestion   = aState.getQuestion();
+        aQuestion   = aState.getQuestion(),
+        aHud        = aState.getHud();
 
     // Check for the right answer only if the Card
     // is flipped up
     if(this.isFlipped()) {
         if(this.answersQuestion(aQuestion)) {
-            console.log('Correct!');
+            aHud.showRightWrongSign(this, true);
         } else {
-            console.log('Wrong!');
+            aHud.showRightWrongSign(this, false);
         }
     }
 };

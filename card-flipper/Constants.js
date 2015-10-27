@@ -23,4 +23,6 @@ var Constants = new function() {
 	this.QUESTION_MAX_INTERVAL	= 10000;	// Max time, in milliseconds, a question should remain active
 	this.QUESTION_MIN_FLIP_CARD	= 2000;		// Min time, in milliseconds, the game should wait until it flips a new card
 	this.QUESTION_MAX_FLIP_CARD	= 4000;		// Max time, in milliseconds, the game should wait until it flips a new card
+
+	this.HUD_RIGHT_WRONG_TTL	= 2000;		// Time, in milliseconds, the "right/wrong" sign remains on the screen.
 };
