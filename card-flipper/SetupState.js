@@ -18,6 +18,9 @@ var SetupState = function() {
 			overlay: 'overlay'
 		};
 
+		// Set the mood
+		Game.stage.backgroundColor = 0xFFCC99;
+
 		// Init all global stuff
 		GlobalInfo.expression = new FTG.ExpressionDetector(aConfig);
 		GlobalInfo.data = new FTG.Collector();

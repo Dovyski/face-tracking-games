@@ -14,6 +14,7 @@ var LoadState = function() {
 		// Assets from external authors
 		Game.load.spritesheet('card', 'assets/card.png', 145, 207); // Card, by jeffshee, CC-BY 3.0, http://opengameart.org/content/colorful-poker-card-back
 		Game.load.spritesheet('blue-button', 'assets/blue_button.png', 190, 49); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
+		Game.load.image('dialog-small', 'assets/dialog_small.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 
 		// Load all JS required to make the face tracking thing work.
 		Game.load.script('camera.js', '../js/ftg.camera.js');
