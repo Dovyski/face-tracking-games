@@ -4,6 +4,7 @@
 
 var PlayState = function() {
 	var mHud; 				// Game hud
+	var mBackground;		// group with all the cards
 	var mCards; 			// group with all the cards
 	var mFlipTimer;			// interval, in seconds, between card flips
 	var mQuestionTimer;		// interval, in seconds, between questions
@@ -16,6 +17,7 @@ var PlayState = function() {
 			j = 0,
 			aCard;
 
+		mBackground = Game.add.sprite(Game.world.width * 0.08, Game.world.height * 0.07, 'deck-background');
 		mCards = Game.add.group();
 
 		for(i = 0; i < Constants.CARDS_MAX; i++) {
@@ -23,7 +25,7 @@ var PlayState = function() {
 				j++;
 			}
 
-			aCard = new Card(Game.world.width * 0.15 + 160 * (i % Constants.CARDS_PER_ROW), Game.world.height * 0.15 + 230 * j);
+			aCard = new Card(Game.world.width * 0.15 + 120 * (i % Constants.CARDS_PER_ROW), Game.world.height * 0.15 + 120 * j);
 			mCards.add(aCard);
 		}
 

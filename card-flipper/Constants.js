@@ -8,9 +8,9 @@ var Constants = new function() {
 	this.GAME_MATCH_DURATION	= 2 * 60 * 1000; // Duration, in milliseconds, of a single match.
 	this.GAME_ENABLE_DATA_LOG	= false; 	// Defines if the game should collect and send anonymous data regarding usage
 
-	this.CARDS_MAX 				= 12;		// Total number of cards in the game
-	this.CARDS_PER_ROW 			= 4;		// Amount of cards in each row
-	this.CARDS_MAX_NUMBER		= 15;		// Amount of cards in each row
+	this.CARDS_MAX 				= 25;		// Total number of cards in the game
+	this.CARDS_PER_ROW 			= 5;		// Amount of cards in each row
+	this.CARDS_MAX_NUMBER		= 25;		// The heightest number to be displayed in a card
 	this.CARDS_MIN_FLIP_SHOW	= 1000;		// Min time, in milliseconds, a card show be shown to the player
 	this.CARDS_MAX_FLIP_SHOW	= 3000;		// Max time, in milliseconds, a card show be shown to the player
 
