@@ -8,6 +8,7 @@ var PlayState = function() {
 	var mFlipTimer;			// interval, in seconds, between card flips
 	var mQuestionTimer;		// interval, in seconds, between questions
 	var mQuestion;			// Info about the current question
+	var mMatchTime;			// Remaining time for the match
 	var mUuid;				// Identifier for this player
 
 	this.create = function() {
@@ -28,6 +29,7 @@ var PlayState = function() {
 
 		mFlipTimer = 0;
 		mQuestionTimer = 0;
+		mMatchTime = Constants.GAME_MATCH_DURATION;
 
 		// Define the current question. 'color' refer to the
 		// expected color in the answer card, 'odd' refers if
@@ -68,6 +70,14 @@ var PlayState = function() {
 			Collector.log(aEmotions); // TODO: add game info here too
 			Collector.send(mUuid);
 		}
+
+		// Update match time
+		mMatchTime -= Game.time.elapsed;
+
+		if(mMatchTime <= 0) {
+			// Match is over!
+			Game.state.start('over');
+		}
 	};
 
 	var flipRandomCard = function() {
@@ -89,6 +99,10 @@ var PlayState = function() {
 
 	this.getQuestion = function() {
 		return mQuestion;
+	};
+
+	this.getMatchRemainingTime = function() {
+		return mMatchTime;
 	};
 
 	this.getHud = function() {

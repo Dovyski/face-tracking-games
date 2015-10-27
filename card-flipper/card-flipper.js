@@ -8,6 +8,7 @@ var Game = new Phaser.Game(Constants.GAME_WIDTH, Constants.GAME_HEIGHT, Phaser.A
 Game.state.add('play', PlayState);
 Game.state.add('setup', SetupState);
 Game.state.add('load', LoadState);
+Game.state.add('over', GameOverState);
 
 // Start the initial state
 Game.state.start('load');

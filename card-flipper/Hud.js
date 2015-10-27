@@ -6,6 +6,7 @@ var Hud = function () {
     var mQuestionText;		// Text about the current question
     var mRightWrongSignal;	// X showed when user clicks a wrong card
     var mRightWrongTimer;	// X showed when user clicks a wrong card
+    var mMatchTime;	        // Displays the match's remaining time.
 
     // Constructor
     Phaser.Group.call(this, Game);
@@ -21,6 +22,7 @@ Hud.prototype.constructor = Hud;
 Hud.prototype.init = function() {
     mQuestionText       = new Phaser.Text(Game, Game.world.width * 0.75, 20, '');
     mRightWrongSignal   = new Phaser.Sprite(Game, 0, 0, 'right-wrong');
+    mMatchTime          = new Phaser.Text(Game, Game.world.width - 200, Game.world.height - 200, '0:00', {fontSize: 70, fill: '#ffffff', align: 'center'});
     mRightWrongTimer    = 0;
 
     mRightWrongSignal.visible = false;
@@ -28,6 +30,7 @@ Hud.prototype.init = function() {
 
     this.add(mQuestionText);
     this.add(mRightWrongSignal);
+    this.add(mMatchTime);
 }
 
 Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
@@ -49,7 +52,8 @@ Hud.prototype.refresh = function() {
     var aState      = Game.state.states[Game.state.current],
         aQuestion   = aState.getQuestion();
 
-	mQuestionText.text = (aQuestion.odd ? 'Odd' : 'Even');
+    // Refresh current question
+    mQuestionText.text = (aQuestion.odd ? 'Odd' : 'Even');
 
     mQuestionText.setStyle({
         fontSize: 64,
@@ -58,6 +62,8 @@ Hud.prototype.refresh = function() {
 };
 
 Hud.prototype.update = function() {
+    var aState = Game.state.states[Game.state.current];
+
     // Check if the right/wrong sign is visible.
     // If it is, make it invisible after a while.
     if(mRightWrongSignal.visible) {
@@ -68,4 +74,20 @@ Hud.prototype.update = function() {
             mRightWrongSignal.visible = false;
         }
     }
+
+    // Refresh match timer
+    mMatchTime.text = this.formatTime(aState.getMatchRemainingTime());
+};
+
+Hud.prototype.formatTime = function(theMillisecondsTime) {
+    var aFloat,
+        aMinutes,
+        aSeconds;
+
+    aFloat    = theMillisecondsTime / 1000 / 60;
+    aMinutes = aFloat | 0; // cast to int
+    aSeconds = (aFloat - aMinutes) * 60;
+    aSeconds = aSeconds | 0;
+
+    return (theMillisecondsTime <= 0 ? '00:00' : (aMinutes < 10 ? '0' : '') + aMinutes + ':' + (aSeconds < 10 ? '0' : '') + aSeconds);
 };
