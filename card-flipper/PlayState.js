@@ -119,7 +119,7 @@ var PlayState = function() {
 	};
 
 	var generateNewQuestion = function() {
-		mQuestion.odd 	= Game.rnd.real() <= 0.5;
+		mQuestion.odd 	= Game.rnd.frac() <= 0.5;
 		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
 
 		mHud.refresh();

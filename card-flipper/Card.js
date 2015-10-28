@@ -89,6 +89,8 @@ Card.prototype.onClick = function() {
             aState.countMove('wrong');
             aHud.showRightWrongSign(this, false);
         }
+
+        this.flipDown();
     }
 };
 
