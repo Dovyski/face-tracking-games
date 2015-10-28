@@ -85,6 +85,8 @@ var PlayState = function() {
 
 		if(mMatchTime <= 0) {
 			// Match is over!
+			GlobalInfo.score = mScore;
+			// TODO: disable face tracking here
 			Game.state.start('over');
 		}
 	};
