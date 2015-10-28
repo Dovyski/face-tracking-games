@@ -108,7 +108,7 @@ Hud.prototype.update = function() {
     // Check if the right/wrong sign is visible.
     // If it is, make it invisible after a while.
     if(mRightWrongSignal.visible) {
-        mRightWrongTimer -= Game.time.elapsed;
+        mRightWrongTimer -= Game.time.elapsedMS;
 
         if(mRightWrongTimer <= 0) {
             mRightWrongTimer = 0;

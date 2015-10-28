@@ -94,7 +94,7 @@ Card.prototype.onClick = function() {
 
 Card.prototype.update = function() {
     if(this.isFlipped()) {
-        this.mFlipUpCounter -= Game.time.elapsed;
+        this.mFlipUpCounter -= Game.time.elapsedMS;
 
         if(this.mFlipUpCounter <= 0) {
             this.flipDown();

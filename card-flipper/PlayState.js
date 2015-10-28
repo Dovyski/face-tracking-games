@@ -48,9 +48,11 @@ var PlayState = function() {
 	};
 
 	this.update = function() {
+		var aElapsed = Game.time.elapsedMS;
+
 		// Update counters regarding quesitons and card flips
-		mFlipTimer -= Game.time.elapsed;
-		mQuestionTimer -= Game.time.elapsed;
+		mFlipTimer -= aElapsed;
+		mQuestionTimer -= aElapsed;
 
 		// Check if it is time to flip a new card
 		if(mFlipTimer <= 0) {
@@ -74,7 +76,7 @@ var PlayState = function() {
 		}
 
 		// Update match time
-		mMatchTime -= Game.time.elapsed;
+		mMatchTime -= aElapsed;
 
 		if(mMatchTime <= 0) {
 			// Match is over!
