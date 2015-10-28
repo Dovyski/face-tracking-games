@@ -10,6 +10,7 @@ Game.state.add('setup', SetupState);
 Game.state.add('load', LoadState);
 Game.state.add('over', GameOverState);
 Game.state.add('menu', MenuState);
+Game.state.add('boot', BootState);
 
 // Start the initial state
-Game.state.start('load');
+Game.state.start('boot');

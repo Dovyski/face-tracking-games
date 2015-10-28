@@ -7,7 +7,8 @@
 var GlobalInfo = {
 	expression: null,	// instance of the expression detector
 	data: null,			// instance of the data collector
-	uuid: null			// a random id used for anonymous data collection
+	uuid: null,			// a random id used for anonymous data collection
+	score: null			// score during the game
 };
 
 var SetupState = function() {
@@ -17,9 +18,6 @@ var SetupState = function() {
 			videoId: 'videoel',
 			overlay: 'overlay'
 		};
-
-		// Set the mood
-		Game.stage.backgroundColor = 0xFFCC99;
 
 		// Init all global stuff
 		GlobalInfo.expression = new FTG.ExpressionDetector(aConfig);
@@ -34,7 +32,7 @@ var SetupState = function() {
 		// Check if facial detection is working
 		if(GlobalInfo.expression.getEmotions().length > 0) {
 			// Yes, it is. Time to start the game.
-			Game.state.start('menu');
+			Game.state.start('play');
 		}
 	};
 };

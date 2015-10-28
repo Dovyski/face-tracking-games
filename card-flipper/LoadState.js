@@ -3,11 +3,19 @@
  */
 
 var LoadState = function() {
+	var mLoadingBackground,
+		mLoadingBar;
+
 	this.create = function() {
 		Game.state.start('setup');
 	};
 
 	this.preload = function() {
+		// Add loading bar
+		mLoadingBackground = Game.add.sprite(Game.world.centerX - 95, Game.world.centerY - 50, 'loading-background');
+		mLoadingBar = Game.add.sprite(mLoadingBackground.x, mLoadingBackground.y, 'loading-fill');
+		Game.load.setPreloadSprite(mLoadingBar);
+
 		// Assets made by myself
 		Game.load.spritesheet('right-wrong', 'assets/right_wrong.png', 145, 207); // By Fernando Bevilacqua, public domain
 
