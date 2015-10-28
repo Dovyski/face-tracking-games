@@ -3,8 +3,10 @@
  */
 Card = function (theX, theY) {
     // Properties
-    this.mText = null;
-    this.mFlipUpCounter = 0;
+    var mText = null;
+    var mFlipUpCounter = 0;
+    var mIsFlipping = false;
+    var mIsFlippingPastHalfWay = false;
 
     // Constructor
     Phaser.Sprite.call(this, Game, theX, theY, 'card');
@@ -37,7 +39,7 @@ Card.prototype.disableInteractions = function() {
     this.events.onInputDown.remove(this.onClick, this);
 };
 
-Card.prototype.isFlipped = function() {
+Card.prototype.isFlippedUp = function() {
     return this.frame != 0;
 };
 
@@ -50,7 +52,7 @@ Card.prototype.randomize = function() {
 };
 
 Card.prototype.flip = function() {
-    if(this.isFlipped()) {
+    if(this.isFlippedUp()) {
         this.flipDown();
 
     } else {
@@ -59,15 +61,11 @@ Card.prototype.flip = function() {
 };
 
 Card.prototype.flipUp = function() {
-    this.randomize();
-
-    this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
-    this.mText.visible = true;
+    this.mIsFlipping = true;
 };
 
 Card.prototype.flipDown = function() {
-    this.frame = 0;
-    this.mText.visible = false;
+    this.mIsFlipping = true;
 };
 
 // Check if the card content answers the current question
@@ -83,7 +81,7 @@ Card.prototype.onClick = function() {
 
     // Check for the right answer only if the Card
     // is flipped up
-    if(this.isFlipped()) {
+    if(this.isFlippedUp()) {
         if(this.answersQuestion(aQuestion)) {
             aState.countMove('right');
             aHud.showRightWrongSign(this, true);
@@ -94,8 +92,42 @@ Card.prototype.onClick = function() {
     }
 };
 
+Card.prototype.updateFlippingProcess = function() {
+    if(this.mIsFlipping) {
+        this.scale.x -= 0.1;
+
+        if(this.scale.x <= -0.3) {
+            this.mIsFlipping = false;
+            this.mIsFlippingPastHalfWay = true;
+            this.scale.x = 0.5;
+
+            // We arrive at the middle of the card turning process
+            // It's time to adjust the back content so the animation
+            // looks convincing.
+            if(this.isFlippedUp()) {
+                this.frame = 0;
+                this.mText.visible = false;
+
+            } else {
+                this.randomize();
+                this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
+                this.mText.visible = true;
+            }
+        }
+    } else if(this.mIsFlippingPastHalfWay) {
+        this.scale.x += 0.1;
+
+        if(this.scale.x >= 0.95) {
+            this.scale.x = 1;
+            this.mIsFlippingPastHalfWay = false;
+        }
+    }
+};
+
 Card.prototype.update = function() {
-    if(this.isFlipped()) {
+    this.updateFlippingProcess();
+
+    if(this.isFlippedUp()) {
         this.mFlipUpCounter -= Game.time.elapsedMS;
 
         if(this.mFlipUpCounter <= 0) {
