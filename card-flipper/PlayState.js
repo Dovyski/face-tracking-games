@@ -22,7 +22,7 @@ var PlayState = function() {
 			j = 0,
 			aCard;
 
-		mBackground = Game.add.sprite(Game.world.width * 0.08, Game.world.height * 0.07, 'deck-background');
+		mBackground = Game.add.sprite(Game.world.width * 0.05, Game.world.height * 0.07, 'deck-background');
 		mCards = Game.add.group();
 
 		for(i = 0; i < Constants.CARDS_MAX; i++) {
@@ -30,7 +30,7 @@ var PlayState = function() {
 				j++;
 			}
 
-			aCard = new Card(Game.world.width * 0.15 + 120 * (i % Constants.CARDS_PER_ROW), Game.world.height * 0.15 + 120 * j);
+			aCard = new Card(mBackground.x + 70 + 120 * (i % Constants.CARDS_PER_ROW), mBackground.y + 60 + 120 * j);
 			mCards.add(aCard);
 		}
 
