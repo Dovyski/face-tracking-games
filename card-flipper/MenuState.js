@@ -17,6 +17,9 @@ var MenuState = function() {
 
 		this.mPlayLabel 	= Game.add.text(this.mPlayBtn.position.x + 60, this.mPlayBtn.position.y + 7, 'Play!', {fill: '#000', fontSize: 24});
 		this.mCreditsLabel 	= Game.add.text(this.mCreditsBtn.position.x + 50, this.mCreditsBtn.position.y + 7, 'Credits', {fill: '#000', fontSize: 24});
+
+		// Generate a unique string to anonymously collect data.
+		GlobalInfo.uuid = Game.rnd.uuid();
 	};
 
 	this.onPlay = function() {
