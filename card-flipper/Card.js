@@ -85,8 +85,10 @@ Card.prototype.onClick = function() {
     // is flipped up
     if(this.isFlipped()) {
         if(this.answersQuestion(aQuestion)) {
+            aState.countMove('right');
             aHud.showRightWrongSign(this, true);
         } else {
+            aState.countMove('wrong');
             aHud.showRightWrongSign(this, false);
         }
     }

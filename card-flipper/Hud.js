@@ -41,8 +41,8 @@ Hud.prototype.init = function() {
     mDialogWrong        = new Phaser.Sprite(Game, mDialogRight.x + mDialogRight.width + 8, mDialogRight.y, 'quarter-dialog');
     mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + mDialogQuestion.height - 100);
 
-    mTextRight          = new Phaser.Text(Game, mDialogRight.x + 40, mDialogRight.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
-    mTextWrong          = new Phaser.Text(Game, mDialogWrong.x + 40, mDialogWrong.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
+    mTextRight          = new Phaser.Text(Game, mDialogRight.x + 23, mDialogRight.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
+    mTextWrong          = new Phaser.Text(Game, mDialogWrong.x + 23, mDialogWrong.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Look for', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelLookForInfo   = new Phaser.Text(Game, mDialogQuestion.x + 25, mDialogQuestion.y + 55, 'Find cards that look like this:', {fontSize: 28, fill: '#000', align: 'center'});
@@ -95,11 +95,15 @@ Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
 
 Hud.prototype.refresh = function() {
     var aState      = Game.state.states[Game.state.current],
-        aQuestion   = aState.getQuestion();
+        aQuestion   = aState.getQuestion(),
+        aScore      = aState.getScore();
 
     // Refresh current question
     mQuestionCard.getText().text = (aQuestion.odd ? 'Odd' : 'Even');
     mQuestionCard.frame = aQuestion.color;
+
+    mTextRight.text = (aScore.right < 10 ? '0' : '') + aScore.right;
+    mTextWrong.text = (aScore.wrong < 10 ? '0' : '') + aScore.wrong;
 };
 
 Hud.prototype.update = function() {

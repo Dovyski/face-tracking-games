@@ -11,6 +11,11 @@ var PlayState = function() {
 	var mQuestion;			// Info about the current question
 	var mMatchTime;			// Remaining time for the match
 	var mUuid;				// Identifier for this player
+	var mScore = {			// Info regarding score
+		right: 0,
+		wrong: 0,
+		miss: 0
+	};
 
 	this.create = function() {
 		var i,
@@ -84,6 +89,21 @@ var PlayState = function() {
 		}
 	};
 
+	// theType can be 'right', 'wrong' or 'miss'
+	this.countMove = function(theType) {
+		if(theType == 'right') {
+			mScore.right++;
+
+		} else if(theType == 'wrong') {
+			mScore.wrong++;
+
+		} else {
+			mScore.miss++;
+		}
+
+		mHud.refresh();
+	}
+
 	var flipRandomCard = function() {
 		var aCard = mCards.getRandom();
 
@@ -92,7 +112,7 @@ var PlayState = function() {
 		}
 	};
 
-	generateNewQuestion = function() {
+	var generateNewQuestion = function() {
 		mQuestion.odd 	= Game.rnd.real() <= 0.5;
 		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
 
@@ -103,6 +123,10 @@ var PlayState = function() {
 
 	this.getQuestion = function() {
 		return mQuestion;
+	};
+
+	this.getScore = function() {
+		return mScore;
 	};
 
 	this.getMatchRemainingTime = function() {
