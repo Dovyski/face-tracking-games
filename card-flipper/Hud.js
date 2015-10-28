@@ -7,6 +7,12 @@ var Hud = function () {
     var mRightWrongSignal;	// X showed when user clicks a wrong card
     var mRightWrongTimer;	// X showed when user clicks a wrong card
     var mMatchTime;	        // Displays the match's remaining time.
+    var mTextRight;
+    var mTextWrong;
+    var mDialogQuestion;
+    var mDialogTime;
+    var mDialogRight;
+    var mDialogWrong;
 
     // Constructor
     Phaser.Group.call(this, Game);
@@ -20,14 +26,28 @@ Hud.prototype.constructor = Hud;
 // Public methods
 
 Hud.prototype.init = function() {
-    mQuestionText       = new Phaser.Text(Game, Game.world.width * 0.75, 20, '');
     mRightWrongSignal   = new Phaser.Sprite(Game, 0, 0, 'right-wrong');
-    mMatchTime          = new Phaser.Text(Game, Game.world.width - 200, Game.world.height - 200, '0:00', {fontSize: 70, fill: '#ffffff', align: 'center'});
+    mMatchTime          = new Phaser.Text(Game, Game.world.width - 250, Game.world.height - 325, '0:00', {fontSize: 70, fill: '#000', align: 'center'});
     mRightWrongTimer    = 0;
+
+    mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
+    mDialogTime         = new Phaser.Sprite(Game, mDialogQuestion.x, mDialogQuestion.height + mDialogQuestion.y + 30, 'time-dialog');
+    mDialogRight        = new Phaser.Sprite(Game, mDialogQuestion.x, mDialogTime.height + mDialogTime.y + 30, 'quarter-dialog');
+    mDialogWrong        = new Phaser.Sprite(Game, mDialogRight.x + mDialogRight.width + 8, mDialogRight.y, 'quarter-dialog');
+
+    mQuestionText       = new Phaser.Text(Game, mDialogQuestion.x + 50, mDialogQuestion.y + 90, '');
+    mTextRight          = new Phaser.Text(Game, mDialogRight.x + 40, mDialogRight.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
+    mTextWrong          = new Phaser.Text(Game, mDialogWrong.x + 40, mDialogWrong.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
 
     mRightWrongSignal.visible = false;
     mRightWrongSignal.anchor.set(0.5);
 
+    this.add(mDialogQuestion);
+    this.add(mDialogTime);
+    this.add(mDialogRight);
+    this.add(mDialogWrong);
+    this.add(mTextRight);
+    this.add(mTextWrong);
     this.add(mQuestionText);
     this.add(mRightWrongSignal);
     this.add(mMatchTime);
