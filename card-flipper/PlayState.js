@@ -16,6 +16,7 @@ var PlayState = function() {
 		wrong: 0,
 		miss: 0
 	};
+	var mSfxNewQuestion;
 
 	this.create = function() {
 		var i,
@@ -37,6 +38,7 @@ var PlayState = function() {
 		mFlipTimer = 0;
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
+		mSfxNewQuestion = Game.add.audio('sfx-new-question');
 
 		// Define the current question. 'color' refer to the
 		// expected color in the answer card, 'odd' refers if
@@ -125,6 +127,7 @@ var PlayState = function() {
 		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
 
 		mHud.refresh();
+		mSfxNewQuestion.play();
 	};
 
 	// Getters

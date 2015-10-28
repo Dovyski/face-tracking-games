@@ -18,6 +18,8 @@ var Hud = function () {
     var mLabelRight;
     var mLabelWrong;
     var mLabelLookForInfo;
+    var mSfxWrong;
+    var mSfxRight;
 
     // Constructor
     Phaser.Group.call(this, Game);
@@ -76,6 +78,9 @@ Hud.prototype.init = function() {
     this.add(mQuestionCard);
     this.add(mRightWrongSignal);
     this.add(mMatchTime);
+
+    mSfxWrong = Game.add.audio('sfx-wrong');
+    mSfxRight = Game.add.audio('sfx-right');
 }
 
 Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
@@ -87,9 +92,9 @@ Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
     mRightWrongTimer = Constants.HUD_RIGHT_WRONG_TTL;
 
     if(theWasItRight) {
-        // TODO: play some SFX
+        mSfxRight.play();
     } else {
-
+        mSfxWrong.play();
     }
 };
 
