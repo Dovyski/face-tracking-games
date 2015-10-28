@@ -105,10 +105,16 @@ var PlayState = function() {
 	}
 
 	var flipRandomCard = function() {
-		var aCard = mCards.getRandom();
+		var aCard,
+		 	i,
+			aTotal = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIPS_TURN, Constants.CARDS_MAX_FLIPS_TURN);
 
-		if(aCard) {
-			aCard.flip();
+		for(i = 0; i < aTotal; i++) {
+			aCard = mCards.getRandom();
+
+			if(aCard) {
+				aCard.flip();
+			}
 		}
 	};
 

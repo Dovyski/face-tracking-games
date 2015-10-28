@@ -10,7 +10,9 @@ var Constants = new function() {
 
 	this.CARDS_MAX 				= 25;		// Total number of cards in the game
 	this.CARDS_PER_ROW 			= 5;		// Amount of cards in each row
-	this.CARDS_MAX_NUMBER		= 25;		// The heightest number to be displayed in a card
+	this.CARDS_MAX_NUMBER		= 99;		// The heightest number to be displayed in a card
+	this.CARDS_MIN_FLIPS_TURN	= 2;		// Min amount of cards that will will be flipped every time a new question is generated.
+	this.CARDS_MAX_FLIPS_TURN	= 4;		// Max amount of cards that will will be flipped every time a new question is generated.
 	this.CARDS_MIN_FLIP_SHOW	= 1000;		// Min time, in milliseconds, a card show be shown to the player
 	this.CARDS_MAX_FLIP_SHOW	= 3000;		// Max time, in milliseconds, a card show be shown to the player
 
