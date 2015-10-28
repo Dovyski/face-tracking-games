@@ -3,7 +3,7 @@
  */
 var Hud = function () {
     // Properties
-    var mQuestionText;		// Text about the current question
+    var mQuestionCard;
     var mRightWrongSignal;	// X showed when user clicks a wrong card
     var mRightWrongTimer;	// X showed when user clicks a wrong card
     var mMatchTime;	        // Displays the match's remaining time.
@@ -13,6 +13,11 @@ var Hud = function () {
     var mDialogTime;
     var mDialogRight;
     var mDialogWrong;
+    var mLabelLookFor;
+    var mLabelTime;
+    var mLabelRight;
+    var mLabelWrong;
+    var mLabelLookForInfo;
 
     // Constructor
     Phaser.Group.call(this, Game);
@@ -34,21 +39,41 @@ Hud.prototype.init = function() {
     mDialogTime         = new Phaser.Sprite(Game, mDialogQuestion.x, mDialogQuestion.height + mDialogQuestion.y + 30, 'time-dialog');
     mDialogRight        = new Phaser.Sprite(Game, mDialogQuestion.x, mDialogTime.height + mDialogTime.y + 30, 'quarter-dialog');
     mDialogWrong        = new Phaser.Sprite(Game, mDialogRight.x + mDialogRight.width + 8, mDialogRight.y, 'quarter-dialog');
+    mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + mDialogQuestion.height - 100);
 
-    mQuestionText       = new Phaser.Text(Game, mDialogQuestion.x + 50, mDialogQuestion.y + 90, '');
     mTextRight          = new Phaser.Text(Game, mDialogRight.x + 40, mDialogRight.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
     mTextWrong          = new Phaser.Text(Game, mDialogWrong.x + 40, mDialogWrong.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
 
+    mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Look for', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelLookForInfo   = new Phaser.Text(Game, mDialogQuestion.x + 25, mDialogQuestion.y + 55, 'Find cards that look like this:', {fontSize: 28, fill: '#000', align: 'center'});
+    mLabelTime          = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Time', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelRight         = new Phaser.Text(Game, mDialogRight.x + 10, mDialogRight.y + 5, 'Right', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelWrong         = new Phaser.Text(Game, mDialogWrong.x + 10, mDialogWrong.y + 5, 'Wrong', {fontSize: 16, fill: '#fff', align: 'center'});
+
     mRightWrongSignal.visible = false;
     mRightWrongSignal.anchor.set(0.5);
+
+    mLabelLookForInfo.wordWrap = true;
+    mLabelLookForInfo.wordWrapWidth = mDialogQuestion.width * 0.85;
+
+    mQuestionCard.disableInteractions(); // prevent hud card to be clicked
+    mQuestionCard.getText().visible = true; // make card text always visible
+    mQuestionCard.getText().setStyle({fontSize: 28});
 
     this.add(mDialogQuestion);
     this.add(mDialogTime);
     this.add(mDialogRight);
     this.add(mDialogWrong);
+
     this.add(mTextRight);
     this.add(mTextWrong);
-    this.add(mQuestionText);
+    this.add(mLabelLookFor);
+    this.add(mLabelLookForInfo);
+    this.add(mLabelTime);
+    this.add(mLabelRight);
+    this.add(mLabelWrong);
+
+    this.add(mQuestionCard);
     this.add(mRightWrongSignal);
     this.add(mMatchTime);
 }
@@ -73,12 +98,8 @@ Hud.prototype.refresh = function() {
         aQuestion   = aState.getQuestion();
 
     // Refresh current question
-    mQuestionText.text = (aQuestion.odd ? 'Odd' : 'Even');
-
-    mQuestionText.setStyle({
-        fontSize: 64,
-        fill: Constants.CARDS_COLORS[aQuestion.color].value
-    });
+    mQuestionCard.getText().text = (aQuestion.odd ? 'Odd' : 'Even');
+    mQuestionCard.frame = aQuestion.color;
 };
 
 Hud.prototype.update = function() {

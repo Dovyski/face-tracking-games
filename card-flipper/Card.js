@@ -18,11 +18,11 @@ Card.prototype.constructor = Card;
 // Public methods
 
 Card.prototype.init = function() {
-    this.mText = Game.add.text(0, 0, '5', {font: "50px Arial", fill: "#ffffff", align: "center"});
+    this.mText = new Phaser.Text(Game, 0, 12, '5', {font: "bold 56px Arial", fill: "#000", align: "center"});
     this.mText.visible = false;
     this.mText.anchor.set(0.5);
-    this.mText.position.x = this.position.x;
-    this.mText.position.y = this.position.y;
+
+    this.addChild(this.mText);
 
     // Centralize graphics
     this.anchor.set(0.5);
@@ -30,6 +30,11 @@ Card.prototype.init = function() {
     //  Enables all kind of input actions on this image (click, etc)
 	this.inputEnabled = true;
     this.events.onInputDown.add(this.onClick, this);
+};
+
+Card.prototype.disableInteractions = function() {
+    this.inputEnabled = false;
+    this.events.onInputDown.remove(this.onClick, this);
 };
 
 Card.prototype.isFlipped = function() {
@@ -95,4 +100,8 @@ Card.prototype.update = function() {
             this.flipDown();
         }
     }
+};
+
+Card.prototype.getText = function() {
+    return this.mText;
 };
