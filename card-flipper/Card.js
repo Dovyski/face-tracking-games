@@ -74,22 +74,26 @@ Card.prototype.answersQuestion = function(theQuestion) {
     return (this.frame != theQuestion.color) || ((theQuestion.odd && !aOurNumberIsOdd) || (!theQuestion.odd && aOurNumberIsOdd));
 };
 
+Card.prototype.reactToClick = function(theWasCorrectAnswer) {
+    var aState      = Game.state.states[Game.state.current],
+        aHud        = aState.getHud();
+
+    aState.countMove(theWasCorrectAnswer ? 'right' : 'wrong');
+    aHud.showRightWrongSign(this, theWasCorrectAnswer);
+};
+
 Card.prototype.onClick = function() {
     var aState      = Game.state.states[Game.state.current],
         aQuestion   = aState.getQuestion(),
-        aHud        = aState.getHud();
+        aHud        = aState.getHud(),
+        aIsCorrect;
 
     // Check for the right answer only if the Card
     // is flipped up
     if(this.isFlippedUp()) {
-        if(this.answersQuestion(aQuestion)) {
-            aState.countMove('right');
-            aHud.showRightWrongSign(this, true);
-        } else {
-            aState.countMove('wrong');
-            aHud.showRightWrongSign(this, false);
-        }
+        aIsCorrect = this.answersQuestion(aQuestion);
 
+        this.reactToClick(aIsCorrect);
         this.flipDown();
     }
 };
@@ -132,7 +136,7 @@ Card.prototype.update = function() {
     if(this.isFlippedUp()) {
         this.mFlipUpCounter -= Game.time.elapsedMS;
 
-        if(this.mFlipUpCounter <= 0) {
+        if(this.mFlipUpCounter <= 0 && !this.mIsFlipping) {
             this.flipDown();
         }
     }
