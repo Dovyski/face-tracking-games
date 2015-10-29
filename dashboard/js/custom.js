@@ -1,11 +1,11 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
 /** ******  left menu  *********************** **/
-$(function () {
+function customUpdateSidebarMenu() {
     $('#sidebar-menu li ul').slideUp();
     $('#sidebar-menu li').removeClass('active');
 
@@ -48,6 +48,10 @@ $(function () {
             }
         }
     });
+}
+
+$(function() {
+    customUpdateSidebarMenu();
 });
 
 /* Sidebar Menu active class */
@@ -307,7 +311,7 @@ $(function () {
 /** ******  Accordion  *********************** **/
 /** ******  scrollview  *********************** **/
 $(document).ready(function () {
-  
+
             $(".scroll-view").niceScroll({
                 touchbehavior: true,
                 cursorcolor: "rgba(42, 63, 84, 0.35)"

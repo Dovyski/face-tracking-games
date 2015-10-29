@@ -1,6 +1,41 @@
 var APP = new function() {
     var mSelf = this;
 
+    this.generateSideMenu = function() {
+        $.ajax({
+            method: 'POST',
+            url: '../backend/menu.php',
+            dataType: 'json'
+        })
+        .done(function(theInfo) {
+            var aOut = '',
+                aGame,
+                i;
+
+            for(aGame in theInfo) {
+                aOut += '<li><a><i class="fa fa-bar-chart-o"></i> Card Flipper <span class="fa fa-chevron-down"></span></a>' +
+                        '<ul class="nav child_menu" style="display: none">';
+
+                for(i = 0; i < theInfo[aGame].length; i++) {
+                    aOut += '<li><a href="javascript:void(0)" data-subject="' + theInfo[aGame][i] + '" class="subject-link">'+ theInfo[aGame][i] +'</a></li>';
+                }
+
+                aOut += '</ul></li>';
+            }
+
+            $('#side-menu').html(aOut);
+
+            $('#side-menu a.subject-link').click(function() {
+                APP.loadData($(this).data('subject'));
+            });
+
+            customUpdateSidebarMenu();
+        })
+        .fail(function() {
+            $('#side-menu').html('|ops!');
+        });
+    };
+
     this.createChart = function(theData) {
         var aCtx,
             aChart;
@@ -40,5 +75,5 @@ var APP = new function() {
 };
 
 $(function () {
-    APP.loadData('b44f9011-78f3-40d9-bb86-c71decac1a40');
+    APP.generateSideMenu();
 });
