@@ -111,7 +111,7 @@
                         <div class="col-md-12">
                             <div class="x_panel">
                                 <div class="x_title">
-                                    <h2>d06a6193-d353-41fc-ad60-ca0e82fe28b7 <small> Subject UUID</small></h2>
+                                    <h2 id="subject-id">???</h2>
                                     <ul class="nav navbar-right panel_toolbox">
                                         <li><a href="#"><i class="fa fa-chevron-up"></i></a>
                                         </li>
@@ -134,7 +134,11 @@
                                     <div class="row">
                                         <div class="col-md-12" style="padding: 30px;">
                                             <p>Facial tracking</p>
-                                            <canvas id="facial-tracking" width="1200" height="768"></canvas>
+                                            <canvas id="facial-tracking" width="1500" height="768"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="facial-tracking-legend" class="col-md-12" style="padding: 30px;">
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -166,42 +170,7 @@
     <script src="js/nicescroll/jquery.nicescroll.min.js"></script>
 
     <script src="js/custom.js"></script>
-
-    <script>
-        var aData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                },
-                {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.2)",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: [28, 48, 40, 19, 86, 27, 90]
-                }
-            ]
-        };
-
-        $('document').ready(function () {
-            // Make Chart behave in a responsive way
-            Chart.defaults.global.responsive = false;
-
-            var aCtx = document.getElementById("facial-tracking").getContext("2d");
-            var aChart = new Chart(aCtx).Line(aData);
-        });
-    </script>
+    <script src="js/app.js"></script>
 </body>
 
 </html>
