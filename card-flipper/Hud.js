@@ -47,7 +47,7 @@ Hud.prototype.init = function() {
     mTextWrong          = new Phaser.Text(Game, mDialogWrong.x + 23, mDialogWrong.y + 20, '0', {fontSize: 70, fill: '#000', align: 'center'});
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Look for', {fontSize: 16, fill: '#fff', align: 'center'});
-    mLabelLookForInfo   = new Phaser.Text(Game, mDialogQuestion.x + 25, mDialogQuestion.y + 55, 'Find cards that look like this:', {fontSize: 28, fill: '#000', align: 'center'});
+    mLabelLookForInfo   = new Phaser.Text(Game, mDialogQuestion.x + 25, mDialogQuestion.y + 55, 'DON\'T\nclick cards that look like this:', {fontSize: 26, fill: '#000', align: 'center'});
     mLabelTime          = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Time', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelRight         = new Phaser.Text(Game, mDialogRight.x + 10, mDialogRight.y + 5, 'Right', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelWrong         = new Phaser.Text(Game, mDialogWrong.x + 10, mDialogWrong.y + 5, 'Wrong', {fontSize: 16, fill: '#fff', align: 'center'});

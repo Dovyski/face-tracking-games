@@ -71,7 +71,7 @@ Card.prototype.flipDown = function() {
 // Check if the card content answers the current question
 Card.prototype.answersQuestion = function(theQuestion) {
     var aOurNumberIsOdd = (parseInt(this.mText.text) % 2) != 0;
-    return (this.frame == theQuestion.color) && ((theQuestion.odd && aOurNumberIsOdd) || (!theQuestion.odd && !aOurNumberIsOdd));
+    return (this.frame != theQuestion.color) || ((theQuestion.odd && !aOurNumberIsOdd) || (!theQuestion.odd && aOurNumberIsOdd));
 };
 
 Card.prototype.onClick = function() {
