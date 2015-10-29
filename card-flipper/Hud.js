@@ -111,6 +111,10 @@ Hud.prototype.refresh = function() {
     mTextWrong.text = (aScore.wrong < 10 ? '0' : '') + aScore.wrong;
 };
 
+Hud.prototype.highlightNewQuestion = function() {
+    this.shake(mQuestionCard);
+};
+
 Hud.prototype.update = function() {
     var aState = Game.state.states[Game.state.current];
 
@@ -140,4 +144,23 @@ Hud.prototype.formatTime = function(theMillisecondsTime) {
     aSeconds = aSeconds | 0;
 
     return (theMillisecondsTime <= 0 ? '00:00' : (aMinutes < 10 ? '0' : '') + aMinutes + ':' + (aSeconds < 10 ? '0' : '') + aSeconds);
+};
+
+// Shake effect. From: http://phaser.io/examples/v2/tweens/earthquake
+Hud.prototype.shake = function(theCard) {
+    var aRumbleOffset = 10,
+        aDuration = 100,
+        aEase = Phaser.Easing.Bounce.InOut,
+        aAutoStart = false,
+        aDelay = 0,
+        aYoyo = true,
+        aProperties,
+        aQuake;
+
+    aProperties = {
+        x: theCard.x - aRumbleOffset
+    };
+
+    aQuake = Game.add.tween(theCard).to(aProperties, aDuration, aEase, aAutoStart, aDelay, 4, aYoyo);
+    aQuake.start();
 };

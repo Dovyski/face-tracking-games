@@ -127,6 +127,8 @@ var PlayState = function() {
 		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
 
 		mHud.refresh();
+		mHud.highlightNewQuestion();
+		
 		mSfxNewQuestion.play();
 	};
 
