@@ -1,4 +1,4 @@
-/* Made by Nambiar - Game Dolphin 
+/* Made by Nambiar - Game Dolphin
 
 Feel free to use and learn from */
 
@@ -13,8 +13,7 @@ Game.MainMenu = function(game){
 Game.MainMenu.prototype = {
 
 	create : function(){
-
-		
+		this.stage.backgroundColor = 0x000;
 
 		this.game.world.bounds.x = 0;
 
@@ -98,7 +97,7 @@ Game.LoseScreen.prototype = {
 
 		this.scoretextmain.anchor.setTo(0.5,0.5);
 
-		
+
 
 	},
 
@@ -146,7 +145,7 @@ Game.WinScreen.prototype = {
 
 		this.tweenplay = this.game.add.tween(this.playbutton).to({y:550},1000,Phaser.Easing.Sinusoidal.InOut,true,0,100,true);
 
-		
+
 
 	},
 

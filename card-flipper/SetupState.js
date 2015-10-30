@@ -12,23 +12,29 @@ var GlobalInfo = {
 	score: null			// score during the game
 };
 
-var SetupState = function() {
-	var mContinueBtn = null,
-		mContinueLabel = null,
-		mText = null,
-		mReady = false;
+var SetupState = function(theGame) {
+};
 
-	this.create = function() {
-		mText = Game.add.text(Game.world.centerX, Game.world.centerY - 80, 'ATENTION!\n\nThis game is part of a research project. It uses your camera to anonymously track facial expressions while you play. At the end, the data is sent to a database.\n\n ***NO PICTURES OR VIDEOS ARE COLLECTED!***\n\nWe collect just a description of your emotions (eg. "sad", "happy") and your score. All data is completely anonymous. \n\nBy clicking the "Continue" button below you agree to take part in this experiment. Thank you!', {fontSize: 20, fill: '#000', align: 'center'});
-		mText.wordWrap = true;
-	    mText.wordWrapWidth = Game.world.width * 0.70;
-	    mText.anchor.setTo(0.5);
 
-		mContinueBtn  = Game.add.button(Game.world.centerX - 85, Game.world.height * 0.85, 'blue-button', init, this, 0, 1, 2);
-		mContinueLabel = Game.add.text(mContinueBtn.x + 40, mContinueBtn.y + 7, 'Continue', {fill: '#000', fontSize: 24});
-	};
+SetupState.prototype = {
+	mContinueBtn: null,
+	mContinueLabel: null,
+	mText: null,
+	mReady: false,
 
-	var init = function() {
+	create: function() {
+		this.stage.backgroundColor = 0xFFCC99;
+
+		this.mText = this.add.text(this.world.centerX, this.world.centerY - 70, 'ATENTION!\n\nThis game is part of a research project. It uses your camera to anonymously track facial expressions while you play. At the end, the data is sent to a database.\n\n ***NO PICTURES OR VIDEOS ARE COLLECTED!***\n\nWe collect just a description of your emotions (eg. "sad", "happy") and your score. All data is completely anonymous. \n\nBy clicking the "Continue" button below you agree to take part in this experiment. Thank you!', {fontSize: 18, fill: '#000', align: 'center'});
+		this.mText.wordWrap = true;
+	    this.mText.wordWrapWidth = this.world.width * 0.90;
+	    this.mText.anchor.setTo(0.5);
+
+		this.mContinueBtn = this.add.button(this.world.centerX - 85, this.world.height * 0.85, 'blue-button', this.initialize, this, 0, 1, 2);
+		this.mContinueLabel = this.add.text(this.mContinueBtn.x + 40, this.mContinueBtn.y + 7, 'Continue', {fill: '#000', fontSize: 24});
+	},
+
+	initialize: function() {
 		var aConfig = {
 			container: 'container',
 			videoId: 'videoel',
@@ -42,18 +48,18 @@ var SetupState = function() {
 		// Make the facial detector run in a loop.
 		GlobalInfo.expression.start();
 
-		mReady = true;
-	};
+		this.mReady = true;
+	},
 
-	this.update = function() {
-		if(!mReady) {
+	update: function() {
+		if(!this.mReady) {
 			return;
 		}
 
 		// Check if facial detection is working
-		if(mReady && GlobalInfo.expression.getEmotions().length > 0) {
+		if(this.mReady && GlobalInfo.expression.getEmotions().length > 0) {
 			// Yes, it is. Time to start the game.
-			Game.state.start('menu');
+			this.state.start('menu');
 		}
-	};
+	}
 };
