@@ -84,7 +84,7 @@ var PlayState = function() {
 		if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
 			// Yeah, they are, collect them
 			GlobalInfo.data.log({e: aEmotions, s: mTurnBasedScore});
-			GlobalInfo.data.send(GlobalInfo.uuid);
+			GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
 		}
 
 		// Update match time

@@ -20,6 +20,7 @@ var MenuState = function() {
 
 		// Generate a unique string to anonymously collect data.
 		GlobalInfo.uuid = Game.rnd.uuid();
+		GlobalInfo.game = 1; // The id of this game.
 	};
 
 	this.onPlay = function() {

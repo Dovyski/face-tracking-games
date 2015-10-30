@@ -8,6 +8,7 @@ var GlobalInfo = {
 	expression: null,	// instance of the expression detector
 	data: null,			// instance of the data collector
 	uuid: null,			// a random id used for anonymous data collection
+	game: 0,			// the game id
 	score: null			// score during the game
 };
 
