@@ -1,4 +1,4 @@
-/* Made by Nambiar - Game Dolphin 
+/* Made by Nambiar - Game Dolphin
 
 Feel free to use and learn from */
 
@@ -8,7 +8,7 @@ Block = function(game,x,y,type,color,scale){
 
 	this.centerY = y;
 
-	this.blocktype = type;	
+	this.blocktype = type;
 
 	this.blockcolor = color;
 
@@ -22,15 +22,14 @@ Block = function(game,x,y,type,color,scale){
 
 };
 
-var md = (width * this.scale ) / 2;
+var md = 15;
 
 Block.prototype = {
 
 	setupsquares : function(){
+		var md = (width * this.scale ) / 2;
 
 		this.squares.length = 0;
-
-		
 
 		switch(this.blocktype){
 
@@ -114,7 +113,7 @@ Block.prototype = {
 
 		this.squares[i].collideWorldBounds = true;
 
-		}	
+		}
 
 	},
 
@@ -178,7 +177,7 @@ Block.prototype = {
 
 
 
-        // Move the square so it's positioned at the origin 
+        // Move the square so it's positioned at the origin
 
         	x1 -= this.centerX;
 
@@ -192,7 +191,7 @@ Block.prototype = {
 
 
 
-        // Move the square back to its proper location 
+        // Move the square back to its proper location
 
         	x2 += this.centerX;
 
@@ -200,7 +199,7 @@ Block.prototype = {
 
 
 
-        // Set the square's location to our temporary variables 
+        // Set the square's location to our temporary variables
 
         	this.squares[i].x = x2;
 
@@ -220,7 +219,7 @@ Block.prototype = {
 
 
 
-    	for (var i=0; i<this.squares.length; i++){    
+    	for (var i=0; i<this.squares.length; i++){
 
         	x1 = this.squares[i].x;
 
@@ -346,7 +345,7 @@ Block.prototype = {
 
 
 
-			default 	 :  return false; 
+			default 	 :  return false;
 
 		}
 
