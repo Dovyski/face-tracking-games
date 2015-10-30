@@ -92,7 +92,7 @@
 
                     <div class="page-title">
                         <div class="title_left">
-                            <h3>Subject report</h3>
+                            <h3 id="subject-id"></h3>
                         </div>
 
                         <div class="title_right"></div>
@@ -104,41 +104,40 @@
                         <div class="col-md-12">
                             <div class="x_panel">
                                 <div class="x_title">
-                                    <h2 id="subject-id">???</h2>
-                                    <ul class="nav navbar-right panel_toolbox">
-                                        <li><a href="#"><i class="fa fa-chevron-up"></i></a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#">Settings 1</a>
-                                                </li>
-                                                <li><a href="#">Settings 2</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#"><i class="fa fa-close"></i></a>
-                                        </li>
-                                    </ul>
+                                    <h2>Facial tracking of emotions</h2>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
-
                                     <div class="row">
                                         <div class="col-md-12" style="padding: 30px;">
-                                            <p>Facial tracking</p>
                                             <canvas id="facial-tracking" width="1500" height="768"></canvas>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div id="facial-tracking-legend" class="col-md-12" style="padding: 30px;">
+                                        <div id="facial-tracking-legend" class="col-md-12"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Score tracking</h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <div class="row">
+                                        <div class="col-md-12" style="padding: 30px;">
+                                            <canvas id="score-tracking" width="1500" height="768"></canvas>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div id="score-tracking-legend" class="col-md-12"></div>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 

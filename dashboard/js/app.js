@@ -36,12 +36,19 @@ var APP = new function() {
         });
     };
 
-    this.createChart = function(theData) {
+    this.createCharts = function(theInfo) {
+        $('#subject-id').html('<strong>' + theInfo.uuid + '</strong> <small>' + theInfo.date + '</small>');
+
+        this.createChart(theInfo.emotions, 'facial-tracking', 'facial-tracking-legend');
+        this.createChart(theInfo.scores, 'score-tracking', 'score-tracking-legend');
+    };
+
+    this.createChart = function(theData, theCanvasId, theLegendId) {
         var aCtx,
             aChart;
 
         // Get canvas context for chart drawing
-        aCtx = document.getElementById('facial-tracking').getContext("2d");
+        aCtx = document.getElementById(theCanvasId).getContext("2d");
 
         // Create chart
         aChart = new Chart(aCtx).Line(theData, {
@@ -50,7 +57,7 @@ var APP = new function() {
         });
 
         // Generate a legend
-        $('#facial-tracking-legend').html(aChart.generateLegend());
+        $('#' + theLegendId).html(aChart.generateLegend());
     };
 
     this.loadData = function(theSubjectId) {
@@ -61,8 +68,7 @@ var APP = new function() {
             data: {uid: theSubjectId},
         })
         .done(function(theInfo) {
-            mSelf.createChart(theInfo.data);
-            $('#subject-id').html('Subject: <strong>' + theInfo.uuid + '</strong> | Date: <strong>' + theInfo.date + '</strong>');
+            mSelf.createCharts(theInfo);
 
         })
         .fail(function() {
