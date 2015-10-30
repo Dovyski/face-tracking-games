@@ -50,8 +50,13 @@ var APP = new function() {
         // Get canvas context for chart drawing
         aCtx = document.getElementById(theCanvasId).getContext("2d");
 
+        theData.labelsFilter = function (theIndex) {
+            //return true if this index should be filtered out
+            return (theIndex + 1) % 10 !== 0;
+        };
+
         // Create chart
-        aChart = new Chart(aCtx).Line(theData, {
+        aChart = new Chart(aCtx).LineAlt(theData, {
             responsive: true,
             legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"width: 30px; height: 10px; background-color:<%=datasets[i].strokeColor%>\">&nbsp;&nbsp;&nbsp;</span> <%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
         });
