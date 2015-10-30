@@ -11,7 +11,12 @@ var PlayState = function() {
 	var mQuestion;			// Info about the current question
 	var mMatchTime;			// Remaining time for the match
 	var mUuid;				// Identifier for this player
-	var mScore = {			// Info regarding score
+	var mScore = {			// Info regarding global score (throughout the game session)
+		right: 0,
+		wrong: 0,
+		miss: 0
+	};
+	var mTurnBasedScore = {		// Info regarding score for each new question
 		right: 0,
 		wrong: 0,
 		miss: 0
@@ -78,7 +83,7 @@ var PlayState = function() {
 		// Emotions are available for reading?
 		if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
 			// Yeah, they are, collect them
-			GlobalInfo.data.log({e: aEmotions, s: mScore});
+			GlobalInfo.data.log({e: aEmotions, s: mTurnBasedScore});
 			GlobalInfo.data.send(GlobalInfo.uuid);
 		}
 
@@ -97,12 +102,15 @@ var PlayState = function() {
 	this.countMove = function(theType) {
 		if(theType == 'right') {
 			mScore.right++;
+			mTurnBasedScore.right++;
 
 		} else if(theType == 'wrong') {
 			mScore.wrong++;
+			mTurnBasedScore.wrong++;
 
 		} else {
 			mScore.miss++;
+			mTurnBasedScore.miss++;
 		}
 
 		mHud.refresh();
@@ -122,12 +130,20 @@ var PlayState = function() {
 		}
 	};
 
+	var clearTurnBasedScore = function() {
+		mTurnBasedScore.right = 0;
+		mTurnBasedScore.wrong = 0;
+		mTurnBasedScore.miss = 0;
+	};
+
 	var generateNewQuestion = function() {
 		mQuestion.odd 	= Game.rnd.frac() <= 0.5;
 		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
 
 		mHud.refresh();
 		mHud.highlightNewQuestion();
+
+		clearTurnBasedScore();
 
 		mSfxNewQuestion.play();
 	};

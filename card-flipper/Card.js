@@ -137,7 +137,10 @@ Card.prototype.update = function() {
         this.mFlipUpCounter -= Game.time.elapsedMS;
 
         if(this.mFlipUpCounter <= 0 && !this.mIsFlipping) {
+            // Card flipped because the player didn't click it.
+            // Let's flip the card and count a miss
             this.flipDown();
+            Game.state.states[Game.state.current].countMove('miss');
         }
     }
 };
