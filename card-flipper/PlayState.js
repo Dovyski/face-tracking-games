@@ -78,7 +78,7 @@ var PlayState = function() {
 		// Emotions are available for reading?
 		if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
 			// Yeah, they are, collect them
-			GlobalInfo.data.log(aEmotions); // TODO: add game info here too
+			GlobalInfo.data.log({e: aEmotions, s: mScore});
 			GlobalInfo.data.send(GlobalInfo.uuid);
 		}
 
@@ -128,7 +128,7 @@ var PlayState = function() {
 
 		mHud.refresh();
 		mHud.highlightNewQuestion();
-		
+
 		mSfxNewQuestion.play();
 	};
 
