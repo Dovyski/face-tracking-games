@@ -1,4 +1,4 @@
-/* Made by Nambiar - Game Dolphin 
+/* Made by Nambiar - Game Dolphin
 
 Feel free to use and learn from */
 
@@ -29,6 +29,8 @@ var KEYRIGHT;
 var KEYUP;
 
 var KEYDOWN;
+
+var ENABLE_DATA_LOG = true;
 
 
 
@@ -70,7 +72,7 @@ Game.PlayGame.prototype = {
 
 		KEYDOWN = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 
-		
+
 
 		this.scoretext = this.add.text(344,355,"SCORE",{ font: "15px Arial", fill: "#ff0044", align: "center" });
 
@@ -78,7 +80,7 @@ Game.PlayGame.prototype = {
 
 		this.scoretextmain = this.add.text(344,370," "+score+" ",{ font: "15px Arial", fill: "#fff", align: "center" })
 
-		
+
 
 		this.resetbutton = this.add.sprite(320,520,'reset');
 
@@ -100,7 +102,7 @@ Game.PlayGame.prototype = {
 
 		score = 0;
 
-		
+
 
 	},
 
@@ -112,7 +114,7 @@ Game.PlayGame.prototype = {
 
 			this.game.paused = true;
 
-		} 
+		}
 
 		else
 
@@ -318,7 +320,7 @@ Game.PlayGame.prototype = {
 
 			if(this.game.time.now>change_rot_time){
 
-				if(this.focusblock.rotatecollide(oldsquares)!=true)		this.focusblock.rotate(); 
+				if(this.focusblock.rotatecollide(oldsquares)!=true)		this.focusblock.rotate();
 
 				change_rot_time = this.game.time.now + 100;
 
@@ -339,8 +341,15 @@ Game.PlayGame.prototype = {
 		}
 
 
+		var aEmotions = GlobalInfo.expression.getEmotions();
+
+		// Emotions are available for reading?
+		if(aEmotions.length > 0 && ENABLE_DATA_LOG) {
+			// Yeah, they are, collect them
+			GlobalInfo.data.log({e: aEmotions, s: score});
+			GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
+		}
 
 	}
 
 };
-

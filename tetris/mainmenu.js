@@ -43,6 +43,9 @@ Game.MainMenu.prototype = {
 
 		this.titleimage.anchor.setTo(0.5,0);
 
+		// Generate a unique string to anonymously collect data.
+		GlobalInfo.uuid = this.rnd.uuid();
+		GlobalInfo.game = 2; // The id of this game.
 	},
 
 
