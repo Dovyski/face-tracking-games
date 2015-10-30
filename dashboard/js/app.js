@@ -43,12 +43,19 @@ var APP = new function() {
         this.createChart(theInfo.scores, 'score-tracking', 'score-tracking-legend');
     };
 
-    this.createChart = function(theData, theCanvasId, theLegendId) {
+    this.createChart = function(theData, theContainerId, theLegendId) {
         var aCtx,
+            aContainer,
+            aCanvas,
             aChart;
 
         // Get canvas context for chart drawing
-        aCtx = document.getElementById(theCanvasId).getContext("2d");
+        $('#' + theContainerId).empty();
+        aContainer = document.getElementById(theContainerId);
+        aCanvas = document.createElement('canvas');
+        aCtx = aCanvas.getContext("2d");
+
+        aContainer.appendChild(aCanvas);
 
         theData.labelsFilter = function (theIndex) {
             //return true if this index should be filtered out
