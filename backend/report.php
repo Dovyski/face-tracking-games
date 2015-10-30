@@ -7,6 +7,49 @@
 
 require_once(dirname(__FILE__) . '/config.php');
 
+function randColor() {
+	static $aIndex = 0;
+
+	$aRandColors = array(
+		'255,0,0',
+		'0,255,0',
+		'0,0,255',
+		'255,0,255',
+		'0,255,255'
+	);
+
+	$aRet = $aRandColors[$aIndex];
+
+	if(++$aIndex >= count($aRandColors)) {
+		$aIndex = 0;
+	}
+
+	return $aRet;
+}
+
+function generateChartConfig($theArray) {
+	$aColor = randColor();
+
+	$theArray['fillColor'] = 'rgba('.$aColor.', 0.05)';
+	$theArray['strokeColor'] = 'rgba('.$aColor.', 1)';
+	$theArray['pointColor'] = 'rgba('.$aColor.', 1)';
+	$theArray['pointStrokeColor'] = '#fff';
+	$theArray['pointHighlightFill'] = '#fff';
+	$theArray['pointHighlightStroke'] = 'rgba('.$aColor.', 1)';
+
+	return $theArray;
+}
+
+function generateDataset($theName, $theValue) {
+	$aTemp = array();
+	$aTemp['label'] = $theName;
+	$aTemp['data'] = $theValue;
+	$aTemp = generateChartConfig($aTemp);
+
+	return $aTemp;
+}
+
+
 $aUid = isset($_REQUEST['uid']) ? $_REQUEST['uid'] : '';
 
 try {
@@ -58,28 +101,13 @@ try {
 		}
 	}
 
+	// Create emotion datasets.
 	$aEmotionData = array(
 		'labels' => $aTimes,
 		'datasets' => array()
 	);
-
-	// Create emotion datasets.
 	foreach($aEmotions as $aName => $aValues) {
-		$aTemp = array();
-
-		$aTemp['label'] = $aName;
-		$aTemp['data'] = $aValues;
-
-		$aColor = rand(50, 255).','.rand(50, 255).','.rand(50, 255);
-
-		$aTemp['fillColor'] = 'rgba('.$aColor.', 0.2)';
-		$aTemp['strokeColor'] = 'rgba('.$aColor.', 1)';
-		$aTemp['pointColor'] = 'rgba('.$aColor.', 1)';
-		$aTemp['pointStrokeColor'] = '#fff';
-		$aTemp['pointHighlightFill'] = '#fff';
-		$aTemp['pointHighlightStroke'] = 'rgba('.$aColor.', 1)';
-
-		$aEmotionData['datasets'][] = $aTemp;
+		$aEmotionData['datasets'][] = generateDataset($aName, $aValues);
 	}
 
 	// Create score datasets
@@ -87,24 +115,8 @@ try {
 		'labels' => $aTimes,
 		'datasets' => array()
 	);
-
-	// Create emotion datasets.
 	foreach($aScores as $aName => $aValues) {
-		$aTemp = array();
-
-		$aTemp['label'] = $aName;
-		$aTemp['data'] = $aValues;
-
-		$aColor = rand(50, 255).','.rand(50, 255).','.rand(50, 255);
-
-		$aTemp['fillColor'] = 'rgba('.$aColor.', 0.2)';
-		$aTemp['strokeColor'] = 'rgba('.$aColor.', 1)';
-		$aTemp['pointColor'] = 'rgba('.$aColor.', 1)';
-		$aTemp['pointStrokeColor'] = '#fff';
-		$aTemp['pointHighlightFill'] = '#fff';
-		$aTemp['pointHighlightStroke'] = 'rgba('.$aColor.', 1)';
-
-		$aScoreData['datasets'][] = $aTemp;
+		$aScoreData['datasets'][] = generateDataset($aName, $aValues);
 	}
 
 	echo json_encode(array(
