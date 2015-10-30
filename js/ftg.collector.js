@@ -31,29 +31,26 @@ FTG.Collector = function() {
 	this.log = function(theData) {
 		// Collect only if it is time to do it
 		if(isTimeToCollect()) {
-			console.log('[Collector] Log', theData);
-
 			mData.push({t: getTimestamp(), d: JSON.stringify(theData)});
 			mLastTimeCollected = getTimestamp();
 		}
 	};
 
 	// Send current recorded data to the server
-	this.send = function(theUid, theForce) {
+	this.send = function(theUid, theGameId, theForce) {
 		var aXmlRequest,
 			aData;
 
 		if(isTimeToSendData() || theForce) {
 			if(mData.length < 0) {
-				console.log('[Collector] No data to send, skipping.');
 				return;
 			}
 
-			console.log('[Collector] Sending data');
 			mLastTimeSent = getTimestamp();
 
 		    aData = new FormData();
 			aData.append('uid', theUid);
+			aData.append('game', theGameId);
 			aData.append('data', JSON.stringify(mData));
 
 		    aXmlRequest = new XMLHttpRequest();
@@ -73,7 +70,6 @@ FTG.Collector = function() {
 
 	// Clear any data stored until now.
 	this.clear = function() {
-		console.log('[Collector] Data cleared');
 		mData.length = 0;
 	};
 };

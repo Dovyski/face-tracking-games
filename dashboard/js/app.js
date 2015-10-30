@@ -13,7 +13,7 @@ var APP = new function() {
                 i;
 
             for(aGame in theInfo) {
-                aOut += '<li><a><i class="fa fa-bar-chart-o"></i> Card Flipper <span class="fa fa-chevron-down"></span></a>' +
+                aOut += '<li><a><i class="fa fa-bar-chart-o"></i> '+ aGame +' <span class="fa fa-chevron-down"></span></a>' +
                         '<ul class="nav child_menu" style="display: none">';
 
                 for(i = 0; i < theInfo[aGame].length; i++) {

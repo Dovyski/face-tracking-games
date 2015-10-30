@@ -12,18 +12,22 @@ try {
 	$aDb = new PDO('sqlite:' . DB_FILE);
 	$aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$aStmt = $aDb->prepare("SELECT DISTINCT uuid FROM logs WHERE 1"); // TODO: use create a game column
-	$aStmt->execute();
+	$aData = array();
+	$aResult = $aDb->query("SELECT id,name FROM games WHERE 1");
 
-	$aSubjects = array();
+	foreach ($aResult as $aGameRow) {
+		$aStmt = $aDb->prepare("SELECT DISTINCT uuid FROM logs WHERE fk_game = :game");
+		$aStmt->bindParam(':game', $aGameRow['id']);
+		$aStmt->execute();
 
-	while($aRow = $aStmt->fetch(PDO::FETCH_ASSOC)) {
-		$aSubjects[] = $aRow['uuid'];
+		$aSubjects = array();
+
+		while($aRow = $aStmt->fetch(PDO::FETCH_ASSOC)) {
+			$aSubjects[] = $aRow['uuid'];
+		}
+
+		$aData[$aGameRow['name']] = $aSubjects;
 	}
-
-	$aData = array(
-		'Card Flipper' => $aSubjects
-	);
 
 	echo json_encode($aData);
 
