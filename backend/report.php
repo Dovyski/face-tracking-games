@@ -94,10 +94,11 @@ try {
 				$aEmotions[$aEmotionEntry->emotion][] = $aEmotionEntry->value;
 			}
 
+			// TODO: get data based on game type
 			$aInfoScores = $aRaw->s;
-			$aScores['right'][] = $aInfoScores->right;
-			$aScores['wrong'][] = $aInfoScores->wrong;
-			$aScores['miss'][] = $aInfoScores->miss;
+			$aScores['right'][] = @$aInfoScores->right;
+			$aScores['wrong'][] = @$aInfoScores->wrong;
+			$aScores['miss'][] = @$aInfoScores->miss;
 		}
 	}
 
