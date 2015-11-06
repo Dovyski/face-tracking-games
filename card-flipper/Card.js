@@ -3,7 +3,6 @@
  */
 Card = function (theX, theY) {
     // Properties
-    var mText = null;
     var mFlipUpCounter = 0;
     var mIsFlipping = false;
     var mIsFlippingPastHalfWay = false;
@@ -23,12 +22,6 @@ Card.prototype.constructor = Card;
 
 Card.prototype.init = function(theX, theY) {
     this.mInitialPosition = new Phaser.Point(theX, theY);
-
-    this.mText = new Phaser.Text(Game, 0, 12, '5', {font: "bold 56px Arial", fill: "#000", align: "center"});
-    this.mText.visible = false;
-    this.mText.anchor.set(0.5);
-
-    this.addChild(this.mText);
 
     // Centralize graphics
     this.anchor.set(0.5);
@@ -51,10 +44,7 @@ Card.prototype.isFlippedUp = function() {
 
 // Randomize the content of the card (number, color, etc)
 Card.prototype.randomize = function() {
-    var aRand = Game.rnd;
-
-    this.mText.text     = aRand.integerInRange(1, Constants.CARDS_MAX_NUMBER);
-    this.frame          = aRand.integerInRange(1, Constants.CARDS_COLORS.length - 1);
+    this.frame = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);
 };
 
 Card.prototype.flip = function() {
@@ -76,28 +66,36 @@ Card.prototype.flipDown = function() {
 
 // Check if the card content answers the current question
 Card.prototype.answersQuestion = function(theQuestion) {
-    var aOurNumberIsOdd = (parseInt(this.mText.text) % 2) != 0;
-    return (this.frame != theQuestion.color) || ((theQuestion.odd && !aOurNumberIsOdd) || (!theQuestion.odd && aOurNumberIsOdd));
+    return this.frame != theQuestion;
 };
 
 Card.prototype.reactToClick = function(theWasCorrectAnswer) {
     var aState      = Game.state.states[Game.state.current],
-        aHud        = aState.getHud();
+        aHud        = aState.getHud(),
+        aWasOk;
 
-    aState.countMove(theWasCorrectAnswer ? 'right' : 'wrong');
-    aHud.showRightWrongSign(this, theWasCorrectAnswer);
+    aWasOk = (this.amICollidingWithMonster() && theWasCorrectAnswer) || (!theWasCorrectAnswer && this.amICollidingWithTrash());
+
+    aState.countMove(aWasOk ? 'right' : 'wrong');
+    aHud.showRightWrongSign(this, aWasOk);
 };
 
 Card.prototype.onDragStart = function() {
     this.mBeingDragged = true;
 };
 
-Card.prototype.amICollidingWithMonsterOrTrash = function() {
-    var aGame = Game.state.states[Game.state.current],
-        aMonster = aGame.getMonster(),
-        aTrash = aGame.getTrash();
+Card.prototype.amICollidingWithMonster = function() {
+    var aMonster = Game.state.states[Game.state.current].getMonster();
+    return aMonster.position.distance(this.position) <= Constants.CARDS_DIST_TARGET;
+};
 
-    return aMonster.position.distance(this.position) <= 200 || aTrash.position.distance(this.position) <= 200;
+Card.prototype.amICollidingWithTrash = function() {
+    var aTrash = Game.state.states[Game.state.current].getTrash();
+    return aTrash.position.distance(this.position) <= Constants.CARDS_DIST_TARGET;
+};
+
+Card.prototype.amICollidingWithMonsterOrTrash = function() {
+    return this.amICollidingWithMonster() || this.amICollidingWithTrash();
 };
 
 Card.prototype.moveToInitialPosition = function() {
@@ -129,7 +127,6 @@ Card.prototype.onDragStop = function() {
 
 Card.prototype.resetToInitialState = function() {
     this.frame = 0;
-    this.mText.visible = false;
     this.input.disableDrag();
     this.x = this.mInitialPosition.x;
     this.y = this.mInitialPosition.y;
@@ -153,7 +150,6 @@ Card.prototype.updateFlippingProcess = function() {
             } else {
                 this.randomize();
                 this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
-                this.mText.visible = true;
                 this.input.enableDrag(true, true);
             }
         }
@@ -180,8 +176,4 @@ Card.prototype.update = function() {
             Game.state.states[Game.state.current].countMove('miss');
         }
     }
-};
-
-Card.prototype.getText = function() {
-    return this.mText;
 };

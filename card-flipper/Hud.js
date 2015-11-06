@@ -46,8 +46,6 @@ Hud.prototype.init = function() {
     mRightWrongSignal.anchor.set(0.5);
 
     mQuestionCard.disableInteractions(); // prevent hud card to be clicked
-    mQuestionCard.getText().visible = true; // make card text always visible
-    mQuestionCard.getText().setStyle({fontSize: 28});
 
     this.add(mDialogQuestion);
     this.add(mDialogTime);
@@ -86,8 +84,7 @@ Hud.prototype.refresh = function() {
         aScore      = aState.getScore();
 
     // Refresh current question
-    mQuestionCard.getText().text = (aQuestion.odd ? 'Odd' : 'Even');
-    mQuestionCard.frame = aQuestion.color;
+    mQuestionCard.frame = aQuestion;
 
     mHealthBar.setPercentage(aState.getHealthPercentage());
 };

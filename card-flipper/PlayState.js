@@ -55,13 +55,7 @@ var PlayState = function() {
 		mHealth = Constants.GAME_HEALTH_MAX;
 		mSfxNewQuestion = Game.add.audio('sfx-new-question');
 
-		// Define the current question. 'color' refer to the
-		// expected color in the answer card, 'odd' refers if
-		// the card number should be odd/even.
-		mQuestion = {
-			color: 1,
-			odd: true
-		};
+		mQuestion = 1;
 
 		mHud = new Hud();
 		Game.add.existing(mHud);
@@ -149,8 +143,7 @@ var PlayState = function() {
 	};
 
 	var generateNewQuestion = function() {
-		mQuestion.odd 	= Game.rnd.frac() <= 0.5;
-		mQuestion.color = Game.rnd.integerInRange(1, Constants.CARDS_COLORS.length - 1);
+		mQuestion = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);
 
 		mHud.refresh();
 		mHud.highlightNewQuestion();
