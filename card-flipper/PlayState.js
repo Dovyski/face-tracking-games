@@ -10,6 +10,7 @@ var PlayState = function() {
 	var mQuestionTimer;		// interval, in seconds, between questions
 	var mQuestion;			// Info about the current question
 	var mMatchTime;			// Remaining time for the match
+	var mHealth;			// Available health points.
 	var mUuid;				// Identifier for this player
 	var mScore = {			// Info regarding global score (throughout the game session)
 		right: 0,
@@ -43,6 +44,7 @@ var PlayState = function() {
 		mFlipTimer = 0;
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
+		mHealth = Constants.GAME_HEALTH_MAX;
 		mSfxNewQuestion = Game.add.audio('sfx-new-question');
 
 		// Define the current question. 'color' refer to the
@@ -90,7 +92,7 @@ var PlayState = function() {
 		// Update match time
 		mMatchTime -= aElapsed;
 
-		if(mMatchTime <= 0) {
+		if(mMatchTime <= 0 || mHealth <= 0) {
 			// Match is over!
 			GlobalInfo.score = mScore;
 			// TODO: disable face tracking here
@@ -103,10 +105,12 @@ var PlayState = function() {
 		if(theType == 'right') {
 			mScore.right++;
 			mTurnBasedScore.right++;
+			mHealth += Constants.GAME_CORRECT_HEALTH;
 
 		} else if(theType == 'wrong') {
 			mScore.wrong++;
 			mTurnBasedScore.wrong++;
+			mHealth -= Constants.GAME_MISTAKE_HEALTH;
 
 		} else {
 			mScore.miss++;
@@ -164,5 +168,9 @@ var PlayState = function() {
 
 	this.getHud = function() {
 		return mHud;
+	};
+
+	this.getHealthPercentage = function() {
+		return mHealth/Constants.GAME_HEALTH_MAX;
 	};
 };

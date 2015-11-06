@@ -48,7 +48,7 @@ Hud.prototype.init = function() {
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Look for', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelLookForInfo   = new Phaser.Text(Game, mDialogQuestion.x + 25, mDialogQuestion.y + 55, 'DON\'T\nclick cards that look like this:', {fontSize: 26, fill: '#000', align: 'center'});
-    mLabelHealth          = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Health', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelHealth        = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Health', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelRight         = new Phaser.Text(Game, mDialogRight.x + 10, mDialogRight.y + 5, 'Right', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelWrong         = new Phaser.Text(Game, mDialogWrong.x + 10, mDialogWrong.y + 5, 'Wrong', {fontSize: 16, fill: '#fff', align: 'center'});
 
@@ -110,7 +110,7 @@ Hud.prototype.refresh = function() {
     mTextRight.text = (aScore.right < 10 ? '0' : '') + aScore.right;
     mTextWrong.text = (aScore.wrong < 10 ? '0' : '') + aScore.wrong;
 
-    mHealthBar.setPercentage(0.5);
+    mHealthBar.setPercentage(aState.getHealthPercentage());
 };
 
 Hud.prototype.highlightNewQuestion = function() {

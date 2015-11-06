@@ -37,5 +37,8 @@ ProgressBar.prototype.init = function() {
 };
 
 ProgressBar.prototype.setPercentage = function(theValue) {
+    theValue = theValue < 0 ? 0 : theValue;
+    theValue = theValue > 1 ? 1 : theValue;
+
     this.mFill.scale.x = theValue;
 };
