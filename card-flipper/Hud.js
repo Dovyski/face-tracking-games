@@ -7,6 +7,8 @@ var Hud = function () {
     var mRightWrongSignal;	// X showed when user clicks a wrong card
     var mRightWrongTimer;	// X showed when user clicks a wrong card
     var mHealthBar;
+    var mTurnTimeBar;
+    var mTurnTimeBackground;
     var mDialogQuestion;
     var mDialogTime;
     var mLabelLookFor;
@@ -36,6 +38,8 @@ Hud.prototype.init = function() {
     mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + 87);
 
     mHealthBar          = new ProgressBar(mDialogTime.x + 20, mDialogTime.y + 50, 210, 30, {line: 0x47B350, fill: 0x37DB45});
+    mTurnTimeBackground = new Phaser.Sprite(Game, Game.world.width * 0.05, Game.world.height * 0.05, 'clock-bar');
+    mTurnTimeBar        = new ProgressBar(mTurnTimeBackground.x + 50, mTurnTimeBackground.y + 15, 550, 20, {line: 0xE86A17, fill: 0xEC8745});
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Poisonous', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelHealth        = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Health', {fontSize: 16, fill: '#fff', align: 'center'});
@@ -49,19 +53,21 @@ Hud.prototype.init = function() {
 
     this.add(mDialogQuestion);
     this.add(mDialogTime);
+    this.add(mTurnTimeBackground);
 
     this.add(mLabelLookFor);
     this.add(mLabelHealth);
     this.add(mLabelRight);
     this.add(mLabelWrong);
     this.add(mHealthBar);
+    this.add(mTurnTimeBar);
 
     this.add(mQuestionCard);
     this.add(mRightWrongSignal);
 
     mSfxWrong = Game.add.audio('sfx-wrong');
     mSfxRight = Game.add.audio('sfx-right');
-}
+};
 
 Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
     mRightWrongSignal.frame = theWasItRight ? 1 : 0;
@@ -106,6 +112,9 @@ Hud.prototype.update = function() {
             mRightWrongSignal.visible = false;
         }
     }
+
+    // Update time remaining for the current turn
+    mTurnTimeBar.setPercentage(aState.getPercentageTimeRemainingAnswerQuestion());
 };
 
 Hud.prototype.formatTime = function(theMillisecondsTime) {

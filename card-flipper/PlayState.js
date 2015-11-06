@@ -9,7 +9,8 @@ var PlayState = function() {
 	var mMonster;
 	var mTrash;
 	var mFlipTimer;			// interval, in seconds, between card flips
-	var mQuestionTimer;		// interval, in seconds, between questions
+	var mQuestionTime;		// Time, in seconds, the player has to answer the current question
+	var mQuestionTimer;		// Counts from mQuestionTime until zero.
 	var mQuestion;			// Info about the current question
 	var mMatchTime;			// Remaining time for the match
 	var mHealth;			// Available health points.
@@ -37,7 +38,7 @@ var PlayState = function() {
 		mMonster.anchor.setTo(0.5);
 		mTrash.anchor.setTo(0.5);
 
-		mBackground = Game.add.sprite(Game.world.width * 0.05, Game.world.height * 0.07, 'deck-background');
+		mBackground = Game.add.sprite(Game.world.width * 0.05, Game.world.height * 0.12, 'deck-background');
 		mCards = Game.add.group();
 
 		for(i = 0; i < Constants.CARDS_MAX; i++) {
@@ -50,6 +51,7 @@ var PlayState = function() {
 		}
 
 		mFlipTimer = 0;
+		mQuestionTime = Constants.QUESTION_DURATION;
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
@@ -79,7 +81,8 @@ var PlayState = function() {
 		// Check if it is time to ask a new question
 		if(mQuestionTimer <= 0) {
 			generateNewQuestion();
-			mQuestionTimer = Game.rnd.realInRange(Constants.QUESTION_MIN_INTERVAL, Constants.QUESTION_MAX_INTERVAL);
+			mQuestionTime = Constants.QUESTION_DURATION; // TODO: adjust according to level difficulty
+			mQuestionTimer = mQuestionTime;
 		}
 
 		var aEmotions = GlobalInfo.expression.getEmotions();
@@ -173,6 +176,10 @@ var PlayState = function() {
 
 	this.getMonster = function() {
 		return mMonster;
+	};
+
+	this.getPercentageTimeRemainingAnswerQuestion = function() {
+		return mQuestionTimer / mQuestionTime;
 	};
 
 	this.getTrash = function() {
