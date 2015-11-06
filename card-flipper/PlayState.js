@@ -6,6 +6,8 @@ var PlayState = function() {
 	var mHud; 				// Game hud
 	var mBackground;		// group with all the cards
 	var mCards; 			// group with all the cards
+	var mMonster;
+	var mTrash;
 	var mFlipTimer;			// interval, in seconds, between card flips
 	var mQuestionTimer;		// interval, in seconds, between questions
 	var mQuestion;			// Info about the current question
@@ -28,6 +30,12 @@ var PlayState = function() {
 		var i,
 			j = 0,
 			aCard;
+
+		mMonster = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.4, 'question-dialog');
+		mTrash = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.6, 'question-dialog');
+
+		mMonster.anchor.setTo(0.5);
+		mTrash.anchor.setTo(0.5);
 
 		mBackground = Game.add.sprite(Game.world.width * 0.05, Game.world.height * 0.07, 'deck-background');
 		mCards = Game.add.group();
@@ -168,6 +176,14 @@ var PlayState = function() {
 
 	this.getHud = function() {
 		return mHud;
+	};
+
+	this.getMonster = function() {
+		return mMonster;
+	};
+
+	this.getTrash = function() {
+		return mTrash;
 	};
 
 	this.getHealthPercentage = function() {

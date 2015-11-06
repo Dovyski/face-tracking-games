@@ -7,10 +7,12 @@ Card = function (theX, theY) {
     var mFlipUpCounter = 0;
     var mIsFlipping = false;
     var mIsFlippingPastHalfWay = false;
+    var mInitialPosition;
+    var mBeingDragged = false;
 
     // Constructor
     Phaser.Sprite.call(this, Game, theX, theY, 'card');
-    this.init();
+    this.init(theX, theY);
 };
 
 // Lovely pants-in-the-head javascript boilerplate for OOP.
@@ -19,7 +21,9 @@ Card.prototype.constructor = Card;
 
 // Public methods
 
-Card.prototype.init = function() {
+Card.prototype.init = function(theX, theY) {
+    this.mInitialPosition = new Phaser.Point(theX, theY);
+
     this.mText = new Phaser.Text(Game, 0, 12, '5', {font: "bold 56px Arial", fill: "#000", align: "center"});
     this.mText.visible = false;
     this.mText.anchor.set(0.5);
@@ -31,12 +35,14 @@ Card.prototype.init = function() {
 
     //  Enables all kind of input actions on this image (click, etc)
 	this.inputEnabled = true;
-    this.events.onInputDown.add(this.onClick, this);
+    this.events.onDragStart.add(this.onDragStart, this);
+    this.events.onDragStop.add(this.onDragStop, this);
 };
 
 Card.prototype.disableInteractions = function() {
     this.inputEnabled = false;
-    this.events.onInputDown.remove(this.onClick, this);
+    this.events.onDragStart.remove(this.onDragStart, this);
+    this.events.onDragStop.remove(this.onDragStop, this);
 };
 
 Card.prototype.isFlippedUp = function() {
@@ -82,20 +88,51 @@ Card.prototype.reactToClick = function(theWasCorrectAnswer) {
     aHud.showRightWrongSign(this, theWasCorrectAnswer);
 };
 
-Card.prototype.onClick = function() {
+Card.prototype.onDragStart = function() {
+    this.mBeingDragged = true;
+};
+
+Card.prototype.amICollidingWithMonsterOrTrash = function() {
+    var aGame = Game.state.states[Game.state.current],
+        aMonster = aGame.getMonster(),
+        aTrash = aGame.getTrash();
+
+    return aMonster.position.distance(this.position) <= 200 || aTrash.position.distance(this.position) <= 200;
+};
+
+Card.prototype.moveToInitialPosition = function() {
+    Game.add.tween(this).to({x: this.mInitialPosition.x, y: this.mInitialPosition.y}, 500, Phaser.Easing.Cubic.Out, true);
+};
+
+Card.prototype.onDragStop = function() {
     var aState      = Game.state.states[Game.state.current],
         aQuestion   = aState.getQuestion(),
         aHud        = aState.getHud(),
         aIsCorrect;
 
+    // Inform dragging has stopped.
+    this.mBeingDragged = false;
+
     // Check for the right answer only if the Card
-    // is flipped up
-    if(this.isFlippedUp()) {
+    // was dropped into the monster or the trash
+    if(this.amICollidingWithMonsterOrTrash()) {
         aIsCorrect = this.answersQuestion(aQuestion);
 
         this.reactToClick(aIsCorrect);
-        this.flipDown();
+        this.resetToInitialState();
+    } else {
+        // Card was dropped in a weird place.
+        // Return it to is initial position
+        this.moveToInitialPosition();
     }
+};
+
+Card.prototype.resetToInitialState = function() {
+    this.frame = 0;
+    this.mText.visible = false;
+    this.input.disableDrag();
+    this.x = this.mInitialPosition.x;
+    this.y = this.mInitialPosition.y;
 };
 
 Card.prototype.updateFlippingProcess = function() {
@@ -111,13 +148,13 @@ Card.prototype.updateFlippingProcess = function() {
             // It's time to adjust the back content so the animation
             // looks convincing.
             if(this.isFlippedUp()) {
-                this.frame = 0;
-                this.mText.visible = false;
+                this.resetToInitialState();
 
             } else {
                 this.randomize();
                 this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
                 this.mText.visible = true;
+                this.input.enableDrag(true, true);
             }
         }
     } else if(this.mIsFlippingPastHalfWay) {
@@ -136,7 +173,7 @@ Card.prototype.update = function() {
     if(this.isFlippedUp()) {
         this.mFlipUpCounter -= Game.time.elapsedMS;
 
-        if(this.mFlipUpCounter <= 0 && !this.mIsFlipping) {
+        if(this.mFlipUpCounter <= 0 && !this.mIsFlipping && !this.mBeingDragged) {
             // Card flipped because the player didn't click it.
             // Let's flip the card and count a miss
             this.flipDown();
