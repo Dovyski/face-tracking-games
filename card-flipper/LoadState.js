@@ -18,6 +18,7 @@ var LoadState = function() {
 
 		// Assets made by myself
 		Game.load.spritesheet('right-wrong', 'assets/right_wrong.png', 145, 207); // By Fernando Bevilacqua, public domain
+		Game.load.image('pixel', 'assets/pixel.png'); // By Fernando Bevilacqua, public domain
 
 		// Assets from external authors
 		Game.load.spritesheet('card', 'assets/card.png', 100, 100); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl

@@ -6,7 +6,7 @@ var Hud = function () {
     var mQuestionCard;
     var mRightWrongSignal;	// X showed when user clicks a wrong card
     var mRightWrongTimer;	// X showed when user clicks a wrong card
-    var mMatchTime;	        // Displays the match's remaining time.
+    var mHealthBar;
     var mTextRight;
     var mTextWrong;
     var mDialogQuestion;
@@ -14,7 +14,7 @@ var Hud = function () {
     var mDialogRight;
     var mDialogWrong;
     var mLabelLookFor;
-    var mLabelTime;
+    var mLabelHealth;
     var mLabelRight;
     var mLabelWrong;
     var mLabelLookForInfo;
@@ -34,7 +34,7 @@ Hud.prototype.constructor = Hud;
 
 Hud.prototype.init = function() {
     mRightWrongSignal   = new Phaser.Sprite(Game, 0, 0, 'right-wrong');
-    mMatchTime          = new Phaser.Text(Game, Game.world.width - 250, Game.world.height - 325, '0:00', {fontSize: 70, fill: '#000', align: 'center'});
+    mHealthBar          = new ProgressBar(Game.world.width - 265, Game.world.height - 305, 210, 30, {line: 0x47B350, fill: 0x37DB45});
     mRightWrongTimer    = 0;
 
     mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
@@ -48,7 +48,7 @@ Hud.prototype.init = function() {
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Look for', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelLookForInfo   = new Phaser.Text(Game, mDialogQuestion.x + 25, mDialogQuestion.y + 55, 'DON\'T\nclick cards that look like this:', {fontSize: 26, fill: '#000', align: 'center'});
-    mLabelTime          = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Time', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelHealth          = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Health', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelRight         = new Phaser.Text(Game, mDialogRight.x + 10, mDialogRight.y + 5, 'Right', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelWrong         = new Phaser.Text(Game, mDialogWrong.x + 10, mDialogWrong.y + 5, 'Wrong', {fontSize: 16, fill: '#fff', align: 'center'});
 
@@ -71,13 +71,13 @@ Hud.prototype.init = function() {
     this.add(mTextWrong);
     this.add(mLabelLookFor);
     this.add(mLabelLookForInfo);
-    this.add(mLabelTime);
+    this.add(mLabelHealth);
     this.add(mLabelRight);
     this.add(mLabelWrong);
+    this.add(mHealthBar);
 
     this.add(mQuestionCard);
     this.add(mRightWrongSignal);
-    this.add(mMatchTime);
 
     mSfxWrong = Game.add.audio('sfx-wrong');
     mSfxRight = Game.add.audio('sfx-right');
@@ -109,6 +109,8 @@ Hud.prototype.refresh = function() {
 
     mTextRight.text = (aScore.right < 10 ? '0' : '') + aScore.right;
     mTextWrong.text = (aScore.wrong < 10 ? '0' : '') + aScore.wrong;
+
+    mHealthBar.setPercentage(0.5);
 };
 
 Hud.prototype.highlightNewQuestion = function() {
@@ -128,9 +130,6 @@ Hud.prototype.update = function() {
             mRightWrongSignal.visible = false;
         }
     }
-
-    // Refresh match timer
-    mMatchTime.text = this.formatTime(aState.getMatchRemainingTime());
 };
 
 Hud.prototype.formatTime = function(theMillisecondsTime) {
