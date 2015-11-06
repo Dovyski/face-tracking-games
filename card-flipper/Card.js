@@ -3,7 +3,6 @@
  */
 Card = function (theX, theY) {
     // Properties
-    var mFlipUpCounter = 0;
     var mIsFlipping = false;
     var mIsFlippingPastHalfWay = false;
     var mInitialPosition;
@@ -60,8 +59,12 @@ Card.prototype.flipUp = function() {
     this.mIsFlipping = true;
 };
 
-Card.prototype.flipDown = function() {
-    this.mIsFlipping = true;
+Card.prototype.flipDown = function(theForce) {
+    if(!theForce) {
+        this.mIsFlipping = true;
+    } else {
+        this.resetToInitialState();
+    }
 };
 
 // Check if the card content answers the current question
@@ -149,7 +152,6 @@ Card.prototype.updateFlippingProcess = function() {
 
             } else {
                 this.randomize();
-                this.mFlipUpCounter = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIP_SHOW, Constants.CARDS_MAX_FLIP_SHOW);
                 this.input.enableDrag(true, true);
             }
         }
@@ -165,15 +167,4 @@ Card.prototype.updateFlippingProcess = function() {
 
 Card.prototype.update = function() {
     this.updateFlippingProcess();
-
-    if(this.isFlippedUp()) {
-        this.mFlipUpCounter -= Game.time.elapsedMS;
-
-        if(this.mFlipUpCounter <= 0 && !this.mIsFlipping && !this.mBeingDragged) {
-            // Card flipped because the player didn't click it.
-            // Let's flip the card and count a miss
-            this.flipDown();
-            Game.state.states[Game.state.current].countMove('miss');
-        }
-    }
 };

@@ -8,7 +8,6 @@ var PlayState = function() {
 	var mCards; 			// group with all the cards
 	var mMonster;
 	var mTrash;
-	var mFlipTimer;			// interval, in seconds, between card flips
 	var mQuestionTime;		// Time, in seconds, the player has to answer the current question
 	var mQuestionTimer;		// Counts from mQuestionTime until zero.
 	var mQuestion;			// Info about the current question
@@ -50,7 +49,6 @@ var PlayState = function() {
 			mCards.add(aCard);
 		}
 
-		mFlipTimer = 0;
 		mQuestionTime = Constants.QUESTION_DURATION;
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
@@ -68,15 +66,8 @@ var PlayState = function() {
 	this.update = function() {
 		var aElapsed = Game.time.elapsedMS;
 
-		// Update counters regarding quesitons and card flips
-		mFlipTimer -= aElapsed;
+		// Update counters regarding question
 		mQuestionTimer -= aElapsed;
-
-		// Check if it is time to flip a new card
-		if(mFlipTimer <= 0) {
-			flipRandomCard();
-			mFlipTimer = Game.rnd.realInRange(Constants.QUESTION_MIN_FLIP_CARD, Constants.QUESTION_MAX_FLIP_CARD);
-		}
 
 		// Check if it is time to ask a new question
 		if(mQuestionTimer <= 0) {
@@ -125,7 +116,7 @@ var PlayState = function() {
 		mHud.refresh();
 	}
 
-	var flipRandomCard = function() {
+	var flipRandomCardsUp = function() {
 		var aCard,
 		 	i,
 			aTotal = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIPS_TURN, Constants.CARDS_MAX_FLIPS_TURN);
@@ -135,6 +126,20 @@ var PlayState = function() {
 
 			if(aCard) {
 				aCard.flip();
+			}
+		}
+	};
+
+	var flipAllCardsDown = function() {
+		var aCard,
+			i,
+			aTotal = mCards.length;
+
+		for(i = 0; i < aTotal; i++) {
+			aCard = mCards.getChildAt(i);
+
+			if(aCard && aCard.isFlippedUp()) {
+				aCard.flipDown();
 			}
 		}
 	};
@@ -152,6 +157,8 @@ var PlayState = function() {
 		mHud.highlightNewQuestion();
 
 		clearTurnBasedScore();
+		flipAllCardsDown();
+		Game.time.events.add(Phaser.Timer.SECOND * 0.5, flipRandomCardsUp, this);
 
 		mSfxNewQuestion.play();
 	};
