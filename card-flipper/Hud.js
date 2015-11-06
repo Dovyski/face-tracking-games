@@ -9,8 +9,6 @@ var Hud = function () {
     var mHealthBar;
     var mDialogQuestion;
     var mDialogTime;
-    var mDialogRight;
-    var mDialogWrong;
     var mLabelLookFor;
     var mLabelHealth;
     var mLabelRight;
@@ -34,17 +32,15 @@ Hud.prototype.init = function() {
     mRightWrongTimer    = 0;
 
     mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
-    mDialogRight        = new Phaser.Sprite(Game, mDialogQuestion.x, mDialogQuestion.height + mDialogQuestion.y + 30, 'question-dialog');
-    mDialogWrong        = new Phaser.Sprite(Game, mDialogQuestion.x, mDialogRight.height + mDialogRight.y + 30, 'question-dialog');
-    mDialogTime         = new Phaser.Sprite(Game, mDialogQuestion.x, mDialogWrong.height + mDialogWrong.y + 30, 'time-dialog');
+    mDialogTime         = new Phaser.Sprite(Game, mDialogQuestion.x, Game.world.height * 0.7, 'time-dialog');
     mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + 87);
 
     mHealthBar          = new ProgressBar(mDialogTime.x + 20, mDialogTime.y + 50, 210, 30, {line: 0x47B350, fill: 0x37DB45});
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Poisonous', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelHealth        = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Health', {fontSize: 16, fill: '#fff', align: 'center'});
-    mLabelRight         = new Phaser.Text(Game, mDialogRight.x + 10, mDialogRight.y + 5, 'Monster', {fontSize: 16, fill: '#fff', align: 'center'});
-    mLabelWrong         = new Phaser.Text(Game, mDialogWrong.x + 10, mDialogWrong.y + 5, 'Trash', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelRight         = new Phaser.Text(Game, 300, 400, 'Monster', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelWrong         = new Phaser.Text(Game, 300, 400, 'Trash', {fontSize: 16, fill: '#fff', align: 'center'});
 
     mRightWrongSignal.visible = false;
     mRightWrongSignal.anchor.set(0.5);
@@ -55,8 +51,6 @@ Hud.prototype.init = function() {
 
     this.add(mDialogQuestion);
     this.add(mDialogTime);
-    this.add(mDialogRight);
-    this.add(mDialogWrong);
 
     this.add(mLabelLookFor);
     this.add(mLabelHealth);
