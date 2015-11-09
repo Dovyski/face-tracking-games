@@ -198,8 +198,7 @@ Game.PlayGame.prototype = {
 
 			if(squaresinrow[i]==9){
 
-				console.log(score);
-
+				GlobalInfo.data.log({event: 'scored', s: score}, true);
 				score+=100;
 
 				for(var j=0;j<oldsquares.length;j++){
@@ -275,6 +274,7 @@ Game.PlayGame.prototype = {
 				}
 
 				this.nextblock = new Block(this.game, 600, 271,this.nextblocktype,this.nextblockcolor,0.7);
+				GlobalInfo.data.log({event: 'newBlock', t: this.nextblocktype}, true);
 
 				if(this.focusblock.wallcollide(oldsquares,'down')==true) { this.game.state.start('Lose');}
 
@@ -331,7 +331,7 @@ Game.PlayGame.prototype = {
 		if(KEYDOWN.isDown){
 
 			force_down_max_time = 50;
-
+			GlobalInfo.data.log({event: 'keyDown'});
 		}
 
 		else {
