@@ -31,13 +31,17 @@ var PlayState = function() {
 			j = 0,
 			aCard;
 
-		mMonster = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.4, 'question-dialog');
-		mTrash = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.6, 'question-dialog');
+		mMonster = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.42, 'monster');
+		mMonster.animations.add('idle', [0,1], 2, true);
+		mMonster.animations.add('sick', [2], 1);
+		mMonster.animations.play('idle');
+
+		mTrash = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.67, 'trash');
 
 		mMonster.anchor.setTo(0.5);
 		mTrash.anchor.setTo(0.5);
 
-		mBackground = Game.add.sprite(Game.world.width * 0.05, Game.world.height * 0.12, 'deck-background');
+		mBackground = Game.add.sprite(Game.world.width * 0.05, Game.world.height * 0.15, 'deck-background');
 		mCards = Game.add.group();
 
 		for(i = 0; i < Constants.CARDS_MAX; i++) {

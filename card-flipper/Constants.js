@@ -18,7 +18,7 @@ var Constants = new function() {
 	this.CARDS_MAX_FLIPS_TURN	= 5;		// Max amount of cards that will will be flipped every time a new question is generated.
 	this.CARDS_MIN_FLIP_SHOW	= 2000;		// Min time, in milliseconds, a card show be shown to the player
 	this.CARDS_MAX_FLIP_SHOW	= 4000;		// Max time, in milliseconds, a card show be shown to the player
-	this.CARDS_COLORS			= 4;
+	this.CARDS_COLORS			= 7;
 	this.CARDS_DIST_TARGET		= 100;
 
 	this.QUESTION_DURATION		= 7000;		// Min time, in milliseconds, a question should remain active

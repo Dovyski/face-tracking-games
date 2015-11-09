@@ -13,8 +13,6 @@ var Hud = function () {
     var mDialogTime;
     var mLabelLookFor;
     var mLabelHealth;
-    var mLabelRight;
-    var mLabelWrong;
     var mSfxWrong;
     var mSfxRight;
 
@@ -34,7 +32,7 @@ Hud.prototype.init = function() {
     mRightWrongTimer    = 0;
 
     mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
-    mDialogTime         = new Phaser.Sprite(Game, mDialogQuestion.x, Game.world.height * 0.7, 'time-dialog');
+    mDialogTime         = new Phaser.Sprite(Game, mDialogQuestion.x, Game.world.height * 0.8, 'time-dialog');
     mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + 87);
 
     mHealthBar          = new ProgressBar(mDialogTime.x + 20, mDialogTime.y + 50, 210, 30, {line: 0x47B350, fill: 0x37DB45});
@@ -43,8 +41,6 @@ Hud.prototype.init = function() {
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Poisonous', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelHealth        = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Health', {fontSize: 16, fill: '#fff', align: 'center'});
-    mLabelRight         = new Phaser.Text(Game, 300, 400, 'Monster', {fontSize: 16, fill: '#fff', align: 'center'});
-    mLabelWrong         = new Phaser.Text(Game, 300, 400, 'Trash', {fontSize: 16, fill: '#fff', align: 'center'});
 
     mRightWrongSignal.visible = false;
     mRightWrongSignal.anchor.set(0.5);
@@ -57,8 +53,6 @@ Hud.prototype.init = function() {
 
     this.add(mLabelLookFor);
     this.add(mLabelHealth);
-    this.add(mLabelRight);
-    this.add(mLabelWrong);
     this.add(mHealthBar);
     this.add(mTurnTimeBar);
 
