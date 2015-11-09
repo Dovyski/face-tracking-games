@@ -25,7 +25,7 @@ SetupState.prototype = {
 	create: function() {
 		this.stage.backgroundColor = 0xFFCC99;
 
-		this.mText = this.add.text(this.world.centerX, this.world.centerY - 70, 'ATENTION!\n\nThis game is part of a research project. It uses your camera to anonymously track facial expressions while you play. At the end, the data is sent to a database.\n\n ***NO PICTURES OR VIDEOS ARE COLLECTED!***\n\nWe collect just a description of your emotions (eg. "sad", "happy") and your score. All data is completely anonymous. \n\nBy clicking the "Continue" button below you agree to take part in this experiment. Thank you!', {fontSize: 18, fill: '#000', align: 'center'});
+		this.mText = this.add.text(this.world.centerX, this.world.centerY - 70, 'ATENTION!\n\nThis game is part of a research project. It uses your camera to anonymously track facial expressions while you play. At the end, the data is sent to a database.\n\n ***NO PICTURES OR VIDEOS ARE COLLECTED!***\n\nWe collect just the position of facial features, e.g. lips, and your score. All data is completely anonymous. \n\nBy clicking the "Continue" button below you agree to take part in this study. Thank you!', {fontSize: 18, fill: '#000', align: 'center'});
 		this.mText.wordWrap = true;
 	    this.mText.wordWrapWidth = this.world.width * 0.90;
 	    this.mText.anchor.setTo(0.5);
