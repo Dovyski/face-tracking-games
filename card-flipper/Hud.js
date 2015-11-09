@@ -7,12 +7,12 @@ var Hud = function () {
     var mRightWrongSignal;	// X showed when user clicks a wrong card
     var mRightWrongTimer;	// X showed when user clicks a wrong card
     var mHealthBar;
+    var mHealthIcon;
     var mTurnTimeBar;
     var mTurnTimeBackground;
     var mDialogQuestion;
-    var mDialogTime;
     var mLabelLookFor;
-    var mLabelHealth;
+    var mLabelTrash;
     var mSfxWrong;
     var mSfxRight;
 
@@ -32,15 +32,15 @@ Hud.prototype.init = function() {
     mRightWrongTimer    = 0;
 
     mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
-    mDialogTime         = new Phaser.Sprite(Game, mDialogQuestion.x, Game.world.height * 0.8, 'time-dialog');
     mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + 87);
 
-    mHealthBar          = new ProgressBar(mDialogTime.x + 20, mDialogTime.y + 50, 210, 30, {line: 0x47B350, fill: 0x37DB45});
+    mHealthBar          = new ProgressBar(this.getPlayState().getMonster().x - 95, this.getPlayState().getMonster().y + 110, 210, 20, {line: 0xAA3030, fill: 0xC83E3E});
+    mHealthIcon         = new Phaser.Sprite(Game, mHealthBar.x - 30, mHealthBar.y - 8, 'heart');
     mTurnTimeBackground = new Phaser.Sprite(Game, Game.world.width * 0.05, Game.world.height * 0.05, 'clock-bar');
     mTurnTimeBar        = new ProgressBar(mTurnTimeBackground.x + 50, mTurnTimeBackground.y + 15, 550, 20, {line: 0xE86A17, fill: 0xEC8745});
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Poisonous', {fontSize: 16, fill: '#fff', align: 'center'});
-    mLabelHealth        = new Phaser.Text(Game, mDialogTime.x + 10, mDialogTime.y + 5, 'Health', {fontSize: 16, fill: '#fff', align: 'center'});
+    mLabelTrash         = new Phaser.Text(Game, this.getPlayState().getTrash().x - 40, this.getPlayState().getTrash().y + 70, 'Trash', {fontSize: 26, fill: '#000', align: 'center'});
 
     mRightWrongSignal.visible = false;
     mRightWrongSignal.anchor.set(0.5);
@@ -48,19 +48,27 @@ Hud.prototype.init = function() {
     mQuestionCard.disableInteractions(); // prevent hud card to be clicked
 
     this.add(mDialogQuestion);
-    this.add(mDialogTime);
     this.add(mTurnTimeBackground);
 
     this.add(mLabelLookFor);
-    this.add(mLabelHealth);
     this.add(mHealthBar);
+    this.add(mHealthIcon);
     this.add(mTurnTimeBar);
+    this.add(mLabelTrash);
 
     this.add(mQuestionCard);
     this.add(mRightWrongSignal);
 
     mSfxWrong = Game.add.audio('sfx-wrong');
     mSfxRight = Game.add.audio('sfx-right');
+};
+
+Hud.prototype.makeMonsterLookSickForAWhile = function() {
+    this.getPlayState().getMonster().animations.play('sick');
+
+    Game.time.events.add(Phaser.Timer.SECOND * 1, function() {
+        this.getPlayState().getMonster().animations.play('idle');
+    }, this);
 };
 
 Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
@@ -75,7 +83,12 @@ Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
         mSfxRight.play();
     } else {
         mSfxWrong.play();
+        this.makeMonsterLookSickForAWhile();
     }
+};
+
+Hud.prototype.getPlayState = function() {
+    return Game.state.states[Game.state.current];
 };
 
 Hud.prototype.refresh = function() {

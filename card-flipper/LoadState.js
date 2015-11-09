@@ -21,7 +21,7 @@ var LoadState = function() {
 		Game.load.image('pixel', 'assets/pixel.png'); // By Fernando Bevilacqua, public domain
 
 		// Assets from external authors
-		Game.load.spritesheet('card', 'assets/card.png', 100, 100); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
+		Game.load.spritesheet('card', 'assets/card.png?2', 100, 100); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.spritesheet('blue-button', 'assets/blue_button.png', 190, 49); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('dialog-small', 'assets/dialog_small.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('deck-background', 'assets/deck_background.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
@@ -30,6 +30,7 @@ var LoadState = function() {
 		Game.load.image('time-dialog', 'assets/time_dialog.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('clock-bar', 'assets/clock_bar.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('trash', 'assets/trash.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
+		Game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.spritesheet('monster', 'assets/monster.png', 150, 201); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 
 		// SFX

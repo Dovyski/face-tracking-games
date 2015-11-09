@@ -33,10 +33,10 @@ var PlayState = function() {
 
 		mMonster = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.42, 'monster');
 		mMonster.animations.add('idle', [0,1], 2, true);
-		mMonster.animations.add('sick', [2], 1);
+		mMonster.animations.add('sick', [2], 1, false);
 		mMonster.animations.play('idle');
 
-		mTrash = Game.add.sprite(Game.world.width * 0.85, Game.world.height * 0.67, 'trash');
+		mTrash = Game.add.sprite(Game.world.width * 0.85, mMonster.y + mMonster.height + 70, 'trash');
 
 		mMonster.anchor.setTo(0.5);
 		mTrash.anchor.setTo(0.5);
