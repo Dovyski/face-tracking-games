@@ -60,7 +60,7 @@ Game.PlayGame.prototype = {
 
 		this.nextblockcolor = this.choosecolor();
 
-		this.nextblock = new Block(this.game, 330, 271,this.nextblocktype,this.nextblockcolor,0.7);
+		this.nextblock = new Block(this.game, 600, 271,this.nextblocktype,this.nextblockcolor,0.7);
 
 
 
@@ -274,7 +274,7 @@ Game.PlayGame.prototype = {
 
 				}
 
-				this.nextblock = new Block(this.game, 330, 271,this.nextblocktype,this.nextblockcolor,0.7);
+				this.nextblock = new Block(this.game, 600, 271,this.nextblocktype,this.nextblockcolor,0.7);
 
 				if(this.focusblock.wallcollide(oldsquares,'down')==true) { this.game.state.start('Lose');}
 
