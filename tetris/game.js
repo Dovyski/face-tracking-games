@@ -316,7 +316,7 @@ Game.PlayGame.prototype = {
 
 		}
 
-		if(KEYUP.isDown){
+		if(KEYUP.downDuration(50)){
 
 			if(this.game.time.now>change_rot_time){
 
