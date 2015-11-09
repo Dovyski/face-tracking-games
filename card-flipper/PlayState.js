@@ -3,6 +3,7 @@
  */
 
 var PlayState = function() {
+	var mSelf = this;
 	var mHud; 				// Game hud
 	var mBackground;		// group with all the cards
 	var mCards; 			// group with all the cards
@@ -115,6 +116,7 @@ var PlayState = function() {
 		} else {
 			mScore.miss++;
 			mTurnBasedScore.miss++;
+			mHealth -= Constants.GAME_MISTAKE_HEALTH;
 		}
 
 		mHud.refresh();
@@ -134,7 +136,7 @@ var PlayState = function() {
 		}
 	};
 
-	var flipAllCardsDown = function() {
+	var penalizeStillFlippedUpCards = function() {
 		var aCard,
 			i,
 			aTotal = mCards.length;
@@ -143,6 +145,8 @@ var PlayState = function() {
 			aCard = mCards.getChildAt(i);
 
 			if(aCard && aCard.isFlippedUp()) {
+				mSelf.countMove('miss');
+				mHud.showRightWrongSign(aCard, false);
 				aCard.flipDown();
 			}
 		}
@@ -160,8 +164,8 @@ var PlayState = function() {
 		mHud.refresh();
 		mHud.highlightNewQuestion();
 
+		penalizeStillFlippedUpCards();
 		clearTurnBasedScore();
-		flipAllCardsDown();
 		Game.time.events.add(Phaser.Timer.SECOND * 0.5, flipRandomCardsUp, this);
 
 		mSfxNewQuestion.play();

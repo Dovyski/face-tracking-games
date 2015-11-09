@@ -4,8 +4,7 @@
 var Hud = function () {
     // Properties
     var mQuestionCard;
-    var mRightWrongSignal;	// X showed when user clicks a wrong card
-    var mRightWrongTimer;	// X showed when user clicks a wrong card
+    var mRightWrongIcons;
     var mHealthBar;
     var mHealthIcon;
     var mTurnTimeBar;
@@ -28,8 +27,11 @@ Hud.prototype.constructor = Hud;
 // Public methods
 
 Hud.prototype.init = function() {
-    mRightWrongSignal   = new Phaser.Sprite(Game, 0, 0, 'right-wrong');
-    mRightWrongTimer    = 0;
+    mRightWrongIcons   = new Phaser.Group(Game);
+
+    for(var i = 0; i < Constants.CARDS_MAX_FLIPS_TURN; i++) {
+        mRightWrongIcons.add(new RightWrongIcon());
+    }
 
     mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
     mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + 87);
@@ -41,9 +43,6 @@ Hud.prototype.init = function() {
 
     mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Poisonous', {fontSize: 16, fill: '#fff', align: 'center'});
     mLabelTrash         = new Phaser.Text(Game, this.getPlayState().getTrash().x - 40, this.getPlayState().getTrash().y + 70, 'Trash', {fontSize: 26, fill: '#000', align: 'center'});
-
-    mRightWrongSignal.visible = false;
-    mRightWrongSignal.anchor.set(0.5);
 
     mQuestionCard.disableInteractions(); // prevent hud card to be clicked
 
@@ -57,7 +56,7 @@ Hud.prototype.init = function() {
     this.add(mLabelTrash);
 
     this.add(mQuestionCard);
-    this.add(mRightWrongSignal);
+    this.add(mRightWrongIcons);
 
     mSfxWrong = Game.add.audio('sfx-wrong');
     mSfxRight = Game.add.audio('sfx-right');
@@ -72,12 +71,11 @@ Hud.prototype.makeMonsterLookSickForAWhile = function() {
 };
 
 Hud.prototype.showRightWrongSign = function(theCard, theWasItRight) {
-    mRightWrongSignal.frame = theWasItRight ? 1 : 0;
-    mRightWrongSignal.position.x = theCard.position.x;
-    mRightWrongSignal.position.y = theCard.position.y;
-    mRightWrongSignal.visible = true;
+    var aIcon = mRightWrongIcons.getFirstDead();
 
-    mRightWrongTimer = Constants.HUD_RIGHT_WRONG_TTL;
+    if(aIcon) {
+        aIcon.show(theCard.x, theCard.y, theWasItRight);
+    }
 
     if(theWasItRight) {
         mSfxRight.play();
@@ -108,17 +106,6 @@ Hud.prototype.highlightNewQuestion = function() {
 
 Hud.prototype.update = function() {
     var aState = Game.state.states[Game.state.current];
-
-    // Check if the right/wrong sign is visible.
-    // If it is, make it invisible after a while.
-    if(mRightWrongSignal.visible) {
-        mRightWrongTimer -= Game.time.elapsedMS;
-
-        if(mRightWrongTimer <= 0) {
-            mRightWrongTimer = 0;
-            mRightWrongSignal.visible = false;
-        }
-    }
 
     // Update time remaining for the current turn
     mTurnTimeBar.setPercentage(aState.getPercentageTimeRemainingAnswerQuestion());
