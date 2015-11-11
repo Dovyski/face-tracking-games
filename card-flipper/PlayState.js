@@ -26,6 +26,7 @@ var PlayState = function() {
 		miss: 0
 	};
 	var mSfxNewQuestion;
+	var mDifficulty = {};
 
 	this.create = function() {
 		var i,
@@ -54,7 +55,11 @@ var PlayState = function() {
 			mCards.add(aCard);
 		}
 
-		mQuestionTime = Constants.QUESTION_DURATION;
+		mDifficulty['CARDS_MIN_FLIPS_TURN'] = Constants.CARDS_MIN_FLIPS_TURN;
+		mDifficulty['CARDS_MAX_FLIPS_TURN'] = Constants.CARDS_MAX_FLIPS_TURN;
+		mDifficulty['QUESTION_DURATION'] = Constants.QUESTION_DURATION;
+
+		mQuestionTime = mDifficulty['QUESTION_DURATION'];
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
@@ -77,8 +82,11 @@ var PlayState = function() {
 		// Check if it is time to ask a new question
 		if(mQuestionTimer <= 0) {
 			generateNewQuestion();
-			mQuestionTime = Constants.QUESTION_DURATION; // TODO: adjust according to level difficulty
+			mQuestionTime = mDifficulty['QUESTION_DURATION'];
 			mQuestionTimer = mQuestionTime;
+
+			// Make the game a bit more harder for the next time :D
+			increaseDifficultyLevel();
 		}
 
 		var aEmotions = GlobalInfo.expression.getEmotions();
@@ -119,13 +127,18 @@ var PlayState = function() {
 			mHealth -= Constants.GAME_MISTAKE_HEALTH;
 		}
 
+		// Prevent overfeeding the monster.
+		if(mHealth >= Constants.GAME_HEALTH_MAX) {
+			mHealth = Constants.GAME_HEALTH_MAX;
+		}
+
 		mHud.refresh();
 	}
 
 	var flipRandomCardsUp = function() {
 		var aCard,
 		 	i,
-			aTotal = Game.rnd.integerInRange(Constants.CARDS_MIN_FLIPS_TURN, Constants.CARDS_MAX_FLIPS_TURN);
+			aTotal = Game.rnd.integerInRange(mDifficulty['CARDS_MIN_FLIPS_TURN'], mDifficulty['CARDS_MAX_FLIPS_TURN']);
 
 		for(i = 0; i < aTotal; i++) {
 			aCard = mCards.getRandom();
@@ -169,6 +182,17 @@ var PlayState = function() {
 		Game.time.events.add(Phaser.Timer.SECOND * 0.5, flipRandomCardsUp, this);
 
 		mSfxNewQuestion.play();
+	};
+
+	var increaseDifficultyLevel = function() {
+		var aProgress = 1 - mMatchTime / Constants.GAME_MATCH_DURATION;
+
+		aProgress = aProgress < 0 ? 0 : aProgress;
+		aProgress = aProgress > 1 ? 1 : aProgress;
+
+		mDifficulty['CARDS_MIN_FLIPS_TURN']	= Math.floor(Constants.CARDS_MIN_FLIPS_TURN * (1 + aProgress * 1.2));
+		mDifficulty['CARDS_MAX_FLIPS_TURN']	= Math.floor(Constants.CARDS_MAX_FLIPS_TURN * (1 + aProgress * 0.5));
+		mDifficulty['QUESTION_DURATION']	= Math.floor(Constants.QUESTION_DURATION * (1.2 - aProgress));
 	};
 
 	// Getters
