@@ -32,6 +32,7 @@ var LoadState = function() {
 		Game.load.image('trash', 'assets/trash.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.spritesheet('monster', 'assets/monster.png', 150, 201); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
+		Game.load.image('skull', 'assets/skull.png'); // Public domain
 
 		// SFX
 		Game.load.audio('sfx-right', 'assets/right.ogg'); // Fourier, CC-BY 3.0, https://soundcloud.com/third-octave

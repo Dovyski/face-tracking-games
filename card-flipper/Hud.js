@@ -5,6 +5,7 @@ var Hud = function () {
     // Properties
     var mQuestionCard;
     var mRightWrongIcons;
+    var mSkullIcon;
     var mHealthBar;
     var mHealthIcon;
     var mTurnTimeBar;
@@ -34,7 +35,8 @@ Hud.prototype.init = function() {
     }
 
     mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
-    mQuestionCard       = new Card(mDialogQuestion.x + 130, mDialogQuestion.y + 87);
+    mQuestionCard       = new Card(mDialogQuestion.x + 165, mDialogQuestion.y + 87);
+    mSkullIcon          = new Phaser.Sprite(Game, mDialogQuestion.x + 35, mDialogQuestion.y + 60, 'skull');    
 
     mHealthBar          = new ProgressBar(this.getPlayState().getMonster().x - 95, this.getPlayState().getMonster().y + 110, 210, 20, {line: 0xAA3030, fill: 0xC83E3E});
     mHealthIcon         = new Phaser.Sprite(Game, mHealthBar.x - 30, mHealthBar.y - 8, 'heart');
@@ -54,6 +56,7 @@ Hud.prototype.init = function() {
     this.add(mHealthIcon);
     this.add(mTurnTimeBar);
     this.add(mLabelTrash);
+    this.add(mSkullIcon);
 
     this.add(mQuestionCard);
     this.add(mRightWrongIcons);
