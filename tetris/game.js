@@ -16,6 +16,7 @@ var oldsquares = new Array();
 var squaresinrow = new Array();
 
 var change_rot_time = 0;
+var change_move_time = 0;
 
 var force_down = 0;
 
@@ -31,7 +32,7 @@ var KEYUP;
 var KEYDOWN;
 
 var ENABLE_DATA_LOG = true;
-var MAX_PLAYING_TIME = 3 * 60 * 1000;
+var MAX_PLAYING_TIME = 5 * 60 * 1000;
 var MAX_VELOCITY = 800;
 
 var force_down_max_time = MAX_VELOCITY;
@@ -323,11 +324,11 @@ Game.PlayGame.prototype = {
 
 		if(KEYRIGHT.isDown){
 
-			if(this.game.time.now>change_rot_time){
+			if(this.game.time.now>change_move_time){
 
 			if(this.focusblock.wallcollide(oldsquares,'right')!=true)	this.focusblock.move('right');
 
-			change_rot_time = this.game.time.now + 100;
+			change_move_time = this.game.time.now + 100;
 
 			}
 
@@ -335,11 +336,11 @@ Game.PlayGame.prototype = {
 
 		if(KEYLEFT.isDown){
 
-			if(this.game.time.now>change_rot_time){
+			if(this.game.time.now>change_move_time){
 
 			if(this.focusblock.wallcollide(oldsquares,'left')!=true)	this.focusblock.move('left');
 
-			change_rot_time = this.game.time.now + 100;
+			change_move_time = this.game.time.now + 100;
 
 			}
 
@@ -358,10 +359,10 @@ Game.PlayGame.prototype = {
 		}
 
 		if(KEYDOWN.isDown){
-			force_down_max_time = 50;
+			//force_down_max_time = 50;
 
 			if(force_down - this.game.time.now > force_down_max_time * 2) {
-				force_down = 0;
+				//force_down = 0;
 			}
 			GlobalInfo.data.log({event: 'keyDown'});
 		}
@@ -369,7 +370,7 @@ Game.PlayGame.prototype = {
 		else {
 			// Make the game harder as time progress.
 			var progress =  1 - playingTime / MAX_PLAYING_TIME;
-			force_down_max_time = Math.floor(MAX_VELOCITY * (progress + 0.2));
+			force_down_max_time = Math.floor(MAX_VELOCITY * progress);
 		}
 
 		var aEmotions = GlobalInfo.expression.getEmotions();
