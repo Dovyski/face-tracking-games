@@ -9,6 +9,7 @@ Game.PlayGame = function(game){
 };
 
 
+var playingTime = 0;
 
 var oldsquares = new Array();
 
@@ -31,6 +32,7 @@ var KEYUP;
 var KEYDOWN;
 
 var ENABLE_DATA_LOG = true;
+var MAX_PLAYING_TIME = 3 * 60 * 1000;
 
 
 
@@ -315,10 +317,6 @@ Game.PlayGame.prototype = {
 
 			this.scoretextmain.setText(score);
 
-			if(score>1900){ this.game.state.start('Win');
-
-			}
-
 			force_down = this.game.time.now + force_down_max_time;
 
 		}
@@ -379,6 +377,14 @@ Game.PlayGame.prototype = {
 			// Yeah, they are, collect them
 			GlobalInfo.data.log({e: aEmotions});
 			GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
+		}
+
+
+		// Limit gameplay time for the sake of the study
+		playingTime += this.game.time.elapsedMS;
+
+		if(playingTime >= MAX_PLAYING_TIME) {
+			this.game.state.start('Lose');
 		}
 
 	}
