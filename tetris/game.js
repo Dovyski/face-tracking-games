@@ -22,7 +22,6 @@ var force_down = 0;
 var slide_time = 0;
 
 
-
 var KEYLEFT;
 
 var KEYRIGHT;
@@ -33,8 +32,9 @@ var KEYDOWN;
 
 var ENABLE_DATA_LOG = true;
 var MAX_PLAYING_TIME = 3 * 60 * 1000;
+var MAX_VELOCITY = 800;
 
-
+var force_down_max_time = MAX_VELOCITY;
 
 Game.PlayGame.prototype = {
 
@@ -358,17 +358,19 @@ Game.PlayGame.prototype = {
 		}
 
 		if(KEYDOWN.isDown){
-
 			force_down_max_time = 50;
+
+			if(force_down - this.game.time.now > force_down_max_time * 2) {
+				force_down = 0;
+			}
 			GlobalInfo.data.log({event: 'keyDown'});
 		}
 
 		else {
-
-			force_down_max_time = 500;
-
+			// Make the game harder as time progress.
+			var progress =  1 - playingTime / MAX_PLAYING_TIME;
+			force_down_max_time = Math.floor(MAX_VELOCITY * (progress + 0.2));
 		}
-
 
 		var aEmotions = GlobalInfo.expression.getEmotions();
 
