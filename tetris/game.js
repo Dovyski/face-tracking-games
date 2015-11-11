@@ -168,10 +168,34 @@ Game.PlayGame.prototype = {
 
 	},
 
+	getboardsnapshot : function(){
+		var ret = [],
+			i,
+			j,
+			top,
+			row,
+			col;
 
+		for(i=0;i<20;i++){
+			ret[i] = [];
+			for(j=0;j<9;j++){
+				ret[i][j] = 0;
+			}
+		}
+
+		top = this.game.world.bounds.height - 19*height - height/2;
+
+		for(i = 0; i < oldsquares.length; i++) {
+			row = (oldsquares[i].y - top)/height;
+			col = Math.floor((oldsquares[i].x - this.game.world.bounds.x)/height);
+
+			ret[row][col] = 1;
+		}
+
+		return ret;
+	},
 
 	checkcompletedlines : function(){
-
 		for(var i=0;i<20;i++){
 
 			squaresinrow[i]=0;
@@ -198,7 +222,7 @@ Game.PlayGame.prototype = {
 
 			if(squaresinrow[i]==9){
 
-				GlobalInfo.data.log({event: 'scored', s: score}, true);
+				GlobalInfo.data.log({event: 'scored', s: score, b: this.getboardsnapshot()}, true);
 				score+=100;
 
 				for(var j=0;j<oldsquares.length;j++){
@@ -274,10 +298,17 @@ Game.PlayGame.prototype = {
 				}
 
 				this.nextblock = new Block(this.game, 600, 271,this.nextblocktype,this.nextblockcolor,0.7);
-				GlobalInfo.data.log({event: 'newBlock', t: this.nextblocktype}, true);
 
-				if(this.focusblock.wallcollide(oldsquares,'down')==true) { this.game.state.start('Lose');}
+				if(this.focusblock.wallcollide(oldsquares,'down')==true) {
+					this.game.state.start('Lose');
+				} else {
+					GlobalInfo.data.log({event: 'newBlock', t: this.nextblocktype, b: this.getboardsnapshot()}, true);
 
+					if(ENABLE_DATA_LOG) {
+						// Force data send to prevent losing information regarding the board configuration
+						GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game, true);
+					}
+				}
 			}
 
 			this.checkcompletedlines();
@@ -346,7 +377,7 @@ Game.PlayGame.prototype = {
 		// Emotions are available for reading?
 		if(aEmotions.length > 0 && ENABLE_DATA_LOG) {
 			// Yeah, they are, collect them
-			GlobalInfo.data.log({e: aEmotions, s: score});
+			GlobalInfo.data.log({e: aEmotions});
 			GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
 		}
 

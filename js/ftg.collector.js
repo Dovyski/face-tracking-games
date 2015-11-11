@@ -28,11 +28,14 @@ FTG.Collector = function() {
 	};
 
 	// Adds a new entry to the data log.
-	this.log = function(theData) {
+	this.log = function(theData, theForce) {
 		// Collect only if it is time to do it
-		if(isTimeToCollect()) {
+		if(isTimeToCollect() || theForce) {
 			mData.push({t: getTimestamp(), d: JSON.stringify(theData)});
-			mLastTimeCollected = getTimestamp();
+
+			if(!theForce) {
+				mLastTimeCollected = getTimestamp();
+			}
 		}
 	};
 
