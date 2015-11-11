@@ -18,7 +18,7 @@ var Constants = new function() {
 	this.CARDS_COLORS			= 7;
 	this.CARDS_DIST_TARGET		= 100;
 
-	this.QUESTION_DURATION		= 20000;	// Time, in milliseconds, a question should remain active
+	this.QUESTION_DURATION		= 30000;	// Time, in milliseconds, a question should remain active
 
 	this.HUD_RIGHT_WRONG_TTL	= 1000;		// Time, in milliseconds, the "right/wrong" sign remains on the screen.
 };
