@@ -3,6 +3,7 @@
  */
 
 var Constants = new function() {
+	this.GAME_SEED 				= 1234;
 	this.GAME_WIDTH 			= 1024;
 	this.GAME_HEIGHT 			= 768;
 	this.GAME_MATCH_DURATION	= 5 * 60 * 1000; // Duration, in milliseconds, of a single match.

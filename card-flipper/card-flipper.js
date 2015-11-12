@@ -4,6 +4,9 @@
 
 var Game = new Phaser.Game(Constants.GAME_WIDTH, Constants.GAME_HEIGHT, Phaser.AUTO, 'card-flipper');
 
+// Choose a seed for the random generator.
+Game.rnd.sow([Constants.GAME_SEED]);
+
 // Add all states
 Game.state.add('play', PlayState);
 Game.state.add('setup', SetupState);
