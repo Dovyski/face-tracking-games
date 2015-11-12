@@ -34,12 +34,15 @@ var KEYDOWN;
 var ENABLE_DATA_LOG = true;
 var MAX_PLAYING_TIME = 5 * 60 * 1000;
 var MAX_VELOCITY = 800;
+var GAME_SEED = 1234;
 
 var force_down_max_time = MAX_VELOCITY;
 
 Game.PlayGame.prototype = {
 
 	create : function(){
+		// Choose a seed for the random generator.
+		this.game.rnd.sow([GAME_SEED]);
 
 		this.bck = this.game.add.sprite(0,0,'bck');
 
@@ -141,7 +144,7 @@ Game.PlayGame.prototype = {
 
 	chooseblock : function(){
 
-		var x = Math.floor(Math.random()*7);
+		var x = this.game.rnd.integerInRange(0, 6);
 
 		switch(x){
 
@@ -167,7 +170,7 @@ Game.PlayGame.prototype = {
 
 	choosecolor : function(){
 
-		return Math.floor(Math.random()*5);
+		return this.game.rnd.integerInRange(0, 5);
 
 	},
 
