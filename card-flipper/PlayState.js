@@ -231,8 +231,8 @@ var PlayState = function() {
 		aProgress = aProgress < 0 ? 0 : aProgress;
 		aProgress = aProgress > 1 ? 1 : aProgress;
 
-		mDifficulty['CARDS_FLIPS_TURN']	= Math.floor(Constants.CARDS_FLIPS_TURN * (1 + aProgress * 4));
-		mDifficulty['QUESTION_DURATION'] = Math.floor(Constants.QUESTION_DURATION * (1.2 - aProgress));
+		mDifficulty['CARDS_FLIPS_TURN']	= Math.floor(Constants.CARDS_FLIPS_TURN * (1 + aProgress * 3));
+		mDifficulty['QUESTION_DURATION'] = Math.floor(Constants.QUESTION_DURATION * (1.2 - aProgress * 1.1));
 	};
 
 	// Getters
