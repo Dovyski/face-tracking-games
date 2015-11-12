@@ -41,6 +41,10 @@ Card.prototype.isFlippedUp = function() {
     return this.frame != 0;
 };
 
+Card.prototype.isFlipping = function() {
+    return this.mIsFlipping;
+};
+
 // Randomize the content of the card (number, color, etc)
 Card.prototype.randomize = function() {
     this.frame = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);

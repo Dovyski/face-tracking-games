@@ -12,7 +12,9 @@ var PlayState = function() {
 	var mQuestionTime;		// Time, in seconds, the player has to answer the current question
 	var mQuestionTimer;		// Counts from mQuestionTime until zero.
 	var mQuestion;			// Info about the current question
+	var mQuestionCounter;	// How many questions so far.
 	var mMatchTime;			// Remaining time for the match
+	var mIsThinking;		// Informs if the player is in a thinking part of the game (e.g. card analysis)
 	var mHealth;			// Available health points.
 	var mUuid;				// Identifier for this player
 	var mScore = {			// Info regarding global score (throughout the game session)
@@ -64,8 +66,10 @@ var PlayState = function() {
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
 		mSfxNewQuestion = Game.add.audio('sfx-new-question');
+		mIsThinking = false;
 
 		mQuestion = 1;
+		mQuestionCounter = 0;
 
 		mHud = new Hud();
 		Game.add.existing(mHud);
@@ -76,18 +80,9 @@ var PlayState = function() {
 	this.update = function() {
 		var aElapsed = Game.time.elapsedMS;
 
-		// Update counters regarding question
-		mQuestionTimer -= aElapsed;
-
-		// Check if it is time to ask a new question
-		if(mQuestionTimer <= 0) {
-			generateNewQuestion();
-			mQuestionTime = mDifficulty['QUESTION_DURATION'];
-			mQuestionTimer = mQuestionTime;
-
-			// Make the game a bit more harder for the next time :D
-			increaseDifficultyLevel();
-		}
+		// Update everything related to turn control (time)
+		// and generation of new questions.
+		updateTurnAndNewQuestionControl(aElapsed);
 
 		var aEmotions = GlobalInfo.expression.getEmotions();
 
@@ -135,6 +130,27 @@ var PlayState = function() {
 		mHud.refresh();
 	}
 
+	var updateTurnAndNewQuestionControl = function(theElapsed) {
+		// Update counters regarding question
+		mQuestionTimer -= theElapsed;
+
+		// Check if it is time to ask a new question
+		if(mQuestionTimer <= 0) {
+			generateNewQuestion();
+			mQuestionTime = mQuestionCounter == 1 ? Constants.QUESTION_DURATION_1ST : mDifficulty['QUESTION_DURATION'];
+			mQuestionTimer = mQuestionTime;
+
+			// Make the game a bit more harder for the next time :D
+			increaseDifficultyLevel();
+		}
+
+		// If all cards have been analyzed already,
+		// speed up the turn count down
+		if(mIsThinking && mQuestionTimer > Constants.QUESTION_DOWN_TO && countFlippingCards() == 0) {
+			mQuestionTimer *= 0.99;
+		}
+	};
+
 	var flipRandomCardsUp = function() {
 		var aCard,
 		 	i,
@@ -165,6 +181,23 @@ var PlayState = function() {
 		}
 	};
 
+	var countFlippingCards = function() {
+		var aCard,
+			i,
+			aTotal = mCards.length,
+			aRet = 0;
+
+		for(i = 0; i < aTotal; i++) {
+			aCard = mCards.getChildAt(i);
+
+			if(aCard && (aCard.isFlippedUp() || aCard.isFlipping())) {
+				aRet++;
+			}
+		}
+
+		return aRet;
+	};
+
 	var clearTurnBasedScore = function() {
 		mTurnBasedScore.right = 0;
 		mTurnBasedScore.wrong = 0;
@@ -172,6 +205,7 @@ var PlayState = function() {
 	};
 
 	var generateNewQuestion = function() {
+		mIsThinking = false;
 		mQuestion = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);
 
 		mHud.refresh();
@@ -179,7 +213,15 @@ var PlayState = function() {
 
 		penalizeStillFlippedUpCards();
 		clearTurnBasedScore();
-		Game.time.events.add(Phaser.Timer.SECOND * 0.5, flipRandomCardsUp, this);
+
+		// Schedule the cards to flip up and the
+		// thinking phase to begin.
+		Game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
+			flipRandomCardsUp();
+			mIsThinking = true;
+		}, this);
+
+		mQuestionCounter++;
 
 		mSfxNewQuestion.play();
 	};
