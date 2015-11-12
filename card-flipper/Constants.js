@@ -14,8 +14,7 @@ var Constants = new function() {
 
 	this.CARDS_MAX 				= 25;		// Total number of cards in the game
 	this.CARDS_PER_ROW 			= 5;		// Amount of cards in each row
-	this.CARDS_MIN_FLIPS_TURN	= 2;		// Min amount of cards that will will be flipped every time a new question is generated.
-	this.CARDS_MAX_FLIPS_TURN	= 5;		// Max amount of cards that will will be flipped every time a new question is generated.
+	this.CARDS_FLIPS_TURN		= 2;		// Amount of cards that will will be flipped every time a new question is generated.
 	this.CARDS_COLORS			= 7;
 	this.CARDS_DIST_TARGET		= 100;
 
