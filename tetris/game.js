@@ -78,7 +78,7 @@ Game.PlayGame.prototype = {
 
 		KEYDOWN = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 
-
+		playingTime = 0;
 
 		this.scoretext = this.add.text(344,355,"SCORE",{ font: "15px Arial", fill: "#ff0044", align: "center" });
 
