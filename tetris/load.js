@@ -25,7 +25,7 @@ Game.Load.prototype = {
 		this.load.image('pause','assets/Pause.png');
 		this.load.image('reset','assets/refresh.png');
 		this.load.image('lose','assets/lose.png');
-		this.load.image('arrow','assets/arrow.png');
+		this.load.image('arrow','assets/arrow.png?1');
 		this.load.image('title','assets/Title.png');
 		this.load.image('logo','assets/logo2.png');
 		this.load.image('win','assets/win.png');
