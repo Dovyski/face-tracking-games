@@ -12,6 +12,9 @@ var Tutorial = function () {
     var mInfoGood;
     var mInfoBad;
     var mInfoTime;
+    var mTextGood;
+    var mTextDrag;
+    var mTextBad;
 
     // Constructor
     Phaser.Group.call(this, Game);
@@ -32,15 +35,22 @@ Tutorial.STEP_EXPLAIN_TIME = 5;
 // Public methods
 
 Tutorial.prototype.init = function() {
-    this.mInfoGood = new Phaser.Sprite(Game, 35, 85, 'tutorial-good');
+    var aText;
+
+    this.mInfoGood = new Phaser.Sprite(Game, 35, 5, 'tutorial-good');
     this.mInfoBad = new Phaser.Sprite(Game, 296, 120, 'tutorial-bad');
     this.mInfoTime = new Phaser.Sprite(Game, 45, 85, 'tutorial-time');
+
+    this.mTextGood = new Phaser.Text(Game, Game.world.centerX - 220, 155, 'You must feed the monster with mushrooms. Choose the ones different from the poisonous indication.', {fontSize: 26, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 450 });
+    this.mTextDrag = new Phaser.Text(Game, Game.world.centerX - 185, Game.world.centerY + 10, 'Drag this safe mushroom into the monster.', {fontSize: 30, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 400 });
 
     this.mInfoGood.visible = false;
     this.mInfoBad.visible = false;
     this.mInfoTime.visible = false;
 
     this.add(this.mInfoGood);
+    this.add(this.mTextGood);
+    this.add(this.mTextDrag);
     this.add(this.mInfoBad);
     this.add(this.mInfoTime);
 };
@@ -99,9 +109,11 @@ Tutorial.prototype.update = function() {
                     this.getPlayState().getHud().getQuestionDialog()
                 ], Game.world.children);
 
-                this.mInfoGood.visible = true;
-                this.mInfoGood.alpha = 1;
-                Game.add.tween(this.mInfoGood).to({alpha: 0.5}, 2000, Phaser.Easing.Linear.None, true, 0, -1, true).start();
+                this.mInfoGood.visible = true; this.mInfoGood.alpha = 1;
+                this.mTextGood.visible = true; this.mTextGood.alpha = 1;
+                this.mTextDrag.visible = true; this.mTextDrag.alpha = 1;
+
+                Game.add.tween(this.mTextDrag).to({alpha: 0.3}, 500, Phaser.Easing.Linear.None, true, 0, -1, true).start();
             }
 
             // The player is understanding how to drag cards.
@@ -111,6 +123,8 @@ Tutorial.prototype.update = function() {
                 // The player got it! :D
                 mGoodCard.alpha = 0.2;
                 this.mInfoGood.destroy();
+                this.mTextGood.destroy();
+                this.mTextDrag.destroy();
                 this.stepTo(Tutorial.STEP_DRAG_BAD_CARD, 1000);
             }
             break;
