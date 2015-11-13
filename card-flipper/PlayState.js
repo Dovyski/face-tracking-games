@@ -88,13 +88,15 @@ var PlayState = function() {
 		// and generation of new questions.
 		updateTurnAndNewQuestionControl(aElapsed);
 
-		var aEmotions = GlobalInfo.expression.getEmotions();
+		if(GlobalInfo && GlobalInfo.expression) {
+			var aEmotions = GlobalInfo.expression.getEmotions();
 
-		// Emotions are available for reading?
-		if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
-			// Yeah, they are, collect them
-			GlobalInfo.data.log({e: aEmotions, s: mTurnBasedScore});
-			GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
+			// Emotions are available for reading?
+			if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
+				// Yeah, they are, collect them
+				GlobalInfo.data.log({e: aEmotions, s: mTurnBasedScore});
+				GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
+			}
 		}
 
 		// Update match time
@@ -102,7 +104,9 @@ var PlayState = function() {
 
 		if(mMatchTime <= 0 || mHealth <= 0) {
 			// Match is over!
-			GlobalInfo.score = mScore;
+			if(GlobalInfo) {
+				GlobalInfo.score = mScore;
+			}
 			// TODO: disable face tracking here
 			Game.state.start('over');
 		}
@@ -220,9 +224,14 @@ var PlayState = function() {
 			// Let's go on with the show then.
 			flipRandomCardsUp();
 
+			// Is the tutorial active?
 			if(mTutorial != null) {
+				// Yeah, it is. Remove it because it's game time!
 				mTutorial.destroy();
 				mTutorial = null;
+
+				// Reset match timer to ignore time spent during tutorial
+				mMatchTime = Constants.GAME_MATCH_DURATION;
 			}
 		}
 
