@@ -11,6 +11,7 @@ var Tutorial = function () {
     var mBadCard;
     var mInfoGood;
     var mInfoBad;
+    var mInfoTime;
 
     // Constructor
     Phaser.Group.call(this, Game);
@@ -27,20 +28,23 @@ Tutorial.STEP_DELAYING = 0;
 Tutorial.STEP_INIT_EVERYTHING = 1;
 Tutorial.STEP_DRAG_GOOD_CARD = 2;
 Tutorial.STEP_INIT_DRAG_BAD_CARD = 3;
-Tutorial.STEP_DRAG_BAD_CARD = 3;
-Tutorial.STEP_EXPLAIN_TIME = 4;
+Tutorial.STEP_DRAG_BAD_CARD = 4;
+Tutorial.STEP_EXPLAIN_TIME = 5;
 
 // Public methods
 
 Tutorial.prototype.init = function() {
     this.mInfoGood = new Phaser.Sprite(Game, 35, 85, 'tutorial-good');
     this.mInfoBad = new Phaser.Sprite(Game, 296, 120, 'tutorial-bad');
+    this.mInfoTime = new Phaser.Sprite(Game, 45, 85, 'tutorial-time');
 
     this.mInfoGood.visible = false;
     this.mInfoBad.visible = false;
+    this.mInfoTime.visible = false;
 
     this.add(this.mInfoGood);
     this.add(this.mInfoBad);
+    this.add(this.mInfoTime);
 };
 
 
@@ -129,12 +133,22 @@ Tutorial.prototype.update = function() {
             // but this time with the bad card.
             if(mBadCard.isFlippedDown()) {
                 this.mInfoBad.visible = false;
+                mBadCard.alpha = 0.2;
                 this.stepTo(Tutorial.STEP_EXPLAIN_TIME, 2000);
             }
             break;
 
         case Tutorial.STEP_EXPLAIN_TIME:
-            // Teach about the time
+            if(!this.mInfoTime.visible) {
+
+                this.highlightElements([
+                    this.getPlayState().getHud().getTimeIndicator(),
+                    this.getPlayState().getHud().getHealthBar()
+                ], Game.world.children);
+
+                this.mInfoTime.visible = true;
+                this.mInfoTime.alpha = 1;
+            }
             break;
     }
 };

@@ -44,18 +44,18 @@ Hud.prototype.init = function() {
     mDialogQuestion.addChild(mQuestionCard);
 
     mHealthBar          = new ProgressBar(this.getPlayState().getMonster().x - 95, this.getPlayState().getMonster().y + 110, 210, 20, {line: 0xAA3030, fill: 0xC83E3E});
-    mHealthIcon         = new Phaser.Sprite(Game, mHealthBar.x - 30, mHealthBar.y - 8, 'heart');
+    mHealthIcon         = new Phaser.Sprite(Game, -42, -8, 'heart');
+    mHealthBar.addChild(mHealthIcon);
+
     mTurnTimeBackground = new Phaser.Sprite(Game, Game.world.width * 0.05, Game.world.height * 0.05, 'clock-bar');
-    mTurnTimeBar        = new ProgressBar(mTurnTimeBackground.x + 50, mTurnTimeBackground.y + 15, 550, 20, {line: 0xE86A17, fill: 0xEC8745});
+    mTurnTimeBar        = new ProgressBar(50, 18, 550, 15, {line: 0xE86A17, fill: 0xEC8745});
+    mTurnTimeBackground.addChild(mTurnTimeBar);
 
     mQuestionCard.disableInteractions(); // prevent hud card to be clicked
 
     this.add(mDialogQuestion);
-    this.add(mTurnTimeBackground);
-
     this.add(mHealthBar);
-    this.add(mHealthIcon);
-    this.add(mTurnTimeBar);
+    this.add(mTurnTimeBackground);
 
     this.add(mRightWrongIcons);
 
@@ -146,4 +146,12 @@ Hud.prototype.shake = function(theCard) {
 
 Hud.prototype.getQuestionDialog = function() {
     return mDialogQuestion;
+};
+
+Hud.prototype.getHealthBar = function() {
+    return mHealthBar;
+};
+
+Hud.prototype.getTimeIndicator = function() {
+    return mTurnTimeBackground;
 };

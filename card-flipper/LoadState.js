@@ -21,6 +21,7 @@ var LoadState = function() {
 		Game.load.image('pixel', 'assets/pixel.png'); // By Fernando Bevilacqua, public domain
 		Game.load.image('tutorial-good', 'assets/tutorial_good.png?1'); // By Fernando Bevilacqua, public domain
 		Game.load.image('tutorial-bad', 'assets/tutorial_bad.png?2'); // By Fernando Bevilacqua, public domain
+		Game.load.image('tutorial-time', 'assets/tutorial_time.png'); // By Fernando Bevilacqua, public domain
 
 		// Assets from external authors
 		Game.load.spritesheet('card', 'assets/card.png?2', 100, 100); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
