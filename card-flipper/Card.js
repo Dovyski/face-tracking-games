@@ -41,6 +41,10 @@ Card.prototype.isFlippedUp = function() {
     return this.frame != 0;
 };
 
+Card.prototype.isFlippedDown = function() {
+    return !this.isFlippedUp();
+};
+
 Card.prototype.isFlipping = function() {
     return this.mIsFlipping;
 };

@@ -41,10 +41,39 @@ Tutorial.prototype.update = function() {
 
     switch(this.mCurrentStep) {
         case Tutorial.STEP_INIT_EVERYTHING:
+            // No tutorial on the screen. Let's set
+            // everything up for the show.
             this.flipTwoCardsForTutorialPurposes();
             this.highlightElements([mGoodCard, this.getPlayState().getMonster()], Game.world.children);
 
+            // Move to next tutorial step after a while
             this.mCurrentStep = Tutorial.STEP_DRAG_GOOD_CARD;
+            break;
+
+        case Tutorial.STEP_DRAG_GOOD_CARD:
+            // The player is understanding how to drag cards.
+            // As soon as the target card is dragged and dropped into
+            // the monster, we move to the next step in the tutorial
+            if(!mGoodCard.isFlipping() && mGoodCard.isFlippedDown()) {
+                // The player got it! :D
+                // Let's teach about the bad cards now
+                var aHighlight = [
+                    mBadCard,
+                    this.getPlayState().getTrash(),
+                    this.getPlayState().getHud().getQuestionDialog()
+                ];
+                this.highlightElements(aHighlight, Game.world.children);
+
+                this.mCurrentStep = Tutorial.STEP_DRAG_BAD_CARD;
+            }
+            break;
+
+        case Tutorial.STEP_DRAG_GOOD_CARD:
+            // Pretty much the same as in STEP_DRAG_GOOD_CARD,
+            // but this time with the bad card.
+            if(mBadCard.isFlippedDown()) {
+                this.mCurrentStep = Tutorial.EXPLAIN_TIME;
+            }
             break;
     }
 };
@@ -81,16 +110,20 @@ Tutorial.prototype.highlightElements = function(theElements, theGroup) {
         aTotal,
         aGroup = theGroup;
 
-    if(!aGroup || !(aGroup instanceof Array)) {
+    if(!aGroup) {
         return;
     }
 
     for(i = 0, aTotal = aGroup.length; i < aTotal; i++) {
-        if(aGroup[i].children && aGroup[i].children.length > 0) {
+        if(!(aGroup[i] instanceof Phaser.Sprite)) {
             this.highlightElements(theElements, aGroup[i].children);
 
         } else {
-            aGroup[i].alpha = theElements.indexOf(aGroup[i]) != -1 ? 1 : 0.2;
+            if(theElements.indexOf(aGroup[i]) != -1 || (aGroup[i] instanceof RightWrongIcon)) {
+                aGroup[i].alpha = 1;
+            } else {
+                aGroup[i].alpha = 0.15;
+            }
         }
     }
 };

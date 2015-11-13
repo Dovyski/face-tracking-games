@@ -42,6 +42,7 @@ var PlayState = function() {
 		mMonster.animations.play('idle');
 
 		mTrash = Game.add.sprite(Game.world.width * 0.85, mMonster.y + mMonster.height + 70, 'trash');
+		mTrash.addChild(new Phaser.Text(Game, -40, 70, 'Trash', {fontSize: 26, fill: '#000', align: 'center'}));
 
 		mMonster.anchor.setTo(0.5);
 		mTrash.anchor.setTo(0.5);

@@ -35,30 +35,28 @@ Hud.prototype.init = function() {
     }
 
     mDialogQuestion     = new Phaser.Sprite(Game, Game.world.width * 0.72, 50, 'question-dialog');
-    mQuestionCard       = new Card(mDialogQuestion.x + 165, mDialogQuestion.y + 87);
-    mSkullIcon          = new Phaser.Sprite(Game, mDialogQuestion.x + 35, mDialogQuestion.y + 60, 'skull');
+    mQuestionCard       = new Card(165, 87);
+    mSkullIcon          = new Phaser.Sprite(Game, 35, 60, 'skull');
+    mLabelLookFor       = new Phaser.Text(Game, 10, 5, 'Poisonous', {fontSize: 16, fill: '#fff', align: 'center'});
+
+    mDialogQuestion.addChild(mSkullIcon);
+    mDialogQuestion.addChild(mLabelLookFor);
+    mDialogQuestion.addChild(mQuestionCard);
 
     mHealthBar          = new ProgressBar(this.getPlayState().getMonster().x - 95, this.getPlayState().getMonster().y + 110, 210, 20, {line: 0xAA3030, fill: 0xC83E3E});
     mHealthIcon         = new Phaser.Sprite(Game, mHealthBar.x - 30, mHealthBar.y - 8, 'heart');
     mTurnTimeBackground = new Phaser.Sprite(Game, Game.world.width * 0.05, Game.world.height * 0.05, 'clock-bar');
     mTurnTimeBar        = new ProgressBar(mTurnTimeBackground.x + 50, mTurnTimeBackground.y + 15, 550, 20, {line: 0xE86A17, fill: 0xEC8745});
 
-    mLabelLookFor       = new Phaser.Text(Game, mDialogQuestion.x + 10, mDialogQuestion.y + 5, 'Poisonous', {fontSize: 16, fill: '#fff', align: 'center'});
-    mLabelTrash         = new Phaser.Text(Game, this.getPlayState().getTrash().x - 40, this.getPlayState().getTrash().y + 70, 'Trash', {fontSize: 26, fill: '#000', align: 'center'});
-
     mQuestionCard.disableInteractions(); // prevent hud card to be clicked
 
     this.add(mDialogQuestion);
     this.add(mTurnTimeBackground);
 
-    this.add(mLabelLookFor);
     this.add(mHealthBar);
     this.add(mHealthIcon);
     this.add(mTurnTimeBar);
-    this.add(mLabelTrash);
-    this.add(mSkullIcon);
 
-    this.add(mQuestionCard);
     this.add(mRightWrongIcons);
 
     mSfxWrong = Game.add.audio('sfx-wrong');
@@ -144,4 +142,8 @@ Hud.prototype.shake = function(theCard) {
 
     aQuake = Game.add.tween(theCard).to(aProperties, aDuration, aEase, aAutoStart, aDelay, 4, aYoyo);
     aQuake.start();
+};
+
+Hud.prototype.getQuestionDialog = function() {
+    return mDialogQuestion;
 };
