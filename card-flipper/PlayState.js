@@ -267,6 +267,10 @@ var PlayState = function() {
 		mDifficulty['QUESTION_DURATION'] = Math.floor(Constants.QUESTION_DURATION * (1.2 - aProgress * 1.1));
 	};
 
+	this.terminateCurrentTurn = function() {
+		mQuestionTimer = 0;
+	}
+
 	// Getters
 
 	this.getQuestion = function() {

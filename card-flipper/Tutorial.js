@@ -45,7 +45,7 @@ Tutorial.prototype.init = function() {
     this.mTextGood = new Phaser.Text(Game, Game.world.centerX - 220, 155, 'You must feed the monster with mushrooms. Choose the ones different from the poisonous indication.', {fontSize: 26, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 450 });
     this.mTextDrag = new Phaser.Text(Game, Game.world.centerX - 185, Game.world.centerY + 10, 'Drag this safe mushroom into the monster.', {fontSize: 30, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 400 });
 
-    this.mTextBad = new Phaser.Text(Game, Game.world.centerX - 250, Game.world.centerY - 100, 'This mushroom equals the poisonous indication!', {fontSize: 26, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 300 });
+    this.mTextBad = new Phaser.Text(Game, Game.world.centerX - 250, Game.world.centerY - 100, 'This mushroom is identical to the poisonous indication!', {fontSize: 26, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 300 });
     this.mTextTrash = new Phaser.Text(Game, Game.world.centerX - 360, Game.world.centerY + 230, 'Drag this bad mushroom into the trash.', {fontSize: 30, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 400 });
 
     this.mInfoGood.visible = false;
@@ -168,6 +168,10 @@ Tutorial.prototype.update = function() {
             break;
 
         case Tutorial.STEP_EXPLAIN_TIME:
+            this.getPlayState().terminateCurrentTurn();
+            this.stepTo(Tutorial.STEP_DELAYING);
+            break;
+
             if(!this.mInfoTime.visible) {
 
                 this.highlightElements([
@@ -184,7 +188,7 @@ Tutorial.prototype.update = function() {
 
 Tutorial.prototype.flipTwoCardsForTutorialPurposes = function() {
 	var aCard,
-        aCards = Game.state.states[Game.state.current].getCards(),
+        aCards = this.getPlayState().getCards(),
 		i,
         aLast,
         aCount = 0,
@@ -206,7 +210,7 @@ Tutorial.prototype.flipTwoCardsForTutorialPurposes = function() {
     mBadCard = aLast;
 
     mGoodCard.flipUp();
-    mBadCard.flipUp();
+    mBadCard.flipUp(this.getPlayState().getQuestion());
 };
 
 Tutorial.prototype.highlightElements = function(theElements, theGroup) {

@@ -7,6 +7,7 @@ Card = function (theX, theY) {
     var mIsFlippingPastHalfWay = false;
     var mInitialPosition;
     var mBeingDragged = false;
+    var mNextType;
 
     // Constructor
     Phaser.Sprite.call(this, Game, theX, theY, 'card');
@@ -21,6 +22,7 @@ Card.prototype.constructor = Card;
 
 Card.prototype.init = function(theX, theY) {
     this.mInitialPosition = new Phaser.Point(theX, theY);
+    this.mNextType = -1;
 
     // Centralize graphics
     this.anchor.set(0.5);
@@ -51,7 +53,8 @@ Card.prototype.isFlipping = function() {
 
 // Randomize the content of the card (number, color, etc)
 Card.prototype.randomize = function() {
-    this.frame = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);
+    this.frame = this.mNextType > 0 ? this.mNextType : Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);
+    this.mNextType = -1;
 };
 
 Card.prototype.flip = function() {
@@ -63,8 +66,9 @@ Card.prototype.flip = function() {
     }
 };
 
-Card.prototype.flipUp = function() {
+Card.prototype.flipUp = function(theFrame) {
     this.mIsFlipping = true;
+    this.mNextType = theFrame || -1;
 };
 
 Card.prototype.flipDown = function(theForce) {
