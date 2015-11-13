@@ -9,9 +9,13 @@ var Tutorial = function () {
     var mCurrentStep;
     var mGoodCard;
     var mBadCard;
+    var mInfoGood;
+    var mInfoBad;
 
     // Constructor
     Phaser.Group.call(this, Game);
+
+    this.init();
 };
 
 // Lovely pants-in-the-head javascript boilerplate for OOP.
@@ -27,6 +31,18 @@ Tutorial.STEP_DRAG_BAD_CARD = 3;
 Tutorial.STEP_EXPLAIN_TIME = 4;
 
 // Public methods
+
+Tutorial.prototype.init = function() {
+    this.mInfoGood = new Phaser.Sprite(Game, 35, 85, 'tutorial-good');
+    this.mInfoBad = new Phaser.Sprite(Game, 296, 120, 'tutorial-bad');
+
+    this.mInfoGood.visible = false;
+    this.mInfoBad.visible = false;
+
+    this.add(this.mInfoGood);
+    this.add(this.mInfoBad);
+};
+
 
 Tutorial.prototype.activate = function() {
     this.stepTo(Tutorial.STEP_INIT_EVERYTHING);
@@ -74,7 +90,10 @@ Tutorial.prototype.update = function() {
             // No tutorial on the screen. Let's set
             // everything up for the show.
             this.flipTwoCardsForTutorialPurposes();
-            this.highlightElements([mGoodCard, this.getPlayState().getMonster()], Game.world.children);
+            this.highlightElements([mGoodCard, this.getPlayState().getMonster(), this.getPlayState().getHud().getQuestionDialog()], Game.world.children);
+
+            this.mInfoGood.visible = true;
+            this.mInfoGood.alpha = 1;
 
             // Move to next tutorial step after a while
             this.stepTo(Tutorial.STEP_DRAG_GOOD_CARD);
@@ -87,6 +106,7 @@ Tutorial.prototype.update = function() {
             if(!mGoodCard.isFlipping() && mGoodCard.isFlippedDown()) {
                 // The player got it! :D
                 mGoodCard.alpha = 0.2;
+                this.mInfoGood.visible = false;
                 this.stepTo(Tutorial.STEP_INIT_DRAG_BAD_CARD, 1000);
             }
             break;
@@ -99,6 +119,8 @@ Tutorial.prototype.update = function() {
                 this.getPlayState().getHud().getQuestionDialog()
             ];
             this.highlightElements(aHighlight, Game.world.children);
+            this.mInfoBad.visible = true;
+            this.mInfoBad.alpha = 1;
             this.stepTo(Tutorial.STEP_DRAG_BAD_CARD);
             break;
 
@@ -106,6 +128,7 @@ Tutorial.prototype.update = function() {
             // Pretty much the same as in STEP_DRAG_GOOD_CARD,
             // but this time with the bad card.
             if(mBadCard.isFlippedDown()) {
+                this.mInfoBad.visible = false;
                 this.stepTo(Tutorial.STEP_EXPLAIN_TIME, 2000);
             }
             break;
