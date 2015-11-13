@@ -25,9 +25,7 @@ Tutorial.prototype.constructor = Tutorial;
 
 // Constants
 Tutorial.STEP_DELAYING = 0;
-Tutorial.STEP_INIT_EVERYTHING = 1;
 Tutorial.STEP_DRAG_GOOD_CARD = 2;
-Tutorial.STEP_INIT_DRAG_BAD_CARD = 3;
 Tutorial.STEP_DRAG_BAD_CARD = 4;
 Tutorial.STEP_EXPLAIN_TIME = 5;
 
@@ -49,7 +47,7 @@ Tutorial.prototype.init = function() {
 
 
 Tutorial.prototype.activate = function() {
-    this.stepTo(Tutorial.STEP_INIT_EVERYTHING);
+    this.stepTo(Tutorial.STEP_DRAG_GOOD_CARD);
 };
 
 Tutorial.prototype.stepTo = function(theStep, theDelay) {
@@ -90,49 +88,51 @@ Tutorial.prototype.update = function() {
             }
             break;
 
-        case Tutorial.STEP_INIT_EVERYTHING:
-            // No tutorial on the screen. Let's set
-            // everything up for the show.
-            this.flipTwoCardsForTutorialPurposes();
-            this.highlightElements([mGoodCard, this.getPlayState().getMonster(), this.getPlayState().getHud().getQuestionDialog()], Game.world.children);
-
-            this.mInfoGood.visible = true;
-            this.mInfoGood.alpha = 1;
-
-            // Move to next tutorial step after a while
-            this.stepTo(Tutorial.STEP_DRAG_GOOD_CARD);
-            break;
-
         case Tutorial.STEP_DRAG_GOOD_CARD:
+            // Let's set everything up for the show.
+            if(!this.mInfoGood.visible) {
+                this.flipTwoCardsForTutorialPurposes();
+
+                this.highlightElements([
+                    mGoodCard,
+                    this.getPlayState().getMonster(),
+                    this.getPlayState().getHud().getQuestionDialog()
+                ], Game.world.children);
+
+                this.mInfoGood.visible = true;
+                this.mInfoGood.alpha = 1;
+                Game.add.tween(this.mInfoGood).to({alpha: 0.5}, 2000, Phaser.Easing.Linear.None, true, 0, -1, true).start();
+            }
+
             // The player is understanding how to drag cards.
             // As soon as the target card is dragged and dropped into
             // the monster, we move to the next step in the tutorial
             if(!mGoodCard.isFlipping() && mGoodCard.isFlippedDown()) {
                 // The player got it! :D
                 mGoodCard.alpha = 0.2;
-                this.mInfoGood.visible = false;
-                this.stepTo(Tutorial.STEP_INIT_DRAG_BAD_CARD, 1000);
+                this.mInfoGood.destroy();
+                this.stepTo(Tutorial.STEP_DRAG_BAD_CARD, 1000);
             }
             break;
 
-        case Tutorial.STEP_INIT_DRAG_BAD_CARD:
-            // Let's teach about the bad cards now
-            var aHighlight = [
-                mBadCard,
-                this.getPlayState().getTrash(),
-                this.getPlayState().getHud().getQuestionDialog()
-            ];
-            this.highlightElements(aHighlight, Game.world.children);
-            this.mInfoBad.visible = true;
-            this.mInfoBad.alpha = 1;
-            this.stepTo(Tutorial.STEP_DRAG_BAD_CARD);
-            break;
-
         case Tutorial.STEP_DRAG_BAD_CARD:
-            // Pretty much the same as in STEP_DRAG_GOOD_CARD,
+            // Let's teach about the bad cards now
+            if(!this.mInfoBad.visible) {
+
+                this.highlightElements([
+                    mBadCard,
+                    this.getPlayState().getTrash(),
+                    this.getPlayState().getHud().getQuestionDialog()
+                ], Game.world.children);
+
+                this.mInfoBad.visible = true;
+                this.mInfoBad.alpha = 1;
+            }
+
+            // Pretty much the same as in STEP_DRAG_GOOD_CARD here,
             // but this time with the bad card.
             if(mBadCard.isFlippedDown()) {
-                this.mInfoBad.visible = false;
+                this.mInfoBad.destroy();
                 mBadCard.alpha = 0.2;
                 this.stepTo(Tutorial.STEP_EXPLAIN_TIME, 2000);
             }
