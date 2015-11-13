@@ -29,6 +29,7 @@ var PlayState = function() {
 	};
 	var mSfxNewQuestion;
 	var mDifficulty = {};
+	var mTutorial;
 
 	this.create = function() {
 		var i,
@@ -72,6 +73,9 @@ var PlayState = function() {
 
 		mHud = new Hud();
 		Game.add.existing(mHud);
+
+		mTutorial = new Tutorial();
+		Game.add.existing(mTutorial);
 
 		mUuid = Game.rnd.uuid();
 	};
@@ -203,6 +207,27 @@ var PlayState = function() {
 		mTurnBasedScore.miss = 0;
 	};
 
+	var flipCardsForNewRound = function() {
+		// Is it the very first question the user sees?
+		if(mQuestionCounter == 1) {
+			// Yes! Let's flip some carefully selected cards
+			// and show the tutorial info.
+			mTutorial.activate();
+
+		} else {
+			// No, the player already saw the tutorial.
+			// Let's go on with the show then.
+			flipRandomCardsUp();
+
+			if(mTutorial != null) {
+				mTutorial.destroy();
+				mTutorial = null;
+			}
+		}
+
+		mIsThinking = true;
+	};
+
 	var generateNewQuestion = function() {
 		mIsThinking = false;
 		mQuestion = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);
@@ -215,10 +240,7 @@ var PlayState = function() {
 
 		// Schedule the cards to flip up and the
 		// thinking phase to begin.
-		Game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
-			flipRandomCardsUp();
-			mIsThinking = true;
-		}, this);
+		Game.time.events.add(Phaser.Timer.SECOND * 0.5, flipCardsForNewRound, this);
 
 		mQuestionCounter++;
 
@@ -239,6 +261,10 @@ var PlayState = function() {
 
 	this.getQuestion = function() {
 		return mQuestion;
+	};
+
+	this.getCards = function() {
+		return mCards;
 	};
 
 	this.getScore = function() {
