@@ -154,8 +154,8 @@ var PlayState = function() {
 
 		// If all cards have been analyzed already,
 		// speed up the turn count down
-		if(mIsThinking && mQuestionTimer > Constants.QUESTION_DOWN_TO && countFlippingCards() == 0) {
-			mQuestionTimer *= 0.99;
+		if(mIsThinking && countFlippingCards() == 0) {
+			mQuestionTimer -= Constants.QUESTION_DOWN_PACE;
 		}
 	};
 

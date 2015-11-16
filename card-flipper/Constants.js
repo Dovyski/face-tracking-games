@@ -18,9 +18,9 @@ var Constants = new function() {
 	this.CARDS_COLORS			= 7;
 	this.CARDS_DIST_TARGET		= 100;
 
-	this.QUESTION_DURATION		= 120000;			// Time, in milliseconds, a question should remain active
+	this.QUESTION_DURATION		= 90000;			// Time, in milliseconds, a question should remain active
 	this.QUESTION_DURATION_1ST	= 3 * 60 * 1000;	// Time, in milliseconds, a question should remain active during the very fist question
-	this.QUESTION_DOWN_TO		= 10 * 1000;		// If there are no cards flipped up for the turn, se the timer to this amount immediately.
+	this.QUESTION_DOWN_PACE		= 200;				// Time, in milliseconds, to decrease time bar if there are no more cards to flip.
 
 	this.HUD_RIGHT_WRONG_TTL	= 1000;				// Time, in milliseconds, the "right/wrong" sign remains on the screen.
 };
