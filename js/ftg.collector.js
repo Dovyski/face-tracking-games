@@ -105,7 +105,7 @@ FTG.Collector = function() {
 			mLastTimeSent = getTimestamp();
 
 		    aData = new FormData();
-			aData.append('uid', theUid);
+			aData.append('uid', mUid);
 			aData.append('game', theGameId);
 			aData.append('data', JSON.stringify(mData));
 
