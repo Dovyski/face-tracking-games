@@ -43,7 +43,7 @@ Tutorial.prototype.init = function() {
     this.mInfoTime = new Phaser.Sprite(Game, 45, 85, 'tutorial-time');
 
     this.mTextGood = new Phaser.Text(Game, Game.world.centerX - 220, 155, 'You must feed the monster with mushrooms. Choose the ones different from the poisonous indication.', {fontSize: 26, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 450 });
-    this.mTextDrag = new Phaser.Text(Game, Game.world.centerX - 185, Game.world.centerY + 10, 'Drag this safe mushroom into the monster.', {fontSize: 30, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 400 });
+    this.mTextDrag = new Phaser.Text(Game, 25, Game.world.centerY - 95, 'Drag this\nsafe mushroom into the monster.', {fontSize: 30, fill: '#2DB200', align: 'left', wordWrap: true, wordWrapWidth: 300 });
 
     this.mTextBad = new Phaser.Text(Game, Game.world.centerX - 250, Game.world.centerY - 100, 'This mushroom is identical to the poisonous indication!', {fontSize: 26, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 300 });
     this.mTextTrash = new Phaser.Text(Game, Game.world.centerX - 360, Game.world.centerY + 230, 'Drag this bad mushroom into the trash.', {fontSize: 30, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 400 });

@@ -264,7 +264,7 @@ var PlayState = function() {
 		aProgress = aProgress < 0 ? 0 : aProgress;
 		aProgress = aProgress > 1 ? 1 : aProgress;
 
-		mDifficulty['CARDS_FLIPS_TURN']	= Math.ceil(Constants.CARDS_FLIPS_TURN * (1 + aProgress * 4));
+		mDifficulty['CARDS_FLIPS_TURN']	= Math.floor(Constants.CARDS_FLIPS_TURN * (1 + aProgress * 4));
 		mDifficulty['QUESTION_DURATION'] = Math.floor(Constants.QUESTION_DURATION * (1 - aProgress));
 		mDifficulty['QUESTION_DOWN_PACE'] = Math.floor(Constants.QUESTION_DOWN_PACE * (1 + aProgress * 10));
 
