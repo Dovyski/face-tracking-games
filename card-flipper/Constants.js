@@ -18,7 +18,7 @@ var Constants = new function() {
 	this.CARDS_COLORS			= 7;
 	this.CARDS_DIST_TARGET		= 100;
 
-	this.QUESTION_DURATION		= 60000;			// Time, in milliseconds, a question should remain active
+	this.QUESTION_DURATION		= 70000;			// Time, in milliseconds, a question should remain active
 	this.QUESTION_DURATION_1ST	= 2 * 60 * 1000;	// Time, in milliseconds, a question should remain active during the very fist question
 	this.QUESTION_DOWN_PACE		= 100;				// Time, in milliseconds, to decrease time bar if there are no more cards to flip.
 	this.QUESTION_DOWN_PACE_1ST = 800;				// Same as QUESTION_DOWN_PACE, but for the very first question.
