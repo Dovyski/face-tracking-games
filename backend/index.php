@@ -14,15 +14,8 @@ $aData 	= isset($_REQUEST['data']) ? $_REQUEST['data'] : '';
 $aFile	= time() . '-' . $aUid;
 
 if($aUid != '' && $aGame != 0) {
-	$aCreateTables = !file_exists(DB_FILE);
 	$aDb = new PDO('sqlite:' . DB_FILE);
 	$aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-	if($aCreateTables) {
-		$aDb->query('CREATE TABLE logs (fk_game INTEGER, timestamp INTEGER, uuid VARCHAR(36), data TEXT)');
-		$aDb->query('CREATE TABLE games (id PRIMARY KEY, name VARCHAR(100))');
-		$aDb->query('CREATE INDEX idx_fk_game ON logs (fk_game)');
-	}
 
 	$aStmt = $aDb->prepare("INSERT INTO logs (fk_game, timestamp, uuid, data) VALUES (:game, :timestamp, :uuid, :data)");
 
