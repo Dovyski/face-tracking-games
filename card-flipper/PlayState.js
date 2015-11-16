@@ -61,6 +61,7 @@ var PlayState = function() {
 
 		mDifficulty['CARDS_FLIPS_TURN'] = Constants.CARDS_FLIPS_TURN;
 		mDifficulty['QUESTION_DURATION'] = Constants.QUESTION_DURATION;
+		mDifficulty['QUESTION_DOWN_PACE'] = Constants.QUESTION_DOWN_PACE;
 
 		mQuestionTime = mDifficulty['QUESTION_DURATION'];
 		mQuestionTimer = 0;
@@ -155,7 +156,7 @@ var PlayState = function() {
 		// If all cards have been analyzed already,
 		// speed up the turn count down
 		if(mIsThinking && countFlippingCards() == 0) {
-			mQuestionTimer -= Constants.QUESTION_DOWN_PACE;
+			mQuestionTimer -= mQuestionCounter == 1 ? Constants.QUESTION_DOWN_PACE_1ST : mDifficulty['QUESTION_DOWN_PACE'];
 		}
 	};
 
@@ -265,6 +266,9 @@ var PlayState = function() {
 
 		mDifficulty['CARDS_FLIPS_TURN']	= Math.floor(Constants.CARDS_FLIPS_TURN * (1 + aProgress * 3));
 		mDifficulty['QUESTION_DURATION'] = Math.floor(Constants.QUESTION_DURATION * (1.2 - aProgress * 1.1));
+		mDifficulty['QUESTION_DOWN_PACE'] = Math.floor(Constants.QUESTION_DOWN_PACE * (1 + aProgress * 10));
+
+		console.log('Progress: ', aProgress);
 	};
 
 	this.terminateCurrentTurn = function() {

@@ -19,8 +19,9 @@ var Constants = new function() {
 	this.CARDS_DIST_TARGET		= 100;
 
 	this.QUESTION_DURATION		= 90000;			// Time, in milliseconds, a question should remain active
-	this.QUESTION_DURATION_1ST	= 3 * 60 * 1000;	// Time, in milliseconds, a question should remain active during the very fist question
-	this.QUESTION_DOWN_PACE		= 200;				// Time, in milliseconds, to decrease time bar if there are no more cards to flip.
+	this.QUESTION_DURATION_1ST	= 2 * 60 * 1000;	// Time, in milliseconds, a question should remain active during the very fist question
+	this.QUESTION_DOWN_PACE		= 100;				// Time, in milliseconds, to decrease time bar if there are no more cards to flip.
+	this.QUESTION_DOWN_PACE_1ST = 800;				// Same as QUESTION_DOWN_PACE, but for the very first question.
 
 	this.HUD_RIGHT_WRONG_TTL	= 1000;				// Time, in milliseconds, the "right/wrong" sign remains on the screen.
 };
