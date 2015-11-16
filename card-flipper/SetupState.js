@@ -43,7 +43,7 @@ SetupState.prototype = {
 
 		// Init all global stuff
 		GlobalInfo.expression = new FTG.ExpressionDetector(aConfig);
-		GlobalInfo.data = new FTG.Collector();
+		GlobalInfo.data = new FTG.Collector(aConfig);
 
 		// Make the facial detector run in a loop.
 		GlobalInfo.expression.start();

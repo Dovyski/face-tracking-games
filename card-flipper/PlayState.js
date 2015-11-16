@@ -16,7 +16,6 @@ var PlayState = function() {
 	var mMatchTime;			// Remaining time for the match
 	var mIsThinking;		// Informs if the player is in a thinking part of the game (e.g. card analysis)
 	var mHealth;			// Available health points.
-	var mUuid;				// Identifier for this player
 	var mScore = {			// Info regarding global score (throughout the game session)
 		right: 0,
 		wrong: 0,
@@ -79,7 +78,9 @@ var PlayState = function() {
 		mTutorial = new Tutorial();
 		Game.add.existing(mTutorial);
 
-		mUuid = Game.rnd.uuid();
+		if(GlobalInfo && GlobalInfo.data) {
+			GlobalInfo.data.markGameStarted();
+		}
 	};
 
 	this.update = function() {
@@ -110,6 +111,10 @@ var PlayState = function() {
 			}
 			// TODO: disable face tracking here
 			Game.state.start('over');
+		}
+
+		if(GlobalInfo && GlobalInfo.data) {
+			GlobalInfo.data.update();
 		}
 	};
 

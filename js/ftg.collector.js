@@ -12,6 +12,8 @@ FTG.Collector = function() {
 
 	var mLastTimeCollected = 0;
 	var mLastTimeSent = 0;
+	var mTimeGameStarted = 0;
+	var mDebugConsole;
 	var mServerURL = '../backend/';
 	var mData = [];
 
@@ -26,6 +28,24 @@ FTG.Collector = function() {
 	var getTimestamp = function() {
 		return (new Date()).getTime();
 	};
+
+	var init = function() {
+		var aContainer;
+
+		aContainer = document.getElementById('container'); // TODO: get this from config
+
+		if(aContainer) {
+			mDebugConsole = document.createElement('span');
+			mDebugConsole.id = 'collector-console';
+			mDebugConsole.style.position = 'absolute';
+			mDebugConsole.style.bottom = '-20px';
+			mDebugConsole.style.right = '20px';
+			mDebugConsole.innerHTML = 'Waiting for camera setup';
+			aContainer.appendChild(mDebugConsole);
+		}
+	};
+
+	init();
 
 	// Adds a new entry to the data log.
 	this.log = function(theData, theForce) {
@@ -74,5 +94,15 @@ FTG.Collector = function() {
 	// Clear any data stored until now.
 	this.clear = function() {
 		mData.length = 0;
+	};
+
+	// Informs the data collector that the game has started.
+	this.markGameStarted = function() {
+		mTimeGameStarted = getTimestamp();
+	};
+
+	// Update the data collector internal functions (e.g. debug panel)
+	this.update = function() {
+		mDebugConsole.innerHTML = '<strong>Subject ID:</strong> XYZ<br /><strong>Time:</strong> ' + (getTimestamp() - mTimeGameStarted);
 	};
 };
