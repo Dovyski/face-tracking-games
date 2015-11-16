@@ -252,6 +252,13 @@ var PlayState = function() {
 		mHud.highlightNewQuestion();
 
 		penalizeStillFlippedUpCards();
+
+		// Before clearing the turn based score, save information
+		// regarding the current turn.
+		if(GlobalInfo && GlobalInfo.data) {
+			GlobalInfo.data.log({turn: mQuestionCounter, s: mTurnBasedScore}, true);
+		}
+
 		clearTurnBasedScore();
 
 		// Schedule the cards to flip up and the
