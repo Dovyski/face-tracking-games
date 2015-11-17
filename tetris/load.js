@@ -37,8 +37,8 @@ Game.Load.prototype = {
 
 		// Load all JS required to make the face tracking thing work.
 		this.load.script('camera.js', '../js/ftg.camera.js');
-		this.load.script('ftg.expression.js', '../js/ftg.expression.js');
-		this.load.script('ftg.collector.js', '../js/ftg.collector.js');
+		this.load.script('ftg.expression.js', '../js/ftg.expression.js?5');
+		this.load.script('ftg.collector.js', '../js/ftg.collector.js?3');
 		this.load.script('utils.js', '../js/3rdparty/clmtrackr/js/utils.js');
 		this.load.script('clmtrackr.js', '../js/3rdparty/clmtrackr/js/clmtrackr.js');
 		this.load.script('Stats.js', '../js/3rdparty/clmtrackr/js/Stats.js');

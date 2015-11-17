@@ -108,8 +108,9 @@ Game.PlayGame.prototype = {
 
 		score = 0;
 
-
-
+		if(GlobalInfo && GlobalInfo.data) {
+			GlobalInfo.data.markGameStarted();
+		}
 	},
 
 	pausebuttondown : function(){
@@ -377,11 +378,12 @@ Game.PlayGame.prototype = {
 		}
 
 		var aEmotions = GlobalInfo.expression.getEmotions();
+		var aPoints = GlobalInfo.expression.getPoints();
 
 		// Emotions are available for reading?
 		if(aEmotions.length > 0 && ENABLE_DATA_LOG) {
 			// Yeah, they are, collect them
-			GlobalInfo.data.log({e: aEmotions});
+			GlobalInfo.data.log({e: aEmotions, p: aPoints});
 			GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
 		}
 
@@ -393,6 +395,9 @@ Game.PlayGame.prototype = {
 			this.game.state.start('Lose');
 		}
 
+		if(GlobalInfo && GlobalInfo.data) {
+			GlobalInfo.data.update();
+		}
 	}
 
 };
