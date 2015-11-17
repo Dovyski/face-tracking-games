@@ -92,11 +92,12 @@ var PlayState = function() {
 
 		if(GlobalInfo && GlobalInfo.expression) {
 			var aEmotions = GlobalInfo.expression.getEmotions();
+			var aPoints = GlobalInfo.expression.getPoints();
 
 			// Emotions are available for reading?
 			if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
 				// Yeah, they are, collect them
-				GlobalInfo.data.log({e: aEmotions, s: mTurnBasedScore});
+				GlobalInfo.data.log({e: aEmotions, p: aPoints, s: mTurnBasedScore});
 				GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
 			}
 		}

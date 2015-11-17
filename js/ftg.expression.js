@@ -8,6 +8,7 @@ FTG.ExpressionDetector = function(theConfig) {
 	var mEmotionClassifier;
 	var mCtrack;
 	var mMeasure = [];
+	var mPoints;
 	var mDebug;
 	var mInitiated = false;
 	var mInitiating = false;
@@ -128,8 +129,8 @@ FTG.ExpressionDetector = function(theConfig) {
 				mCtrack.draw(mOverlay);
 			}
 		}
-
-		mMeasure = mEmotionClassifier.meanPredict(mCtrack.getCurrentParameters());
+		mPoints = mCtrack.getCurrentParameters();
+		mMeasure = mEmotionClassifier.meanPredict(mPoints);
 	};
 
 	// Will make the detector loop (using requestAnimFrame) and keep on tracking the face.
@@ -148,6 +149,10 @@ FTG.ExpressionDetector = function(theConfig) {
 
 	this.getEmotions = function() {
 		return mMeasure;
+	};
+
+	this.getPoints = function() {
+		return mPoints;
 	};
 
 	this.getDominantEmotion = function() {
