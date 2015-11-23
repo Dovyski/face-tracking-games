@@ -51,15 +51,17 @@ function generateDataset($theName, $theValue) {
 
 
 $aUid = isset($_REQUEST['uid']) ? $_REQUEST['uid'] : '';
+$aGame = isset($_REQUEST['game']) ? $_REQUEST['game'] : '';
 
 try {
 
 	$aDb = new PDO('sqlite:' . DB_FILE);
 	$aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$aStmt = $aDb->prepare("SELECT * FROM logs WHERE uuid = :uuid");
+	$aStmt = $aDb->prepare("SELECT * FROM logs WHERE uuid = :uuid AND fk_game = :game");
 
 	$aStmt->bindParam(':uuid', $aUid);
+	$aStmt->bindParam(':game', $aGame);
 	$aStmt->execute();
 
 	$aFirstTime = -1;
@@ -84,21 +86,35 @@ try {
 			$aTimes[] = sprintf('%.1f', ($aInfoTimestamp - $aFirstTime) / 1000);
 
 			$aRaw = json_decode($aValue->d);
-			$aInfoEmotions = $aRaw->e;
 
-			foreach($aInfoEmotions as $aEmotionEntry) {
-				if(!isset($aEmotions[$aEmotionEntry->emotion])) {
-					$aEmotions[$aEmotionEntry->emotion] = array();
-				}
+			// Process the message according to the fields it has
+			// TODO: get data based on game type
 
-				$aEmotions[$aEmotionEntry->emotion][] = $aEmotionEntry->value;
+			// Message about the current score
+			if(property_exists($aRaw, 's')) {
+				$aInfoScores = $aRaw->s;
+				$aScores['right'][] = @$aInfoScores->right;
+				$aScores['wrong'][] = @$aInfoScores->wrong;
+				$aScores['miss'][] = @$aInfoScores->miss;
 			}
 
-			// TODO: get data based on game type
-			$aInfoScores = $aRaw->s;
-			$aScores['right'][] = @$aInfoScores->right;
-			$aScores['wrong'][] = @$aInfoScores->wrong;
-			$aScores['miss'][] = @$aInfoScores->miss;
+			// Message about emotions
+			if(property_exists($aRaw, 'e')) {
+				$aInfoEmotions = $aRaw->e;
+
+				foreach($aInfoEmotions as $aEmotionEntry) {
+					if(!isset($aEmotions[$aEmotionEntry->emotion])) {
+						$aEmotions[$aEmotionEntry->emotion] = array();
+					}
+
+					$aEmotions[$aEmotionEntry->emotion][] = $aEmotionEntry->value;
+				}
+			}
+
+			// Message about a new turn
+			if(property_exists($aRaw, 'turn')) {
+				$aInfoTurn = $aRaw->turn;
+			}
 		}
 	}
 

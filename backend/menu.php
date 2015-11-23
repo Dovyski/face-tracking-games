@@ -26,7 +26,11 @@ try {
 			$aSubjects[] = $aRow['uuid'];
 		}
 
-		$aData[$aGameRow['name']] = $aSubjects;
+		$aData[] = array(
+			'name' 		=> $aGameRow['name'],
+			'id' 		=> $aGameRow['id'],
+			'subjects'	=> $aSubjects
+		);
 	}
 
 	echo json_encode($aData);

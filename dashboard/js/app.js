@@ -9,15 +9,18 @@ var APP = new function() {
         })
         .done(function(theInfo) {
             var aOut = '',
+                j,
                 aGame,
                 i;
 
-            for(aGame in theInfo) {
-                aOut += '<li><a><i class="fa fa-bar-chart-o"></i> '+ aGame +' <span class="fa fa-chevron-down"></span></a>' +
+            for(j in theInfo) {
+                aGame = theInfo[j];
+
+                aOut += '<li><a><i class="fa fa-bar-chart-o"></i> '+ aGame.name +' <span class="fa fa-chevron-down"></span></a>' +
                         '<ul class="nav child_menu" style="display: none">';
 
-                for(i = 0; i < theInfo[aGame].length; i++) {
-                    aOut += '<li><a href="javascript:void(0)" data-subject="' + theInfo[aGame][i] + '" class="subject-link">'+ theInfo[aGame][i] +'</a></li>';
+                for(i = 0; i < aGame.subjects.length; i++) {
+                    aOut += '<li><a href="javascript:void(0)" data-subject="' + aGame.subjects[i] + '" data-game="' + aGame.id + '" class="subject-link">'+ aGame.subjects[i] +'</a></li>';
                 }
 
                 aOut += '</ul></li>';
@@ -26,7 +29,7 @@ var APP = new function() {
             $('#side-menu').html(aOut);
 
             $('#side-menu a.subject-link').click(function() {
-                APP.loadData($(this).data('subject'));
+                APP.loadData($(this).data('subject'), $(this).data('game'));
             });
 
             customUpdateSidebarMenu();
@@ -72,12 +75,12 @@ var APP = new function() {
         $('#' + theLegendId).html(aChart.generateLegend());
     };
 
-    this.loadData = function(theSubjectId) {
+    this.loadData = function(theSubjectId, theGameId) {
         $.ajax({
             method: 'POST',
             url: '../backend/report.php',
             dataType: 'json',
-            data: {uid: theSubjectId},
+            data: {uid: theSubjectId, game: theGameId},
         })
         .done(function(theInfo) {
             mSelf.createCharts(theInfo);
