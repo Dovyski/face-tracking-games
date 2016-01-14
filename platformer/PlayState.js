@@ -5,7 +5,7 @@
 var PlayState = function() {
 	var mSelf = this;
 	var mHud; 				// Game hud
-	var mBackground;		// group with all the cards
+	var mLevel;
 	var mPlayer;
 	var mActionTimer;
 	var mControls;
@@ -19,24 +19,16 @@ var PlayState = function() {
 	};
 
 	this.create = function() {
-		mBackground = this.game.add.sprite(0, 0, 'background');
+		this.game.stage.backgroundColor = '#5FCDE4';
 
 		// Init physics
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
- 		this.game.physics.arcade.gravity.y = 0;
+ 		this.game.physics.arcade.gravity.y = 200;
 		this.game.time.desiredFps = 30;
 
-		// Init player
-		mPlayer = this.game.add.sprite(50, this.game.width * 0.15, 'player');
-
-		mPlayer.animations.add('run', [0, 1, 2, 3, 4, 5], 10, true);
-		mPlayer.animations.add('jump', [6, 7, 8, 8, 9, 10], 5, true);
-		mPlayer.animations.play('run');
-
-		this.game.physics.enable(mPlayer, Phaser.Physics.ARCADE);
-	    mPlayer.body.bounce.y = 0.2;
-	    mPlayer.body.collideWorldBounds = true;
-	    mPlayer.body.setSize(20, 32, 5, 16);
+		// Init entities
+		mLevel = new Level(this.game);
+		this.initPlayer();
 
 		// Init input
 	    mControls = this.game.input.keyboard.createCursorKeys();
@@ -53,6 +45,18 @@ var PlayState = function() {
 		if(GlobalInfo && GlobalInfo.data) {
 			GlobalInfo.data.markGameStarted();
 		}
+	};
+
+	this.initPlayer = function() {
+		mPlayer = this.game.add.sprite(50, this.game.width * 0.15, 'player');
+
+		mPlayer.animations.add('run', [0, 1, 2, 3, 4, 5], 10, true);
+		mPlayer.animations.add('jump', [6, 7, 8, 8, 9, 10], 5, true);
+		mPlayer.animations.play('run');
+
+		this.game.physics.enable(mPlayer, Phaser.Physics.ARCADE);
+		mPlayer.body.bounce.y = 0.2;
+		mPlayer.body.collideWorldBounds = true;
 	};
 
 	this.updateTimeAndTracking = function() {
@@ -101,6 +105,8 @@ var PlayState = function() {
 
 	        mActionTimer = this.game.time.now + 750;
 	    }
+
+		this.game.physics.arcade.collide(mPlayer, mLevel.getFloor());
 	};
 
 	// theType can be 'right', 'wrong' or 'miss'
