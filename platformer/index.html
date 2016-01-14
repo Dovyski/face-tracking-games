@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Platformer</title>
+	<script type="text/javascript" src="../js/3rdparty/phaser.min.js"></script>
+
+	<script type="text/javascript" src="./Constants.js"></script>
+	<script type="text/javascript" src="./BootState.js"></script>
+	<script type="text/javascript" src="./LoadState.js"></script>
+	<script type="text/javascript" src="./SetupState.js"></script>
+	<script type="text/javascript" src="./PlayState.js"></script>
+	<script type="text/javascript" src="./GameOverState.js"></script>
+	<script type="text/javascript" src="./MenuState.js"></script>
+	<script type="text/javascript" src="./ProgressBar.js"></script>
+	<script type="text/javascript" src="./Hud.js"></script>
+	<script type="text/javascript" src="./Player.js"></script>
+	<script type="text/javascript" src="./Tutorial.js"></script>
+	<script type="text/javascript" src="./platformer.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+
+		#videoel,
+		#overlay {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			-o-transform : scaleX(-1);
+			-webkit-transform : scaleX(-1);
+			transform : scaleX(-1);
+			-ms-filter : fliph; /*IE*/
+			filter : fliph; /*IE*/
+			z-index: 10;
+
+			width : 300px;
+			height : 230px;
+		}
+
+		#videoel {
+			z-index: 9;
+		}
+
+		#container {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 300px;
+			height : 230px;
+		}
+    </style>
+</head>
+<body>
+	<div id="container"></div>
+</body>
+</html>
