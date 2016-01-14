@@ -23,6 +23,7 @@ var PlayState = function() {
 
 		// Init physics
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
+		this.game.physics.setBoundsToWorld();
  		this.game.physics.arcade.gravity.y = 200;
 		this.game.time.desiredFps = 30;
 
@@ -93,6 +94,7 @@ var PlayState = function() {
 		this.updateTimeAndTracking();
 
 		mPlayer.body.velocity.x = 0;
+		mPlayer.x = this.game.width * 0.15;
 
 	    if (mActionKey.isDown && mPlayer.body.onFloor() && this.game.time.now > mActionTimer) {
 			if(mControls.up.isDown) {

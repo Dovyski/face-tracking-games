@@ -6,8 +6,10 @@ var Level = function (theGame) {
     var mFloor,
         mSlopesDown,
         mSlopesUp,
+        mSlopes,
         mPlatforms,
-        mObstacles;
+        mObstacles,
+        mLastShifted;
 
     // Constructor
     Phaser.Group.call(this, theGame);
@@ -21,24 +23,61 @@ Level.prototype.constructor = Level;
 // Public methods
 
 Level.prototype.init = function() {
-    var aPlatform,
-        aGame = this.game;
+    var aItem,
+        aGame = this.game,
+        i;
 
     mFloor = this.game.add.group();
-
+    mSlopes = this.game.add.group();
+    mSlopesUp = this.game.add.group();
+    mSlopesDown = this.game.add.group();
     mPlatforms = this.game.add.group();
-    mPlatforms.add(new Phaser.Sprite(this.game, 0, this.game.world.centerY, 'platform'));
-    mPlatforms.add(new Phaser.Sprite(this.game, this.game.world.centerX, this.game.world.centerY, 'platform'));
+    mLastShifted = null;
 
-    mPlatforms.forEach(function(theItem) {
-        aGame.physics.enable(theItem, Phaser.Physics.ARCADE);
-        theItem.body.allowGravity = false;
-        theItem.body.immovable = true;
-    });
+    // Create the platforms
+    for(i = 0; i < 3; i++) {
+        aItem = new Phaser.Sprite(this.game, this.game.world.width / 2 * i, this.game.world.centerY, 'platform');
+        this.initPhysics(aItem);
 
-    this.add(mPlatforms);
+        mPlatforms.add(aItem);
+        mFloor.add(aItem);
+    }
+
+    // Create the slopes
+    // TODO: work this
+    aItem = new Phaser.Sprite(this.game, 0, this.game.world.centerY - 80, 'slope-up');
+    this.initPhysics(aItem);
+    mSlopesUp.add(aItem);
+
+    // Add the floor to the level
+    this.add(mFloor);
+};
+
+Level.prototype.initPhysics = function(theItem) {
+    this.game.physics.enable(theItem, Phaser.Physics.ARCADE);
+    theItem.body.allowGravity = false;
+    theItem.body.velocity.x = -100;
+    theItem.body.immovable = true;
+    theItem.checkWorldBounds = true;
+
+    theItem.events.onOutOfBounds.add(this.onOutOfBound, this);
+};
+
+Level.prototype.onOutOfBound = function(theItem) {
+    if(mLastShifted != null) {
+        theItem.x = mLastShifted.x + mLastShifted.width;
+
+    } else {
+        theItem.x = this.game.world.width;
+    }
+
+    mLastShifted = theItem;
 };
 
 Level.prototype.getFloor = function() {
-    return mPlatforms;
+    return mFloor;
+};
+
+Level.prototype.getSlopes = function() {
+    return mSlopes;
 };
