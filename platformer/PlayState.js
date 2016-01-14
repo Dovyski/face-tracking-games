@@ -7,7 +7,7 @@ var PlayState = function() {
 	var mHud; 				// Game hud
 	var mBackground;		// group with all the cards
 	var mPlayer;
-	var mJumpTimer;
+	var mActionTimer;
 	var mControls;
 	var mActionKey;
 	var mMatchTime;			// Remaining time for the match
@@ -23,20 +23,20 @@ var PlayState = function() {
 
 		// Init physics
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
- 		this.game.physics.arcade.gravity.y = 250;
+ 		this.game.physics.arcade.gravity.y = 0;
 		this.game.time.desiredFps = 30;
 
 		// Init player
-		mPlayer = this.game.add.sprite(32, 32, 'heart');
-	    this.game.physics.enable(mPlayer, Phaser.Physics.ARCADE);
+		mPlayer = this.game.add.sprite(50, this.game.width * 0.15, 'player');
 
+		mPlayer.animations.add('run', [0, 1, 2, 3, 4, 5], 10, true);
+		mPlayer.animations.add('jump', [6, 7, 8, 8, 9, 10], 5, true);
+		mPlayer.animations.play('run');
+
+		this.game.physics.enable(mPlayer, Phaser.Physics.ARCADE);
 	    mPlayer.body.bounce.y = 0.2;
 	    mPlayer.body.collideWorldBounds = true;
 	    mPlayer.body.setSize(20, 32, 5, 16);
-
-	    mPlayer.animations.add('left', [0], 10, true);
-	    mPlayer.animations.add('turn', [0], 20, true);
-	    mPlayer.animations.add('right', [0], 10, true);
 
 		// Init input
 	    mControls = this.game.input.keyboard.createCursorKeys();
@@ -45,7 +45,7 @@ var PlayState = function() {
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
-		mJumpTimer = 0;
+		mActionTimer = 0;
 
 		mHud = new Hud();
 		this.game.add.existing(mHud);
@@ -90,30 +90,16 @@ var PlayState = function() {
 
 		mPlayer.body.velocity.x = 0;
 
-	    if(mControls.left.isDown) {
-	        mPlayer.body.velocity.x = -150;
+	    if (mActionKey.isDown && mPlayer.body.onFloor() && this.game.time.now > mActionTimer) {
+			if(mControls.up.isDown) {
+		        mPlayer.animations.play('jump');
+				mPlayer.body.velocity.y = -250;
 
-	        if(mPlayer.facing != 'left') {
-	            mPlayer.animations.play('left');
-	            mPlayer.facing = 'left';
-	        }
+		    } else if(mControls.down.isDown) {
+				mPlayer.animations.play('duck');
+			}
 
-	    } else if(mControls.right.isDown) {
-	        mPlayer.body.velocity.x = 150;
-
-	        if(mPlayer.facing != 'right') {
-	            mPlayer.animations.play('right');
-	            mPlayer.facing = 'right';
-	        }
-	    } else if (mPlayer.facing != 'idle') {
-        	mPlayer.animations.stop();
-            mPlayer.frame = mPlayer.facing == 'left' ? 0 : 5;
-            mPlayer.facing = 'idle';
-	    }
-
-	    if (mActionKey.isDown && mPlayer.body.onFloor() && this.game.time.now > mJumpTimer) {
-	        mPlayer.body.velocity.y = -250;
-	        mJumpTimer = this.game.time.now + 750;
+	        mActionTimer = this.game.time.now + 750;
 	    }
 	};
 
