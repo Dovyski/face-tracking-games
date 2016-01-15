@@ -27,7 +27,7 @@ Level.prototype.init = function() {
     mSlopes = this.game.add.group();
     mFloor = this.game.add.group();
     mItems = [];
-    mLastAdded = null;
+    mLastAdded = {x: 0, y: this.game.world.centerY, width: 0, height: 0};
 
     // Create the platforms
     for(i = 0; i < 5; i++) {
@@ -37,9 +37,7 @@ Level.prototype.init = function() {
         mFloor.add(aItem);
         mItems.push(aItem);
 
-        if(i > 2) {
-            aItem.kill();
-        }
+        aItem.kill();
     }
 
     // Create the slopes
@@ -49,6 +47,11 @@ Level.prototype.init = function() {
         mSlopes.add(aItem);
         mItems.push(aItem);
         aItem.kill();
+    }
+
+    // Add a few pieces of floor to start with
+    for(i = 0; i < 4; i++) {
+        this.addNewPieceOfFloor();
     }
 
     // Add the floor and the slopes to the level

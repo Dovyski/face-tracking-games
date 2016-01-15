@@ -109,6 +109,29 @@ var PlayState = function() {
 	    }
 
 		this.game.physics.arcade.collide(mPlayer, mLevel.getFloor());
+		this.game.physics.arcade.overlap(mPlayer, mLevel.getSlopes(), this.handleMovesOnSlopes);
+	};
+
+	this.handleMovesOnSlopes = function(thePlayer, theSlope) {
+		var aScale;
+
+		aScale = (thePlayer.x - theSlope.x) / theSlope.width;
+
+		if(theSlope.key == 'slope-up') {
+			if(aScale < 0.1) {
+				thePlayer.y = theSlope.y - theSlope.height / 2;
+
+			} else if(aScale >= 0.1 && aScale <= 0.6) {
+				thePlayer.y = theSlope.y - (theSlope.height / 2 + aScale * theSlope.height);
+			}
+		} else {
+			if(aScale >= 0.25 && aScale <= 0.6) {
+				thePlayer.y = theSlope.y - theSlope.height / 2 - 40 + aScale * (theSlope.height / 2);
+
+			} else if(aScale > 0.6) {
+				thePlayer.y = theSlope.y - theSlope.height / 2;
+			}
+		}
 	};
 
 	// theType can be 'right', 'wrong' or 'miss'
