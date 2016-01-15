@@ -97,7 +97,7 @@ Level.prototype.addNewPieceOfFloor = function() {
         // Was the last added element a platform?
         if(mLastAdded.key == 'platform' && this.game.rnd.frac() <= 1.0) {
             // Yep! We can add a slope here then to make things more interesting.
-            if(mLastAdded.y <= this.game.height * 0.2) {
+            if(mLastAdded.y <= this.game.height * 0.3) {
                 // We are too high right now, no room for up-slopes.
                 // We must add a down-slope.
                 aNew = this.getFirstDeadByType(mSlopes, 'slope-down');
@@ -109,34 +109,31 @@ Level.prototype.addNewPieceOfFloor = function() {
             } else {
                 // We are not too high/low, so any slope will fit.
                 aNew = mSlopes.getFirstDead();
-
             }
+
+            aNew.reset(mLastAdded.x + mLastAdded.width, mLastAdded.y - (aNew.key == 'slope-up' ? aNew.height / 2 - 5 : 0));
+
         } else {
             // Nop, it was not a platform. We must add a platform here then.
             aNew = this.getFirstDeadByType(mFloor, 'platform');
+            aNew.reset(mLastAdded.x + mLastAdded.width - 15, mLastAdded.y);
+
+            if(mLastAdded.key != 'platform') {
+                aNew.y += mLastAdded.key == 'slope-up' ? 0 : mLastAdded.height / 2 - 5;
+            }
         }
     } else {
         aNew = this.getFirstDeadByType(mFloor, 'platform');
+        aNew.reset(this.game.width, this.game.world.centerY);
     }
 
     if(aNew) {
-        if(mLastAdded) {
-            aNew.reset(mLastAdded.x + mLastAdded.width, mLastAdded.y);
-        } else {
-            aNew.reset(this.game.width, this.game.world.centerY);
-        }
-
         // Make the platform move
         aNew.body.velocity.x = -100;
-
         // Tigh things together
         aNew.x -= 15;
-
-        // Fix a small offset with slopes
-        if(aNew.key != 'platform') {
-            aNew.y += 5;
-        }
     }
+
     mLastAdded = aNew;
 };
 
