@@ -4,12 +4,9 @@
 var Level = function (theGame) {
     // Properties
     var mFloor,
-        mSlopesDown,
-        mSlopesUp,
         mSlopes,
-        mPlatforms,
-        mObstacles,
-        mLastShifted;
+        mItems,
+        mLastAdded;
 
     // Constructor
     Phaser.Group.call(this, theGame);
@@ -27,29 +24,35 @@ Level.prototype.init = function() {
         aGame = this.game,
         i;
 
-    mFloor = this.game.add.group();
     mSlopes = this.game.add.group();
-    mSlopesUp = this.game.add.group();
-    mSlopesDown = this.game.add.group();
-    mPlatforms = this.game.add.group();
-    mLastShifted = null;
+    mFloor = this.game.add.group();
+    mItems = [];
+    mLastAdded = null;
 
     // Create the platforms
-    for(i = 0; i < 3; i++) {
+    for(i = 0; i < 5; i++) {
         aItem = new Phaser.Sprite(this.game, this.game.world.width / 2 * i, this.game.world.centerY, 'platform');
         this.initPhysics(aItem);
 
-        mPlatforms.add(aItem);
         mFloor.add(aItem);
+        mItems.push(aItem);
+
+        if(i > 2) {
+            aItem.kill();
+        }
     }
 
     // Create the slopes
-    // TODO: work this
-    aItem = new Phaser.Sprite(this.game, 0, this.game.world.centerY - 80, 'slope-up');
-    this.initPhysics(aItem);
-    mSlopesUp.add(aItem);
+    for(i = 0; i < 8; i++) {
+        aItem = new Phaser.Sprite(this.game, 0, 0, i % 2 == 0 ? 'slope-up' : 'slope-down');
+        this.initPhysics(aItem);
+        mSlopes.add(aItem);
+        mItems.push(aItem);
+        aItem.kill();
+    }
 
-    // Add the floor to the level
+    // Add the floor and the slopes to the level
+    this.add(mSlopes);
     this.add(mFloor);
 };
 
@@ -59,19 +62,94 @@ Level.prototype.initPhysics = function(theItem) {
     theItem.body.velocity.x = -100;
     theItem.body.immovable = true;
     theItem.checkWorldBounds = true;
-
-    theItem.events.onOutOfBounds.add(this.onOutOfBound, this);
 };
 
-Level.prototype.onOutOfBound = function(theItem) {
-    if(mLastShifted != null) {
-        theItem.x = mLastShifted.x + mLastShifted.width;
+Level.prototype.update = function() {
+    var i,
+        aTotal,
+        aItem;
 
-    } else {
-        theItem.x = this.game.world.width;
+    Phaser.Group.prototype.update.call(this);
+
+    // Let's check if anyone has moved out of the screen
+    for(i = 0, aTotal = mItems.length; i < aTotal; i++) {
+        aItem = mItems[i];
+
+        if(aItem.alive && aItem.x <= -aItem.width) {
+            aItem.kill();
+            this.addNewPieceOfFloor();
+        }
     }
 
-    mLastShifted = theItem;
+    // Is there a gap on the screen?
+    if(mLastAdded && mLastAdded.x + mLastAdded.width < this.game.width) {
+        this.addNewPieceOfFloor();
+    }
+};
+
+Level.prototype.addNewPieceOfFloor = function() {
+    var aNew;
+
+    // Do we have any previously added element as
+    // a reference to base on?
+    if(mLastAdded != null) {
+        // Yes.
+        // Was the last added element a platform?
+        if(mLastAdded.key == 'platform' && this.game.rnd.frac() <= 1.0) {
+            // Yep! We can add a slope here then to make things more interesting.
+            if(mLastAdded.y <= this.game.height * 0.2) {
+                // We are too high right now, no room for up-slopes.
+                // We must add a down-slope.
+                aNew = this.getFirstDeadByType(mSlopes, 'slope-down');
+
+            } else if(mLastAdded.y >= this.game.height * 0.8) {
+                // We are too low. It's time for a up-slope.
+                aNew = this.getFirstDeadByType(mSlopes, 'slope-up');
+
+            } else {
+                // We are not too high/low, so any slope will fit.
+                aNew = mSlopes.getFirstDead();
+
+            }
+        } else {
+            // Nop, it was not a platform. We must add a platform here then.
+            aNew = this.getFirstDeadByType(mFloor, 'platform');
+        }
+    } else {
+        aNew = this.getFirstDeadByType(mFloor, 'platform');
+    }
+
+    if(aNew) {
+        if(mLastAdded) {
+            aNew.reset(mLastAdded.x + mLastAdded.width, mLastAdded.y);
+        } else {
+            aNew.reset(this.game.width, this.game.world.centerY);
+        }
+
+        // Make the platform move
+        aNew.body.velocity.x = -100;
+
+        // Tigh things together
+        aNew.x -= 15;
+
+        // Fix a small offset with slopes
+        if(aNew.key != 'platform') {
+            aNew.y += 5;
+        }
+    }
+    mLastAdded = aNew;
+};
+
+Level.prototype.getFirstDeadByType = function(theGroup, theType) {
+    var aRet;
+
+    theGroup.forEachDead(function(theItem) {
+        if(theItem.key == theType) {
+            aRet = theItem;
+        }
+    });
+
+    return aRet;
 };
 
 Level.prototype.getFloor = function() {
