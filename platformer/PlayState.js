@@ -7,9 +7,6 @@ var PlayState = function() {
 	var mHud; 				// Game hud
 	var mLevel;
 	var mPlayer;
-	var mActionTimer;
-	var mControls;
-	var mActionKey;
 	var mMatchTime;			// Remaining time for the match
 	var mHealth;			// Available health points.
 	var mScore = {			// Info regarding global score (throughout the game session)
@@ -24,21 +21,16 @@ var PlayState = function() {
 		// Init physics
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.setBoundsToWorld();
- 		this.game.physics.arcade.gravity.y = 200;
+ 		this.game.physics.arcade.gravity.y = 300;
 		this.game.time.desiredFps = 30;
 
 		// Init entities
 		mLevel = new Level(this.game);
 		this.initPlayer();
 
-		// Init input
-	    mControls = this.game.input.keyboard.createCursorKeys();
-	    mActionKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
-		mActionTimer = 0;
 
 		mHud = new Hud();
 		this.game.add.existing(mHud);
@@ -56,7 +48,6 @@ var PlayState = function() {
 		mPlayer.animations.play('run');
 
 		this.game.physics.enable(mPlayer, Phaser.Physics.ARCADE);
-		mPlayer.body.bounce.y = 0.2;
 		mPlayer.body.collideWorldBounds = true;
 	};
 
@@ -96,19 +87,22 @@ var PlayState = function() {
 		mPlayer.body.velocity.x = 0;
 		mPlayer.x = this.game.width * 0.15;
 
-	    if (mActionKey.isDown && mPlayer.body.onFloor() && this.game.time.now > mActionTimer) {
-			if(mControls.up.isDown) {
+	    if (this.game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)) {
+			//if(mControls.up.isDown) {
 		        mPlayer.animations.play('jump');
-				mPlayer.body.velocity.y = -250;
+				mPlayer.y -= 50;
+				mPlayer.body.velocity.y = -350;
+				console.log('sdsdsd');
 
-		    } else if(mControls.down.isDown) {
-				mPlayer.animations.play('duck');
-			}
-
-	        mActionTimer = this.game.time.now + 750;
+		    //} else if(mControls.down.isDown) {
+			//	mPlayer.animations.play('duck');
+			//}
 	    }
 
-		this.game.physics.arcade.collide(mPlayer, mLevel.getFloor());
+		if (!this.game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)) {
+			this.game.physics.arcade.collide(mPlayer, mLevel.getFloor());
+		}
+
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getSlopes(), this.handleMovesOnSlopes);
 	};
 
