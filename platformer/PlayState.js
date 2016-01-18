@@ -3,17 +3,20 @@
  */
 
 var PlayState = function() {
-	var mSelf = this;
-	var mHud; 				// Game hud
-	var mLevel;
-	var mPlayer;
-	var mMatchTime;			// Remaining time for the match
-	var mHealth;			// Available health points.
-	var mScore = {			// Info regarding global score (throughout the game session)
-		right: 0,
-		wrong: 0,
-		miss: 0
-	};
+	var mSelf = this,
+		mHud, 				// Game hud
+		mLevel,
+		mPlayer,
+		mJumping,
+		mDashing,
+		mActionTimer,
+		mMatchTime,			// Remaining time for the match
+		mHealth,			// Available health points.
+		mScore = {			// Info regarding global score (throughout the game session)
+			right: 0,
+			wrong: 0,
+			miss: 0
+		};
 
 	this.create = function() {
 		this.game.stage.backgroundColor = '#5FCDE4';
@@ -21,7 +24,7 @@ var PlayState = function() {
 		// Init physics
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.setBoundsToWorld();
- 		this.game.physics.arcade.gravity.y = 300;
+ 		this.game.physics.arcade.gravity.y = 1000;
 		this.game.time.desiredFps = 30;
 
 		// Init entities
@@ -31,6 +34,9 @@ var PlayState = function() {
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
+		mJumping = false;
+		mDashing = false;
+		mActionTimer = 0;
 
 		mHud = new Hud();
 		this.game.add.existing(mHud);
@@ -82,24 +88,39 @@ var PlayState = function() {
 	};
 
 	this.update = function() {
+		var aKeyboard;
+
 		this.updateTimeAndTracking();
 
 		mPlayer.body.velocity.x = 0;
 		mPlayer.x = this.game.width * 0.15;
+		aKeyboard = this.game.input.keyboard;
 
-	    if (this.game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)) {
-			//if(mControls.up.isDown) {
+		if(mJumping || mDashing) {
+			mActionTimer -= this.game.time.elapsedMS;
+
+			if(mActionTimer <= 0) {
+				mJumping = false;
+				mDashing = false;
+				mPlayer.animations.play('run');
+			}
+		}
+
+	    if (aKeyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)) {
+			if(!mJumping && aKeyboard.isDown(Phaser.Keyboard.UP, 10)) {
+				mJumping = true;
+				mActionTimer = 500;
 		        mPlayer.animations.play('jump');
-				mPlayer.y -= 50;
-				mPlayer.body.velocity.y = -350;
-				console.log('sdsdsd');
+				mPlayer.body.velocity.y = -500;
 
-		    //} else if(mControls.down.isDown) {
-			//	mPlayer.animations.play('duck');
-			//}
+			} else if(!mJumping && aKeyboard.isDown(Phaser.Keyboard.DOWN, 10)){
+				mDashing = true;
+				mActionTimer = 500;
+				mPlayer.animations.play('jump');
+			}
 	    }
 
-		if (!this.game.input.keyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)) {
+		if (!mJumping) {
 			this.game.physics.arcade.collide(mPlayer, mLevel.getFloor());
 		}
 
