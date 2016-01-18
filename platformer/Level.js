@@ -174,10 +174,14 @@ Level.prototype.addNewObstacleIfAppropriate = function(theWhere) {
         aObstacle = mObstacles.getFirstDead();
 
         if(aObstacle) {
-            aPosY = aObstacle.key == 'obstacle-top' ? -150 : -aObstacle.height + 5;
-
-            aObstacle.reset(50 + this.game.rnd.frac() * theWhere.width * 0.8 + theWhere.x, theWhere.y + aPosY);
+            aObstacle.reset(50 + this.game.rnd.frac() * theWhere.width * 0.8 + theWhere.x, theWhere.y + -aObstacle.height + 5);
             aObstacle.body.velocity.x = theWhere.body.velocity.x;
+
+            if(aObstacle.key == 'obstacle-top') {
+                aObstacle.anchor.setTo(0.5);
+                aObstacle.body.angularVelocity = 100;
+                aObstacle.y -= 20;
+            }
         }
     }
 };

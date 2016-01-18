@@ -7,9 +7,6 @@ var PlayState = function() {
 		mHud, 				// Game hud
 		mLevel,
 		mPlayer,
-		mJumping,
-		mDashing,
-		mActionTimer,
 		mMatchTime,			// Remaining time for the match
 		mHealth,			// Available health points.
 		mScore = {			// Info regarding global score (throughout the game session)
@@ -29,14 +26,12 @@ var PlayState = function() {
 
 		// Init entities
 		mLevel = new Level(this.game);
-		this.initPlayer();
+		mPlayer = new Player(this.game);
+		this.game.add.existing(mPlayer);
 
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
-		mJumping = false;
-		mDashing = false;
-		mActionTimer = 0;
 
 		mHud = new Hud();
 		this.game.add.existing(mHud);
@@ -44,17 +39,6 @@ var PlayState = function() {
 		if(GlobalInfo && GlobalInfo.data) {
 			GlobalInfo.data.markGameStarted();
 		}
-	};
-
-	this.initPlayer = function() {
-		mPlayer = this.game.add.sprite(50, this.game.width * 0.15, 'player');
-
-		mPlayer.animations.add('run', [0, 1, 2, 3, 4, 5], 10, true);
-		mPlayer.animations.add('jump', [6, 7, 8, 8, 9, 10], 5, true);
-		mPlayer.animations.play('run');
-
-		this.game.physics.enable(mPlayer, Phaser.Physics.ARCADE);
-		mPlayer.body.collideWorldBounds = true;
 	};
 
 	this.updateTimeAndTracking = function() {
@@ -92,42 +76,31 @@ var PlayState = function() {
 
 		this.updateTimeAndTracking();
 
-		mPlayer.body.velocity.x = 0;
-		mPlayer.x = this.game.width * 0.15;
 		aKeyboard = this.game.input.keyboard;
 
-		if(mJumping || mDashing) {
-			mActionTimer -= this.game.time.elapsedMS;
-
-			if(mActionTimer <= 0) {
-				mJumping = false;
-				mDashing = false;
-			}
-		}
-
 	    if (aKeyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)) {
-			if(!mJumping && aKeyboard.isDown(Phaser.Keyboard.UP, 10)) {
-				mJumping = true;
-				mActionTimer = 250;
-		        mPlayer.animations.play('jump');
-				mPlayer.body.velocity.y = -500;
+			if(aKeyboard.isDown(Phaser.Keyboard.UP, 10)) {
+		        mPlayer.jump();
 
-			} else if(!mDashing && aKeyboard.isDown(Phaser.Keyboard.DOWN, 10)){
-				mDashing = true;
-				mActionTimer = 500;
-				mPlayer.animations.play('jump');
+			} else if(aKeyboard.isDown(Phaser.Keyboard.DOWN, 10)){
+				mPlayer.dash();
 			}
 	    }
 
-		if (!mJumping) {
+		if (!mPlayer.jumping) {
 			this.game.physics.arcade.collide(mPlayer, mLevel.getFloor(), function() {
-				if(!mDashing) {
+				if(!mPlayer.dashing) {
 					mPlayer.animations.play('run');
 				}
 			}, null, this);
 		}
 
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getSlopes(), this.handleMovesOnSlopes);
+		this.game.physics.arcade.overlap(mPlayer, mLevel.getObstacles(), this.handleObstacleOverlap);
+	};
+
+	this.handleObstacleOverlap = function(thePlayer, theObstacle) {
+		thePlayer.hurt();
 	};
 
 	this.handleMovesOnSlopes = function(thePlayer, theSlope) {
