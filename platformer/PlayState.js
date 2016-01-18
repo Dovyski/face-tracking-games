@@ -102,18 +102,17 @@ var PlayState = function() {
 			if(mActionTimer <= 0) {
 				mJumping = false;
 				mDashing = false;
-				mPlayer.animations.play('run');
 			}
 		}
 
 	    if (aKeyboard.downDuration(Phaser.Keyboard.SPACEBAR, 10)) {
 			if(!mJumping && aKeyboard.isDown(Phaser.Keyboard.UP, 10)) {
 				mJumping = true;
-				mActionTimer = 500;
+				mActionTimer = 250;
 		        mPlayer.animations.play('jump');
 				mPlayer.body.velocity.y = -500;
 
-			} else if(!mJumping && aKeyboard.isDown(Phaser.Keyboard.DOWN, 10)){
+			} else if(!mDashing && aKeyboard.isDown(Phaser.Keyboard.DOWN, 10)){
 				mDashing = true;
 				mActionTimer = 500;
 				mPlayer.animations.play('jump');
@@ -121,7 +120,11 @@ var PlayState = function() {
 	    }
 
 		if (!mJumping) {
-			this.game.physics.arcade.collide(mPlayer, mLevel.getFloor());
+			this.game.physics.arcade.collide(mPlayer, mLevel.getFloor(), function() {
+				if(!mDashing) {
+					mPlayer.animations.play('run');
+				}
+			}, null, this);
 		}
 
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getSlopes(), this.handleMovesOnSlopes);
@@ -133,18 +136,13 @@ var PlayState = function() {
 		aScale = (thePlayer.x - theSlope.x) / theSlope.width;
 
 		if(theSlope.key == 'slope-up') {
-			if(aScale < 0.1) {
-				thePlayer.y = theSlope.y - theSlope.height / 2;
-
-			} else if(aScale >= 0.1 && aScale <= 0.6) {
+			if(aScale >= 0.1 && aScale <= 0.75) {
 				thePlayer.y = theSlope.y - (theSlope.height / 2 + aScale * theSlope.height);
 			}
 		} else {
 			if(aScale >= 0.25 && aScale <= 0.6) {
 				thePlayer.y = theSlope.y - theSlope.height / 2 - 40 + aScale * (theSlope.height / 2);
 
-			} else if(aScale > 0.6) {
-				thePlayer.y = theSlope.y - theSlope.height / 2;
 			}
 		}
 	};

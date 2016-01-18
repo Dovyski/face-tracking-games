@@ -114,12 +114,12 @@ Level.prototype.addNewPieceOfFloor = function() {
                 aNew = mSlopes.getFirstDead();
             }
 
-            aNew.reset(mLastAdded.x + mLastAdded.width, mLastAdded.y - (aNew.key == 'slope-up' ? aNew.height / 2 - 5 : 0));
+            aNew.reset(mLastAdded.x + mLastAdded.width - 30, mLastAdded.y - (aNew.key == 'slope-up' ? aNew.height / 2 - 5 : 0));
 
         } else {
             // Nop, it was not a platform. We must add a platform here then.
             aNew = this.getFirstDeadByType(mFloor, 'platform');
-            aNew.reset(mLastAdded.x + mLastAdded.width - 15, mLastAdded.y);
+            aNew.reset(mLastAdded.x + mLastAdded.width - 50, mLastAdded.y);
 
             if(mLastAdded.key != 'platform') {
                 aNew.y += mLastAdded.key == 'slope-up' ? 0 : mLastAdded.height / 2 - 5;
