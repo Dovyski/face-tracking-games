@@ -6,6 +6,7 @@ Player = function (theGame) {
     this.jumping;
     this.dashing,
     this.mActionTimer;
+    this.mHealth;
 
     // Constructor
     Phaser.Sprite.call(this, theGame, 50, theGame.width * 0.15, 'player');
@@ -28,6 +29,7 @@ Player.prototype.init = function() {
     this.jumping = false;
     this.dashing = false;
     this.mActionTimer = 0;
+    this.mHealth = Constants.GAME_HEALTH_MAX;
 
     this.animations.play('run');
 };
@@ -65,6 +67,27 @@ Player.prototype.dash = function() {
     }
 };
 
+Player.prototype.heal = function() {
+    this.mHealth += Constants.GAME_CORRECT_HEALTH;
+
+    // Prevent overfeeding health
+    if(this.mHealth >= Constants.GAME_HEALTH_MAX) {
+        this.mHealth = Constants.GAME_HEALTH_MAX;
+    }
+};
+
 Player.prototype.hurt = function() {
-    console.log('Hurt!');
+    this.mHealth -= Constants.GAME_MISTAKE_HEALTH;
+
+    if(this.mHealth < 0) {
+        this.mHealth = 0;
+    }
+};
+
+Player.prototype.getHealth = function() {
+    return this.mHealth;
+};
+
+Player.prototype.getHealthPercentage = function() {
+    return this.mHealth / Constants.GAME_HEALTH_MAX;
 };

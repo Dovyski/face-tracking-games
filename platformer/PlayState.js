@@ -2,13 +2,12 @@
  * Describes the play state.
  */
 
-var PlayState = function() {
+PlayState = function() {
 	var mSelf = this,
 		mHud, 				// Game hud
 		mLevel,
 		mPlayer,
 		mMatchTime,			// Remaining time for the match
-		mHealth,			// Available health points.
 		mScore = {			// Info regarding global score (throughout the game session)
 			right: 0,
 			wrong: 0,
@@ -31,7 +30,7 @@ var PlayState = function() {
 
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
-		mHealth = Constants.GAME_HEALTH_MAX;
+
 
 		mHud = new Hud();
 		this.game.add.existing(mHud);
@@ -57,7 +56,7 @@ var PlayState = function() {
 		// Update match time
 		mMatchTime -= this.game.time.elapsedMS;
 
-		if(mMatchTime <= 0 || mHealth <= 0) {
+		if(mMatchTime <= 0 || mPlayer.getHealth() <= 0) {
 			// Match is over!
 			if(GlobalInfo) {
 				GlobalInfo.score = mScore;
@@ -101,6 +100,9 @@ var PlayState = function() {
 
 	this.handleObstacleOverlap = function(thePlayer, theObstacle) {
 		thePlayer.hurt();
+		mScore.wrong++;
+
+		mHud.refresh();
 	};
 
 	this.handleMovesOnSlopes = function(thePlayer, theSlope) {
@@ -120,45 +122,17 @@ var PlayState = function() {
 		}
 	};
 
-	// theType can be 'right', 'wrong' or 'miss'
-	this.countMove = function(theType) {
-		if(theType == 'right') {
-			mScore.right++;
-			mHealth += Constants.GAME_CORRECT_HEALTH;
-
-		} else if(theType == 'wrong') {
-			mScore.wrong++;
-			mHealth -= Constants.GAME_MISTAKE_HEALTH;
-
-		} else {
-			mScore.miss++;
-			mHealth -= Constants.GAME_MISTAKE_HEALTH;
-		}
-
-		// Prevent overfeeding health
-		if(mHealth >= Constants.GAME_HEALTH_MAX) {
-			mHealth = Constants.GAME_HEALTH_MAX;
-		}
-
-		mHud.refresh();
-	}
-
-
 	// Getters
 
 	this.getScore = function() {
 		return mScore;
 	};
 
-	this.getMatchRemainingTime = function() {
-		return mMatchTime;
-	};
-
 	this.getHud = function() {
 		return mHud;
 	};
 
-	this.getHealthPercentage = function() {
-		return mHealth/Constants.GAME_HEALTH_MAX;
+	this.getPlayer = function() {
+		return mPlayer;
 	};
 };

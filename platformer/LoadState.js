@@ -16,6 +16,9 @@ var LoadState = function() {
 		mLoadingBar = Game.add.sprite(mLoadingBackground.x, mLoadingBackground.y, 'loading-fill');
 		this.game.load.setPreloadSprite(mLoadingBar);
 
+		// Assets by myself
+		this.load.image('pixel', 'assets/pixel.png'); // By Fernando Bevilacqua, public domain
+
 		// Assets from external authors
 		this.game.load.spritesheet('player', 'assets/player.png', 74, 128); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('platform', 'assets/platform.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
@@ -24,13 +27,14 @@ var LoadState = function() {
 		this.game.load.image('obstacle-bottom', 'assets/obstacle-bottom.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('obstacle-top', 'assets/obstacle-top.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 
+		Game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
+
 		Game.load.spritesheet('card', 'assets/card.png?2', 100, 100); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.spritesheet('blue-button', 'assets/blue_button.png', 190, 49); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('dialog-small', 'assets/dialog_small.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('quarter-dialog', 'assets/quarter_dialog.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('question-dialog', 'assets/question_dialog.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('time-dialog', 'assets/time_dialog.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
-		Game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 
 		// SFX
 		Game.load.audio('sfx-right', 'assets/right.ogg'); // Fourier, CC-BY 3.0, https://soundcloud.com/third-octave
