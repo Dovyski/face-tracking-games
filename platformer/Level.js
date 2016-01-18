@@ -6,6 +6,7 @@ var Level = function (theGame) {
     var mFloor,
         mSlopes,
         mItems,
+        mObstacles,
         mLastAdded;
 
     // Constructor
@@ -21,13 +22,30 @@ Level.prototype.constructor = Level;
 
 Level.prototype.init = function() {
     var aItem,
-        aGame = this.game,
         i;
 
     mSlopes = this.game.add.group();
     mFloor = this.game.add.group();
+    mObstacles = this.game.add.group();
     mItems = [];
     mLastAdded = {x: 0, y: this.game.world.centerY, width: 0, height: 0};
+
+    this.initTerrain();
+    this.initObstacles();
+
+    // Add a few pieces of floor to start with
+    for(i = 0; i < 4; i++) {
+        this.addNewPieceOfFloor();
+    }
+
+    // Add the floor and the slopes to the level
+    this.add(mSlopes);
+    this.add(mFloor);
+};
+
+Level.prototype.initTerrain = function() {
+    var aItem,
+        i;
 
     // Create the platforms
     for(i = 0; i < 5; i++) {
@@ -48,15 +66,22 @@ Level.prototype.init = function() {
         mItems.push(aItem);
         aItem.kill();
     }
+};
 
-    // Add a few pieces of floor to start with
-    for(i = 0; i < 4; i++) {
-        this.addNewPieceOfFloor();
+Level.prototype.initObstacles = function() {
+    var aItem,
+        i;
+
+    for(i = 0; i < 5; i++) {
+        aItem = new Phaser.Sprite(this.game, 0, 0, 'frog');
+        aItem.animations.add('idle', [0, 1, 2, 3, 4], 5, true);
+        aItem.play('idle');
+
+        this.initPhysics(aItem);
+        mObstacles.add(aItem);
+        mItems.push(aItem);
+        aItem.kill();
     }
-
-    // Add the floor and the slopes to the level
-    this.add(mSlopes);
-    this.add(mFloor);
 };
 
 Level.prototype.initPhysics = function(theItem) {
@@ -79,8 +104,10 @@ Level.prototype.update = function() {
         aItem = mItems[i];
 
         if(aItem.alive && aItem.x <= -aItem.width) {
+            if(aItem.key == 'platform' || aItem.key == 'slope-up' || aItem.key == 'slope-down') {
+                this.addNewPieceOfFloor();
+            }
             aItem.kill();
-            this.addNewPieceOfFloor();
         }
     }
 
@@ -135,9 +162,23 @@ Level.prototype.addNewPieceOfFloor = function() {
         aNew.body.velocity.x = -100;
         // Tigh things together
         aNew.x -= 15;
+        this.addNewObstacleIfAppropriate(aNew);
     }
 
     mLastAdded = aNew;
+};
+
+Level.prototype.addNewObstacleIfAppropriate = function(theWhere) {
+    var aObstacle;
+
+    if(theWhere.key == 'platform' && this.game.rnd.frac() <= 1.0) {
+        aObstacle = mObstacles.getFirstDead();
+
+        if(aObstacle) {
+            aObstacle.reset(50 + this.game.rnd.frac() * theWhere.width * 0.8 + theWhere.x, theWhere.y - aObstacle.height + 5);
+            aObstacle.body.velocity.x = theWhere.body.velocity.x;
+        }
+    }
 };
 
 Level.prototype.getFirstDeadByType = function(theGroup, theType) {
@@ -158,4 +199,8 @@ Level.prototype.getFloor = function() {
 
 Level.prototype.getSlopes = function() {
     return mSlopes;
+};
+
+Level.prototype.getObstacles = function() {
+    return mObstacles;
 };
