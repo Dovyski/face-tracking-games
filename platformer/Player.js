@@ -8,6 +8,8 @@ Player = function (theGame) {
     this.mActionTimer;
     this.mHealth;
     this.mFlickeringTimer;
+    this.mVelocity;
+    this.mAcceleration;
 
     // Constructor
     Phaser.Sprite.call(this, theGame, theGame.width * 0.15, theGame.world.centerY + 10, 'player');
@@ -32,12 +34,13 @@ Player.prototype.init = function() {
     this.dashing = false;
     this.mActionTimer = 0;
     this.mHealth = Constants.GAME_HEALTH_MAX;
+    this.mVelocity = new Phaser.Point();
+    this.mAcceleration = new Phaser.Point(0, 1);
 
     this.run();
 };
 
 Player.prototype.update = function() {
-    this.body.velocity.x = 0;
     this.x = this.game.width * 0.15;
 
     if(this.jumping || this.dashing) {
@@ -64,6 +67,45 @@ Player.prototype.update = function() {
     }
 };
 
+Player.prototype.adjustPosition = function(theCurrentFloor) {
+    // Euler interpolation
+    this.mVelocity.y += this.mAcceleration.y;
+    this.mVelocity.y = this.mVelocity.y > 200 ? 200 : this.mVelocity.y;
+
+    this.y += this.mVelocity.y;
+
+    if(theCurrentFloor.key == 'slope-up' || theCurrentFloor.key == 'slope-down') {
+        this.processMoveOnSlope(theCurrentFloor);
+
+    } else if(this.y + this.body.height > theCurrentFloor.y) {
+		this.y = theCurrentFloor.y - this.body.height;
+
+        if(!this.dashing) {
+            this.run();
+        }
+    }
+};
+
+Player.prototype.processMoveOnSlope = function(theSlope) {
+    var aScale;
+
+    aScale = (this.x - theSlope.x) / theSlope.width;
+
+    if(theSlope.key == 'slope-up') {
+        if(aScale <= 0.5) {
+            this.y = theSlope.y - (theSlope.height / 2 + aScale * theSlope.height * 0.7);
+        } else {
+            this.y = theSlope.y - this.body.height;
+        }
+    } else {
+        if(aScale <= 0.6) {
+            this.y = theSlope.y - theSlope.height / 2 - 40 + aScale * (theSlope.height / 2);
+        } else {
+            this.y = theSlope.y - 60;
+        }
+    }
+};
+
 Player.prototype.run = function() {
     if(this.animations.currentAnim.name != "run") {
         this.body.setSize(20, 120, 30, 0);
@@ -77,7 +119,7 @@ Player.prototype.jump = function() {
     if(!this.jumping) {
         this.jumping = true;
         this.animations.play('jump');
-        this.body.velocity.y = -500;
+        this.mVelocity.y = -15;
 
         this.mActionTimer = 250;
     }

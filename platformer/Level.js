@@ -7,6 +7,7 @@ var Level = function (theGame) {
         mSlopes,
         mItems,
         mObstacles,
+        mCurrentPlayerFloor,
         mLastAdded;
 
     // Constructor
@@ -29,6 +30,7 @@ Level.prototype.init = function() {
     mObstacles = this.game.add.group();
     mItems = [];
     mLastAdded = {x: 0, y: this.game.world.centerY, width: 0, height: 0};
+    mCurrentPlayerFloor = mLastAdded;
 
     this.initTerrain();
     this.initObstacles();
@@ -101,11 +103,17 @@ Level.prototype.update = function() {
     for(i = 0, aTotal = mItems.length; i < aTotal; i++) {
         aItem = mItems[i];
 
-        if(aItem.alive && aItem.x <= -aItem.width) {
-            if(aItem.key == 'platform' || aItem.key == 'slope-up' || aItem.key == 'slope-down') {
-                this.addNewPieceOfFloor();
+        if(aItem.alive) {
+            if(this.isFloor(aItem) && aItem.x > 0 && aItem.x <= this.game.width * 0.15) {
+                mCurrentPlayerFloor = aItem;
             }
-            aItem.kill();
+
+            if(aItem.x <= -aItem.width) {
+                if(this.isFloor(aItem)) {
+                    this.addNewPieceOfFloor();
+                }
+                aItem.kill();
+            }
         }
     }
 
@@ -113,6 +121,10 @@ Level.prototype.update = function() {
     if(mLastAdded && mLastAdded.x + mLastAdded.width < this.game.width) {
         this.addNewPieceOfFloor();
     }
+};
+
+Level.prototype.isFloor = function(theItem) {
+    return theItem.key == 'platform' || theItem.key == 'slope-up' || theItem.key == 'slope-down';
 };
 
 Level.prototype.addNewPieceOfFloor = function() {
@@ -196,6 +208,10 @@ Level.prototype.getFirstDeadByType = function(theGroup, theType) {
     });
 
     return aRet;
+};
+
+Level.prototype.getCurrentPlayerFloor = function() {
+    return mCurrentPlayerFloor;
 };
 
 Level.prototype.getFloor = function() {

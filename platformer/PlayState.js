@@ -30,7 +30,6 @@ PlayState = function() {
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 
-
 		mHud = new Hud();
 		this.game.add.existing(mHud);
 
@@ -85,19 +84,9 @@ PlayState = function() {
 			}
 	    }
 
-		this.game.physics.arcade.overlap(mPlayer, mLevel.getFloor(), this.handleFloorCollision);
-		this.game.physics.arcade.overlap(mPlayer, mLevel.getSlopes(), this.handleMovesOnSlopes);
+		mPlayer.adjustPosition(mLevel.getCurrentPlayerFloor());
+
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getObstacles(), this.handleObstacleOverlap);
-	};
-
-	this.handleFloorCollision = function(thePlayer, theObstacle) {
-		if(thePlayer.y + thePlayer.body.height > theObstacle.y) {
-			thePlayer.y = theObstacle.y - thePlayer.body.height;
-		}
-
-		if(!thePlayer.dashing) {
-			thePlayer.run();
-		}
 	};
 
 	this.handleObstacleOverlap = function(thePlayer, theObstacle) {
@@ -107,25 +96,9 @@ PlayState = function() {
 		mHud.refresh();
 	};
 
-	this.handleMovesOnSlopes = function(thePlayer, theSlope) {
-		var aScale;
-
-		aScale = (thePlayer.x - theSlope.x) / theSlope.width;
-
-		if(theSlope.key == 'slope-up') {
-			if(aScale >= 0.1 && aScale <= 0.75) {
-				thePlayer.y = theSlope.y - (theSlope.height / 2 + aScale * theSlope.height);
-			}
-		} else {
-			if(aScale >= 0.25 && aScale <= 0.6) {
-				thePlayer.y = theSlope.y - theSlope.height / 2 - 40 + aScale * (theSlope.height / 2);
-
-			}
-		}
-	};
-
 	this.render = function() {
 		//this.game.debug.body(mPlayer);
+		//this.game.debug.body(mLevel.getCurrentPlayerFloor());
 	};
 
 	// Getters
