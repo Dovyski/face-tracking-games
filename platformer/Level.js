@@ -73,9 +73,7 @@ Level.prototype.initObstacles = function() {
         i;
 
     for(i = 0; i < 5; i++) {
-        aItem = new Phaser.Sprite(this.game, 0, 0, 'frog');
-        aItem.animations.add('idle', [0, 1, 2, 3, 4], 5, true);
-        aItem.play('idle');
+        aItem = new Phaser.Sprite(this.game, 0, 0, i % 2 == 0 ? 'obstacle-top' : 'obstacle-bottom');
 
         this.initPhysics(aItem);
         mObstacles.add(aItem);
@@ -169,13 +167,16 @@ Level.prototype.addNewPieceOfFloor = function() {
 };
 
 Level.prototype.addNewObstacleIfAppropriate = function(theWhere) {
-    var aObstacle;
+    var aObstacle,
+        aPosY;
 
     if(theWhere.key == 'platform' && this.game.rnd.frac() <= 1.0) {
         aObstacle = mObstacles.getFirstDead();
 
         if(aObstacle) {
-            aObstacle.reset(50 + this.game.rnd.frac() * theWhere.width * 0.8 + theWhere.x, theWhere.y - aObstacle.height + 5);
+            aPosY = aObstacle.key == 'obstacle-top' ? -150 : -aObstacle.height + 5;
+
+            aObstacle.reset(50 + this.game.rnd.frac() * theWhere.width * 0.8 + theWhere.x, theWhere.y + aPosY);
             aObstacle.body.velocity.x = theWhere.body.velocity.x;
         }
     }
