@@ -10,7 +10,7 @@ Player = function (theGame) {
     this.mFlickeringTimer;
 
     // Constructor
-    Phaser.Sprite.call(this, theGame, 50, theGame.width * 0.15, 'player');
+    Phaser.Sprite.call(this, theGame, theGame.width * 0.15, theGame.world.centerY + 10, 'player');
     this.init();
 };
 
@@ -23,6 +23,7 @@ Player.prototype.constructor = Player;
 Player.prototype.init = function() {
     this.animations.add('run', [0, 1, 2, 3, 4, 5], 10, true);
     this.animations.add('jump', [6, 7, 8, 8, 9, 10], 5, true);
+    this.animations.add('dash', [11], 5, true);
 
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.collideWorldBounds = true;
@@ -32,7 +33,7 @@ Player.prototype.init = function() {
     this.mActionTimer = 0;
     this.mHealth = Constants.GAME_HEALTH_MAX;
 
-    this.animations.play('run');
+    this.run();
 };
 
 Player.prototype.update = function() {
@@ -44,7 +45,11 @@ Player.prototype.update = function() {
 
         if(this.mActionTimer <= 0) {
             this.jumping = false;
-            this.dashing = false;
+
+            if(this.dashing) {
+                this.dashing = false;
+                this.run();
+            }
         }
     }
 
@@ -56,6 +61,15 @@ Player.prototype.update = function() {
         if(this.mFlickeringTimer <= 0) {
             this.visible = true;
         }
+    }
+};
+
+Player.prototype.run = function() {
+    if(this.animations.currentAnim.name != "run") {
+        this.body.setSize(20, 120, 30, 0);
+        this.anchor.set(0);
+        this.angle = 0;
+        this.animations.play('run');
     }
 };
 
@@ -72,9 +86,13 @@ Player.prototype.jump = function() {
 Player.prototype.dash = function() {
     if(!this.dashing) {
         this.dashing = true;
-        this.animations.play('jump');
+        this.animations.play('dash');
+        this.body.setSize(100, 30, 0, 0);
+        this.anchor.set(0.5);
+        this.angle = -90;
+        this.y += this.height;
 
-        this.mActionTimer = 500;
+        this.mActionTimer = 1000;
     }
 };
 

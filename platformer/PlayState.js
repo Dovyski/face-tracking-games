@@ -20,7 +20,6 @@ PlayState = function() {
 		// Init physics
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.game.physics.setBoundsToWorld();
- 		this.game.physics.arcade.gravity.y = 1000;
 		this.game.time.desiredFps = 30;
 
 		// Init entities
@@ -86,16 +85,19 @@ PlayState = function() {
 			}
 	    }
 
-		if (!mPlayer.jumping) {
-			this.game.physics.arcade.collide(mPlayer, mLevel.getFloor(), function() {
-				if(!mPlayer.dashing) {
-					mPlayer.animations.play('run');
-				}
-			}, null, this);
-		}
-
+		this.game.physics.arcade.overlap(mPlayer, mLevel.getFloor(), this.handleFloorCollision);
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getSlopes(), this.handleMovesOnSlopes);
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getObstacles(), this.handleObstacleOverlap);
+	};
+
+	this.handleFloorCollision = function(thePlayer, theObstacle) {
+		if(thePlayer.y + thePlayer.body.height > theObstacle.y) {
+			thePlayer.y = theObstacle.y - thePlayer.body.height;
+		}
+
+		if(!thePlayer.dashing) {
+			thePlayer.run();
+		}
 	};
 
 	this.handleObstacleOverlap = function(thePlayer, theObstacle) {
@@ -120,6 +122,10 @@ PlayState = function() {
 
 			}
 		}
+	};
+
+	this.render = function() {
+		//this.game.debug.body(mPlayer);
 	};
 
 	// Getters
