@@ -7,6 +7,7 @@ Player = function (theGame) {
     this.dashing,
     this.mActionTimer;
     this.mHealth;
+    this.mFlickeringTimer;
 
     // Constructor
     Phaser.Sprite.call(this, theGame, 50, theGame.width * 0.15, 'player');
@@ -46,6 +47,16 @@ Player.prototype.update = function() {
             this.dashing = false;
         }
     }
+
+    if(this.mFlickeringTimer > 0) {
+        this.mFlickeringTimer -= this.game.time.elapsedMS;
+
+        this.visible = !this.visible;
+
+        if(this.mFlickeringTimer <= 0) {
+            this.visible = true;
+        }
+    }
 };
 
 Player.prototype.jump = function() {
@@ -77,11 +88,23 @@ Player.prototype.heal = function() {
 };
 
 Player.prototype.hurt = function() {
-    this.mHealth -= Constants.GAME_MISTAKE_HEALTH;
+    if(!this.isFlickering()) {
+        this.mHealth -= Constants.GAME_MISTAKE_HEALTH;
 
-    if(this.mHealth < 0) {
-        this.mHealth = 0;
+        if(this.mHealth < 0) {
+            this.mHealth = 0;
+        }
+
+        this.flicker(1000);
     }
+};
+
+Player.prototype.flicker = function(theDuration) {
+    this.mFlickeringTimer = theDuration
+};
+
+Player.prototype.isFlickering = function() {
+    return this.mFlickeringTimer > 0;
 };
 
 Player.prototype.getHealth = function() {
