@@ -44,18 +44,16 @@ Player.prototype.init = function() {
 Player.prototype.update = function() {
     this.x = this.game.width * Constants.PLAYER_POSITION_X;
 
+    this.adjustDustEmitterPosition();
+
     if(this.dashing) {
         this.mDashTimer -= this.game.time.elapsedMS;
 
-        this.mDustEmitter.x = this.x + 40;
-        this.mDustEmitter.y = this.y + this.body.height;
-
         if(this.mDashTimer <= 0) {
             this.dashing = false;
+            this.mDustEmitter.on = false;
             this.run();
         }
-    } else if(this.mDustEmitter.on) {
-        this.mDustEmitter.on = false;
     }
 
     if(this.mFlickeringTimer > 0) {
@@ -69,6 +67,11 @@ Player.prototype.update = function() {
     }
 };
 
+Player.prototype.adjustDustEmitterPosition = function() {
+    this.mDustEmitter.x = this.x + 40;
+    this.mDustEmitter.y = this.y + this.body.height;
+};
+
 Player.prototype.adjustPosition = function(theCurrentFloor) {
     // Euler interpolation
     this.mVelocity.y += this.mAcceleration.y;
@@ -79,6 +82,11 @@ Player.prototype.adjustPosition = function(theCurrentFloor) {
     // Are we touching the floor?
     if(this.y + this.body.height > theCurrentFloor.y) {
         // Yep, we are. Is it a slope?
+        if(this.mTouchingFloor == false) {
+            // About to land from jump, let's emit some dust
+            this.adjustDustEmitterPosition();
+            this.mDustEmitter.start(false, 1000, 500, 2, 2);
+        }
         this.mTouchingFloor = true;
 
         // Check it the floor is a slope
@@ -131,9 +139,8 @@ Player.prototype.run = function() {
 };
 
 Player.prototype.jump = function() {
-    if(this.mTouchingFloor ) {
+    if(this.mTouchingFloor) {
         this.run(); // to prevent any dash rotation/animation
-        this.mTouchingFloor = false;
         this.animations.play('jump');
         this.mVelocity.y = -15;
     }
@@ -194,4 +201,5 @@ Player.prototype.getHealthPercentage = function() {
 
 Player.prototype.setDustEmitter = function(theEmitter) {
     this.mDustEmitter = theEmitter;
+    this.adjustDustEmitterPosition();
 };
