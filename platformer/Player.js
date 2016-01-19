@@ -10,6 +10,7 @@ Player = function (theGame) {
     this.mTouchingFloor;
     this.mVelocity;
     this.mAcceleration;
+    this.mDustEmitter;
 
     // Constructor
     Phaser.Sprite.call(this, theGame, theGame.width * 0.15, theGame.world.centerY + 10, 'player');
@@ -46,10 +47,15 @@ Player.prototype.update = function() {
     if(this.dashing) {
         this.mDashTimer -= this.game.time.elapsedMS;
 
+        this.mDustEmitter.x = this.x + 40;
+        this.mDustEmitter.y = this.y + this.body.height;
+
         if(this.mDashTimer <= 0) {
             this.dashing = false;
             this.run();
         }
+    } else if(this.mDustEmitter.on) {
+        this.mDustEmitter.on = false;
     }
 
     if(this.mFlickeringTimer > 0) {
@@ -143,6 +149,9 @@ Player.prototype.dash = function() {
         this.y += this.height;
 
         this.mDashTimer = 500;
+
+        // Emit some dust \o/
+        this.mDustEmitter.start(false, 1000, 50);
     }
 };
 
@@ -181,4 +190,8 @@ Player.prototype.getHealth = function() {
 
 Player.prototype.getHealthPercentage = function() {
     return this.mHealth / Constants.GAME_HEALTH_MAX;
+};
+
+Player.prototype.setDustEmitter = function(theEmitter) {
+    this.mDustEmitter = theEmitter;
 };

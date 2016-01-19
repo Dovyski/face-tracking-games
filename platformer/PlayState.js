@@ -8,6 +8,7 @@ PlayState = function() {
 		mLevel,
 		mPlayer,
 		mMatchTime,			// Remaining time for the match
+		mDustEmitter,
 		mDifficultyIndex,
 		mScore = {			// Info regarding global score (throughout the game session)
 			right: 0,
@@ -27,6 +28,16 @@ PlayState = function() {
 		mLevel = new Level(this.game);
 		mPlayer = new Player(this.game);
 		this.game.add.existing(mPlayer);
+
+		// Dust emitter
+		mDustEmitter = this.game.add.emitter(this.game, 0, 0, 100);
+		mDustEmitter.particleClass = Dust;
+		mDustEmitter.gravity = -70;
+		mDustEmitter.minParticleSpeed.set(-100, -50);
+		mDustEmitter.maxParticleSpeed.set(-300, -150);
+		mDustEmitter.setRotation(0, 0);
+		mDustEmitter.makeParticles();
+		mPlayer.setDustEmitter(mDustEmitter);
 
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
