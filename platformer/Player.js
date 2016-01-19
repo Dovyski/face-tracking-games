@@ -5,7 +5,8 @@ Player = function (theGame) {
     // Properties
     this.jumping;
     this.dashing,
-    this.mActionTimer;
+    this.mJumpTimer;
+    this.mDashTimer;
     this.mHealth;
     this.mFlickeringTimer;
     this.mVelocity;
@@ -32,7 +33,8 @@ Player.prototype.init = function() {
 
     this.jumping = false;
     this.dashing = false;
-    this.mActionTimer = 0;
+    this.mJumpTimer = 0;
+    this.mDashTimer = 0;
     this.mHealth = Constants.GAME_HEALTH_MAX;
     this.mVelocity = new Phaser.Point();
     this.mAcceleration = new Phaser.Point(0, 1);
@@ -43,16 +45,20 @@ Player.prototype.init = function() {
 Player.prototype.update = function() {
     this.x = this.game.width * 0.15;
 
-    if(this.jumping || this.dashing) {
-        this.mActionTimer -= this.game.time.elapsedMS;
+    if(this.jumping) {
+        this.mJumpTimer -= this.game.time.elapsedMS;
 
-        if(this.mActionTimer <= 0) {
+        if(this.mJumpTimer <= 0) {
             this.jumping = false;
+        }
+    }
 
-            if(this.dashing) {
-                this.dashing = false;
-                this.run();
-            }
+    if(this.dashing) {
+        this.mDashTimer -= this.game.time.elapsedMS;
+
+        if(this.mDashTimer <= 0) {
+            this.dashing = false;
+            this.run();
         }
     }
 
@@ -74,14 +80,20 @@ Player.prototype.adjustPosition = function(theCurrentFloor) {
 
     this.y += this.mVelocity.y;
 
-    if(theCurrentFloor.key == 'slope-up' || theCurrentFloor.key == 'slope-down') {
-        this.processMoveOnSlope(theCurrentFloor);
+    // Are we touching the floor?
+    if(this.y + this.body.height > theCurrentFloor.y) {
+        // Yep, we are. Is it a slope?
+        if(theCurrentFloor.key == 'slope-up' || theCurrentFloor.key == 'slope-down') {
+            // Yep, handle the up/down movement.
+            this.processMoveOnSlope(theCurrentFloor);
 
-    } else if(this.y + this.body.height > theCurrentFloor.y) {
-		this.y = theCurrentFloor.y - this.body.height;
+        } else {
+            // No, it's a flat platform.
+    		this.y = theCurrentFloor.y - this.body.height;
 
-        if(!this.dashing) {
-            this.run();
+            if(!this.dashing) {
+                this.run();
+            }
         }
     }
 };
@@ -93,12 +105,14 @@ Player.prototype.processMoveOnSlope = function(theSlope) {
 
     if(theSlope.key == 'slope-up') {
         if(aScale <= 0.5) {
+            this.run();
             this.y = theSlope.y - (theSlope.height / 2 + aScale * theSlope.height * 0.7);
         } else {
             this.y = theSlope.y - this.body.height;
         }
     } else {
         if(aScale <= 0.6) {
+            this.run();
             this.y = theSlope.y - theSlope.height / 2 - 40 + aScale * (theSlope.height / 2);
         } else {
             this.y = theSlope.y - 60;
@@ -112,6 +126,7 @@ Player.prototype.run = function() {
         this.anchor.set(0);
         this.angle = 0;
         this.animations.play('run');
+        this.mJumpTimer = 50;
     }
 };
 
@@ -121,7 +136,7 @@ Player.prototype.jump = function() {
         this.animations.play('jump');
         this.mVelocity.y = -15;
 
-        this.mActionTimer = 250;
+        this.mJumpTimer = 250;
     }
 };
 
@@ -134,7 +149,7 @@ Player.prototype.dash = function() {
         this.angle = -90;
         this.y += this.height;
 
-        this.mActionTimer = 1000;
+        this.mDashTimer = 500;
     }
 };
 
