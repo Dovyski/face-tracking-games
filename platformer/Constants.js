@@ -21,7 +21,7 @@ var Constants = new function() {
 			obstacles_per_platform: 1,		// Number of obstacles for each platform
 			obstacle_min_pos: 50,			// Min. amount of pixels from the begining of the platform until the obstacle.
 			obstacle_min_spacing: 100,		// Min. amount of pixels between the obstacles.
-			slope_chance: 0.3				// Chances of adding a slope after a platform.
+			platforms_before_slope: 3		// Number of flat platforms before adding a slope
 		}
 	];
 };

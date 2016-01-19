@@ -8,6 +8,7 @@ var Level = function (theGame) {
         mItems,
         mObstacles,
         mCurrentPlayerFloor,
+        mFlatCounter,
         mLastAdded;
 
     // Constructor
@@ -31,6 +32,7 @@ Level.prototype.init = function() {
     mItems = [];
     mLastAdded = {x: 0, y: this.game.world.centerY, width: 0, height: 0};
     mCurrentPlayerFloor = mLastAdded;
+    mFlatCounter = 0;
 
     this.initTerrain();
     this.initObstacles();
@@ -142,7 +144,7 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
     if(mLastAdded != null) {
         // Yes.
         // Was the last added element a platform?
-        if(mLastAdded.key == 'platform' && this.game.rnd.frac() <= 1.0) {
+        if(mLastAdded.key == 'platform' && mFlatCounter++ >= theDifficulty.platforms_before_slope) {
             // Yep! We can add a slope here then to make things more interesting.
             if(mLastAdded.y <= this.game.height * 0.3) {
                 // We are too high right now, no room for up-slopes.
@@ -159,6 +161,7 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
             }
 
             aNew.reset(mLastAdded.x + mLastAdded.width - 30, mLastAdded.y - (aNew.key == 'slope-up' ? aNew.height / 2 - 5 : 0));
+            mFlatCounter = 0;
 
         } else {
             // Nop, it was not a platform. We must add a platform here then.
