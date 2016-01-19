@@ -4,8 +4,6 @@
 var Level = function (theGame) {
     // Properties
     var mFloor,
-        mSlopes,
-        mItems,
         mObstacles,
         mCurrentPlayerFloor,
         mFlatCounter,
@@ -26,10 +24,8 @@ Level.prototype.init = function() {
     var aItem,
         i;
 
-    mSlopes = this.game.add.group();
     mFloor = this.game.add.group();
     mObstacles = this.game.add.group();
-    mItems = [];
     mLastAdded = {x: 0, y: this.game.world.centerY, width: 0, height: 0};
     mCurrentPlayerFloor = mLastAdded;
     mFlatCounter = 0;
@@ -42,8 +38,6 @@ Level.prototype.init = function() {
         this.addNewPieceOfFloor(this.getDifficulty());
     }
 
-    // Add the floor and the slopes to the level
-    this.add(mSlopes);
     this.add(mFloor);
 };
 
@@ -51,23 +45,19 @@ Level.prototype.initTerrain = function() {
     var aItem,
         i;
 
-    // Create the platforms
-    for(i = 0; i < 5; i++) {
-        aItem = new Phaser.Sprite(this.game, this.game.world.width / 2 * i, this.game.world.centerY, 'platform');
-        this.initPhysics(aItem);
-
-        mFloor.add(aItem);
-        mItems.push(aItem);
-
-        aItem.kill();
-    }
-
     // Create the slopes
     for(i = 0; i < 8; i++) {
         aItem = new Phaser.Sprite(this.game, 0, 0, i % 2 == 0 ? 'slope-up' : 'slope-down');
         this.initPhysics(aItem);
-        mSlopes.add(aItem);
-        mItems.push(aItem);
+        mFloor.add(aItem);
+        aItem.kill();
+    }
+
+    // Create the platforms
+    for(i = 0; i < 5; i++) {
+        aItem = new Phaser.Sprite(this.game, this.game.world.width / 2 * i, this.game.world.centerY, 'platform');
+        this.initPhysics(aItem);
+        mFloor.add(aItem);
         aItem.kill();
     }
 };
@@ -81,7 +71,6 @@ Level.prototype.initObstacles = function() {
 
         this.initPhysics(aItem);
         mObstacles.add(aItem);
-        mItems.push(aItem);
         aItem.kill();
     }
 };
@@ -105,31 +94,35 @@ Level.prototype.update = function() {
     // Get current difficulty configuration
     aDifficulty = this.getDifficulty();
 
-    // Let's check if anyone has moved out of the screen
-    for(i = 0, aTotal = mItems.length; i < aTotal; i++) {
-        aItem = mItems[i];
-
-        if(aItem.alive) {
-            if(this.isFloor(aItem) && aItem.x > 0 && aItem.x <= this.game.width * Constants.PLAYER_POSITION_X) {
-                mCurrentPlayerFloor = aItem.x > mCurrentPlayerFloor.x ? aItem : mCurrentPlayerFloor;
-            }
-
-            // Update item velocity according to game difficulty
-            aItem.body.velocity.x = aDifficulty.speed;
-
-            if(aItem.x <= -aItem.width) {
-                if(this.isFloor(aItem)) {
-                    this.addNewPieceOfFloor(aDifficulty);
-                }
-                aItem.kill();
-            }
+    // Let's check who is the block touching the player
+    // and if anything has moved out of the screen.
+    mFloor.forEachAlive(function(theItem) {
+        if(this.isFloor(theItem) && theItem.x > 0 && theItem.x <= this.game.width * Constants.PLAYER_POSITION_X) {
+            mCurrentPlayerFloor = theItem.x > mCurrentPlayerFloor.x ? theItem : mCurrentPlayerFloor;
         }
-    }
+
+        // Update item velocity according to game difficulty
+        theItem.body.velocity.x = aDifficulty.speed;
+
+        if(theItem.x <= -theItem.width) {
+            if(this.isFloor(theItem)) {
+                this.addNewPieceOfFloor(aDifficulty);
+            }
+            theItem.kill();
+        }
+    }, this);
 
     // Is there a gap on the screen?
     if(mLastAdded && mLastAdded.x + mLastAdded.width < this.game.width) {
         this.addNewPieceOfFloor(aDifficulty);
     }
+
+    // Check if obstacles left the screen.
+    mObstacles.forEachAlive(function(theItem) {
+        if(theItem.x <= -theItem.width) {
+            theItem.kill();
+        }
+    }, this);
 };
 
 Level.prototype.isFloor = function(theItem) {
@@ -149,15 +142,15 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
             if(mLastAdded.y <= this.game.height * theDifficulty.slope_max_hight) {
                 // We are too high right now, no room for up-slopes.
                 // We must add a down-slope.
-                aNew = this.getFirstDeadByType(mSlopes, 'slope-down');
+                aNew = this.getFirstDeadByType(mFloor, 'slope-down');
 
             } else if(mLastAdded.y >= this.game.height * theDifficulty.slope_min_hight) {
                 // We are too low. It's time for a up-slope.
-                aNew = this.getFirstDeadByType(mSlopes, 'slope-up');
+                aNew = this.getFirstDeadByType(mFloor, 'slope-up');
 
             } else {
                 // We are not too high/low, so any slope will fit.
-                aNew = this.getFirstDeadByType(mSlopes, this.game.rnd.frac() < 0.5 ? 'slope-up' : 'slope-down');
+                aNew = this.getFirstDeadByType(mFloor, this.game.rnd.frac() < 0.5 ? 'slope-up' : 'slope-down');
             }
 
             aNew.reset(mLastAdded.x + mLastAdded.width - 30, mLastAdded.y - (aNew.key == 'slope-up' ? aNew.height / 2 - 5 : 0));
@@ -236,7 +229,7 @@ Level.prototype.getFloor = function() {
 };
 
 Level.prototype.getSlopes = function() {
-    return mSlopes;
+    return mFloor;
 };
 
 Level.prototype.getObstacles = function() {
