@@ -125,7 +125,8 @@ Player.prototype.run = function() {
 };
 
 Player.prototype.jump = function() {
-    if(this.mTouchingFloor) {
+    if(this.mTouchingFloor ) {
+        this.run(); // to prevent any dash rotation/animation
         this.mTouchingFloor = false;
         this.animations.play('jump');
         this.mVelocity.y = -15;
@@ -133,7 +134,7 @@ Player.prototype.jump = function() {
 };
 
 Player.prototype.dash = function() {
-    if(!this.dashing) {
+    if(!this.dashing && this.mTouchingFloor) {
         this.dashing = true;
         this.animations.play('dash');
         this.body.setSize(100, 30, 0, 0);

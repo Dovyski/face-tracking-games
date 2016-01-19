@@ -105,7 +105,7 @@ Level.prototype.update = function() {
 
         if(aItem.alive) {
             if(this.isFloor(aItem) && aItem.x > 0 && aItem.x <= this.game.width * Constants.PLAYER_POSITION_X) {
-                mCurrentPlayerFloor = aItem;
+                mCurrentPlayerFloor = aItem.x > mCurrentPlayerFloor.x ? aItem : mCurrentPlayerFloor;
             }
 
             if(aItem.x <= -aItem.width) {

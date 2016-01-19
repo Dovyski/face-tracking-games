@@ -12,5 +12,5 @@ var Constants = new function() {
 	this.GAME_MISTAKE_HEALTH	= 5; 		// How many health point you loose when you make a mistake.
 	this.GAME_CORRECT_HEALTH	= 1; 		// How many health point you win when you make a mistake.
 
-	this.PLAYER_POSITION_X		= 0.35; 	// Relative to screen width, percentage of player's position (from the left).
+	this.PLAYER_POSITION_X		= 0.15; 	// Relative to screen width, percentage of player's position (from the left).
 };
