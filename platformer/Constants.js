@@ -17,11 +17,13 @@ var Constants = new function() {
 	this.DIFFICULTY	= [						// Controls the difficulty of the game. Each entry means a piece of time
 		{
 			speed: -100,					// Speed of the platforms
-			obstacles_chance: 0.3,			// Chances of adding obstacles on a platform
-			obstacles_per_platform: 1,		// Number of obstacles for each platform
-			obstacle_min_pos: 50,			// Min. amount of pixels from the begining of the platform until the obstacle.
-			obstacle_min_spacing: 100,		// Min. amount of pixels between the obstacles.
-			platforms_before_slope: 3		// Number of flat platforms before adding a slope
+			obstacles_chance: 1.0,			// Chances of adding obstacles on a platform
+			obstacles_per_platform: 3,		// Number of obstacles for each platform
+			obstacle_min_pos: 150,			// Min. amount of pixels from the begining of the platform until the obstacle.
+			obstacle_spacing: 200,			// Amount of pixels between the obstacles.
+			platforms_before_slope: 3,		// Number of flat platforms before adding a slope
+			slope_max_hight: 3,				// Maxium height the player can reach before a slope-down must be added.
+			slope_min_hight: 3				// Minimum height the player can reach before a slope-up must be added.
 		}
 	];
 };

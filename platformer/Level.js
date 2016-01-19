@@ -76,7 +76,7 @@ Level.prototype.initObstacles = function() {
     var aItem,
         i;
 
-    for(i = 0; i < 5; i++) {
+    for(i = 0; i < 15; i++) {
         aItem = new Phaser.Sprite(this.game, 0, 0, i % 2 == 0 ? 'obstacle-top' : 'obstacle-bottom');
 
         this.initPhysics(aItem);
@@ -166,7 +166,7 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
         } else {
             // Nop, it was not a platform. We must add a platform here then.
             aNew = this.getFirstDeadByType(mFloor, 'platform');
-            aNew.reset(mLastAdded.x + mLastAdded.width - 50, mLastAdded.y);
+            aNew.reset(mLastAdded.x + mLastAdded.width - 10, mLastAdded.y);
 
             if(mLastAdded.key != 'platform') {
                 aNew.y += mLastAdded.key == 'slope-up' ? 0 : mLastAdded.height / 2 - 5;
@@ -190,19 +190,26 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
 
 Level.prototype.addNewObstacleIfAppropriate = function(theWhere, theDifficulty) {
     var aObstacle,
-        aPosY;
+        aPosX,
+        aPosY,
+        i;
 
-    if(theWhere.key == 'platform' && this.game.rnd.frac() <= 1.0) {
-        aObstacle = mObstacles.getFirstDead();
+    if(theWhere.key == 'platform' && this.game.rnd.frac() <= theDifficulty.obstacles_chance) {
+        for(i = 0; i < theDifficulty.obstacles_per_platform; i++) {
+            aObstacle = mObstacles.getFirstDead();
 
-        if(aObstacle) {
-            aObstacle.reset(50 + this.game.rnd.frac() * theWhere.width * 0.8 + theWhere.x, theWhere.y + -aObstacle.height + 5);
-            aObstacle.body.velocity.x = theWhere.body.velocity.x;
+            if(aObstacle) {
+                aPosX = theDifficulty.obstacle_min_pos + theWhere.x + theDifficulty.obstacle_spacing * i;
+                aPosY = theWhere.y + -aObstacle.height + 5;
 
-            if(aObstacle.key == 'obstacle-top') {
-                aObstacle.anchor.setTo(0.5);
-                aObstacle.body.angularVelocity = 100;
-                aObstacle.y -= 20;
+                aObstacle.reset(aPosX, aPosY);
+                aObstacle.body.velocity.x = theWhere.body.velocity.x;
+
+                if(aObstacle.key == 'obstacle-top') {
+                    aObstacle.anchor.setTo(0.5);
+                    aObstacle.body.angularVelocity = 100;
+                    aObstacle.y -= 20;
+                }
             }
         }
     }
