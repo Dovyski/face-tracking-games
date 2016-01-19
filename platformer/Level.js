@@ -146,18 +146,18 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
         // Was the last added element a platform?
         if(mLastAdded.key == 'platform' && mFlatCounter++ >= theDifficulty.platforms_before_slope) {
             // Yep! We can add a slope here then to make things more interesting.
-            if(mLastAdded.y <= this.game.height * 0.3) {
+            if(mLastAdded.y <= this.game.height * theDifficulty.slope_max_hight) {
                 // We are too high right now, no room for up-slopes.
                 // We must add a down-slope.
                 aNew = this.getFirstDeadByType(mSlopes, 'slope-down');
 
-            } else if(mLastAdded.y >= this.game.height * 0.8) {
+            } else if(mLastAdded.y >= this.game.height * theDifficulty.slope_min_hight) {
                 // We are too low. It's time for a up-slope.
                 aNew = this.getFirstDeadByType(mSlopes, 'slope-up');
 
             } else {
                 // We are not too high/low, so any slope will fit.
-                aNew = mSlopes.getFirstDead();
+                aNew = this.getFirstDeadByType(mSlopes, this.game.rnd.frac() < 0.5 ? 'slope-up' : 'slope-down');
             }
 
             aNew.reset(mLastAdded.x + mLastAdded.width - 30, mLastAdded.y - (aNew.key == 'slope-up' ? aNew.height / 2 - 5 : 0));
