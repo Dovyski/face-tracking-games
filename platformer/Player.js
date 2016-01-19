@@ -41,7 +41,7 @@ Player.prototype.init = function() {
 };
 
 Player.prototype.update = function() {
-    this.x = this.game.width * 0.15;
+    this.x = this.game.width * Constants.PLAYER_POSITION_X;
 
     if(this.dashing) {
         this.mDashTimer -= this.game.time.elapsedMS;

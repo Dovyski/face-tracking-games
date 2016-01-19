@@ -11,4 +11,6 @@ var Constants = new function() {
 	this.GAME_HEALTH_MAX		= 100; 		// Max health points available in the game.
 	this.GAME_MISTAKE_HEALTH	= 5; 		// How many health point you loose when you make a mistake.
 	this.GAME_CORRECT_HEALTH	= 1; 		// How many health point you win when you make a mistake.
+
+	this.PLAYER_POSITION_X		= 0.35; 	// Relative to screen width, percentage of player's position (from the left).
 };
