@@ -3,12 +3,11 @@
  */
 Player = function (theGame) {
     // Properties
-    this.jumping;
     this.dashing,
-    this.mJumpTimer;
     this.mDashTimer;
     this.mHealth;
     this.mFlickeringTimer;
+    this.mTouchingFloor;
     this.mVelocity;
     this.mAcceleration;
 
@@ -31,10 +30,9 @@ Player.prototype.init = function() {
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.collideWorldBounds = true;
 
-    this.jumping = false;
     this.dashing = false;
-    this.mJumpTimer = 0;
     this.mDashTimer = 0;
+    this.mTouchingFloor = false;
     this.mHealth = Constants.GAME_HEALTH_MAX;
     this.mVelocity = new Phaser.Point();
     this.mAcceleration = new Phaser.Point(0, 1);
@@ -44,14 +42,6 @@ Player.prototype.init = function() {
 
 Player.prototype.update = function() {
     this.x = this.game.width * 0.15;
-
-    if(this.jumping) {
-        this.mJumpTimer -= this.game.time.elapsedMS;
-
-        if(this.mJumpTimer <= 0) {
-            this.jumping = false;
-        }
-    }
 
     if(this.dashing) {
         this.mDashTimer -= this.game.time.elapsedMS;
@@ -83,6 +73,9 @@ Player.prototype.adjustPosition = function(theCurrentFloor) {
     // Are we touching the floor?
     if(this.y + this.body.height > theCurrentFloor.y) {
         // Yep, we are. Is it a slope?
+        this.mTouchingFloor = true;
+
+        // Check it the floor is a slope
         if(theCurrentFloor.key == 'slope-up' || theCurrentFloor.key == 'slope-down') {
             // Yep, handle the up/down movement.
             this.processMoveOnSlope(theCurrentFloor);
@@ -95,6 +88,8 @@ Player.prototype.adjustPosition = function(theCurrentFloor) {
                 this.run();
             }
         }
+    } else {
+        this.mTouchingFloor = false;
     }
 };
 
@@ -126,17 +121,14 @@ Player.prototype.run = function() {
         this.anchor.set(0);
         this.angle = 0;
         this.animations.play('run');
-        this.mJumpTimer = 50;
     }
 };
 
 Player.prototype.jump = function() {
-    if(!this.jumping) {
-        this.jumping = true;
+    if(this.mTouchingFloor) {
+        this.mTouchingFloor = false;
         this.animations.play('jump');
         this.mVelocity.y = -15;
-
-        this.mJumpTimer = 250;
     }
 };
 
