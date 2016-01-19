@@ -8,6 +8,7 @@ PlayState = function() {
 		mLevel,
 		mPlayer,
 		mMatchTime,			// Remaining time for the match
+		mDifficultyIndex,
 		mScore = {			// Info regarding global score (throughout the game session)
 			right: 0,
 			wrong: 0,
@@ -71,6 +72,10 @@ PlayState = function() {
 	this.update = function() {
 		var aKeyboard;
 
+		// Calculate the difficulty index based on the game duration
+		mDifficultyIndex = (1 - mMatchTime / Constants.GAME_MATCH_DURATION) * Constants.DIFFICULTY.length;
+		mDifficultyIndex |= 0; // cast to int
+
 		this.updateTimeAndTracking();
 
 		aKeyboard = this.game.input.keyboard;
@@ -105,6 +110,10 @@ PlayState = function() {
 
 	this.getScore = function() {
 		return mScore;
+	};
+
+	this.getDifficulty = function() {
+		return mDifficultyIndex >= 0 && mDifficultyIndex < Constants.DIFFICULTY.length ? Constants.DIFFICULTY[mDifficultyIndex] : Constants.DIFFICULTY[0];
 	};
 
 	this.getHud = function() {

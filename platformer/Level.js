@@ -37,7 +37,7 @@ Level.prototype.init = function() {
 
     // Add a few pieces of floor to start with
     for(i = 0; i < 4; i++) {
-        this.addNewPieceOfFloor();
+        this.addNewPieceOfFloor(this.getDifficulty());
     }
 
     // Add the floor and the slopes to the level
@@ -95,9 +95,13 @@ Level.prototype.initPhysics = function(theItem) {
 Level.prototype.update = function() {
     var i,
         aTotal,
-        aItem;
+        aItem,
+        aDifficulty;
 
     Phaser.Group.prototype.update.call(this);
+
+    // Get current difficulty configuration
+    aDifficulty = this.getDifficulty();
 
     // Let's check if anyone has moved out of the screen
     for(i = 0, aTotal = mItems.length; i < aTotal; i++) {
@@ -108,9 +112,12 @@ Level.prototype.update = function() {
                 mCurrentPlayerFloor = aItem.x > mCurrentPlayerFloor.x ? aItem : mCurrentPlayerFloor;
             }
 
+            // Update item velocity according to game difficulty
+            aItem.body.velocity.x = aDifficulty.speed;
+
             if(aItem.x <= -aItem.width) {
                 if(this.isFloor(aItem)) {
-                    this.addNewPieceOfFloor();
+                    this.addNewPieceOfFloor(aDifficulty);
                 }
                 aItem.kill();
             }
@@ -119,7 +126,7 @@ Level.prototype.update = function() {
 
     // Is there a gap on the screen?
     if(mLastAdded && mLastAdded.x + mLastAdded.width < this.game.width) {
-        this.addNewPieceOfFloor();
+        this.addNewPieceOfFloor(aDifficulty);
     }
 };
 
@@ -127,7 +134,7 @@ Level.prototype.isFloor = function(theItem) {
     return theItem.key == 'platform' || theItem.key == 'slope-up' || theItem.key == 'slope-down';
 };
 
-Level.prototype.addNewPieceOfFloor = function() {
+Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
     var aNew;
 
     // Do we have any previously added element as
@@ -169,16 +176,16 @@ Level.prototype.addNewPieceOfFloor = function() {
 
     if(aNew) {
         // Make the platform move
-        aNew.body.velocity.x = -100;
+        aNew.body.velocity.x = theDifficulty.speed;
         // Tigh things together
         aNew.x -= 15;
-        this.addNewObstacleIfAppropriate(aNew);
+        this.addNewObstacleIfAppropriate(aNew, theDifficulty);
     }
 
     mLastAdded = aNew;
 };
 
-Level.prototype.addNewObstacleIfAppropriate = function(theWhere) {
+Level.prototype.addNewObstacleIfAppropriate = function(theWhere, theDifficulty) {
     var aObstacle,
         aPosY;
 
@@ -224,4 +231,8 @@ Level.prototype.getSlopes = function() {
 
 Level.prototype.getObstacles = function() {
     return mObstacles;
+};
+
+Level.prototype.getDifficulty = function() {
+    return Game.state.states[Game.state.current].getDifficulty();
 };
