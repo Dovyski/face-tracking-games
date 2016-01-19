@@ -196,7 +196,7 @@ Level.prototype.addNewObstacleIfAppropriate = function(theWhere, theDifficulty) 
 
     if(theWhere.key == 'platform' && this.game.rnd.frac() <= theDifficulty.obstacles_chance) {
         for(i = 0; i < theDifficulty.obstacles_per_platform; i++) {
-            aObstacle = mObstacles.getFirstDead();
+            aObstacle = aNew = this.getFirstDeadByType(mObstacles, this.game.rnd.frac() < 0.5 ? 'obstacle-top' : 'obstacle-bottom');
 
             if(aObstacle) {
                 aPosX = theDifficulty.obstacle_min_pos + theWhere.x + theDifficulty.obstacle_spacing * i;
