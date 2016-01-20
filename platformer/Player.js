@@ -11,6 +11,7 @@ Player = function (theGame) {
     this.mVelocity;
     this.mAcceleration;
     this.mDustEmitter;
+    this.mCurrentFloor;
 
     var mSfxJump,
         mSfxHurt,
@@ -41,6 +42,7 @@ Player.prototype.init = function() {
     this.mHealth = Constants.GAME_HEALTH_MAX;
     this.mVelocity = new Phaser.Point();
     this.mAcceleration = new Phaser.Point(0, 1);
+    this.mCurrentFloor = null;
 
     mSfxJump = this.game.add.audio('sfx-jump', 0.8);
     mSfxHurt = this.game.add.audio('sfx-hurt', 0.8);
@@ -81,6 +83,12 @@ Player.prototype.adjustDustEmitterPosition = function() {
 };
 
 Player.prototype.adjustPosition = function(theCurrentFloor) {
+    // Cache the current floor for any calculation in other methods
+    this.mCurrentFloor = theCurrentFloor;
+
+    // If the current floor is null, there is nothing to do here.
+    if(!theCurrentFloor) return;
+
     // Euler interpolation
     this.mVelocity.y += this.mAcceleration.y;
     this.mVelocity.y = this.mVelocity.y > 200 ? 200 : this.mVelocity.y;
@@ -143,6 +151,10 @@ Player.prototype.run = function() {
         this.anchor.set(0);
         this.angle = 0;
         this.animations.play('run');
+
+        // Fix any wrong placement during the transition from other
+        // state (dash, jump, etc).
+        this.adjustPosition(this.mCurrentFloor);
     }
 };
 

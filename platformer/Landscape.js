@@ -62,7 +62,7 @@ Landscape.prototype.update = function() {
         aItem.body.velocity.x = aDifficulty.speed * (aItem.key == 'clouds' ? 0.2 : 1);
 
         if(aItem.x <= -aItem.width) {
-            aItem.x = this.game.width;
+            aItem.x = this.game.width - 5;
         }
     }
 };
