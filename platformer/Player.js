@@ -155,10 +155,15 @@ Player.prototype.dash = function() {
         this.angle = -90;
         this.y += this.height;
 
-        this.mDashTimer = 500;
+        this.mDashTimer = 50;
 
         // Emit some dust \o/
         this.mDustEmitter.start(false, 1000, 50);
+
+    } else if(this.dashing) {
+        // If the player is already dashing and more of it
+        // is requested, we just increase the dashing timer.
+        this.mDashTimer = 50;
     }
 };
 
