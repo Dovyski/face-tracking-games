@@ -104,10 +104,28 @@ PlayState = function() {
 		mPlayer.adjustPosition(mLevel.getCurrentPlayerFloor());
 
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getObstacles(), this.handleObstacleOverlap);
+		this.game.physics.arcade.overlap(mPlayer, mLevel.getCollectables(), this.handleCollectable, null, this);
+	};
+
+	this.handleCollectable = function(thePlayer, theCollectable) {
+		var aTween;
+
+		if(theCollectable.alive) {
+			theCollectable.alive = false;
+			mScore.right++;
+
+			aTween = this.game.add.tween(theCollectable).to(mHud.getHeartIconPosition(), 500, Phaser.Easing.Linear.None, true);
+
+			aTween.onComplete.add(function(theItem) {
+				theItem.kill();
+				thePlayer.heal();
+			});
+		}
 	};
 
 	this.handleObstacleOverlap = function(thePlayer, theObstacle) {
 		thePlayer.hurt();
+		// TODO: score just once.
 		mScore.wrong++;
 
 		mHud.refresh();

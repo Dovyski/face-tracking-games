@@ -5,9 +5,11 @@ var Level = function (theGame) {
     // Properties
     var mFloor,
         mObstacles,
+        mCollectables,
         mCurrentPlayerFloor,
         mFlatCounter,
         mLandscape,
+        mItems,
         mLastAdded;
 
     // Constructor
@@ -25,15 +27,18 @@ Level.prototype.init = function() {
     var aItem,
         i;
 
+    mItems = [];
     mLandscape = new Landscape(this.game);
     mFloor = new Phaser.Group(this.game);
     mObstacles = new Phaser.Group(this.game);
+    mCollectables = new Phaser.Group(this.game);
     mLastAdded = {x: 0, y: this.game.world.centerY, width: 0, height: 0};
     mCurrentPlayerFloor = mLastAdded;
     mFlatCounter = 0;
 
     this.initTerrain();
     this.initObstacles();
+    this.initCollectables();
 
     // Add a few pieces of floor to start with
     for(i = 0; i < 4; i++) {
@@ -43,6 +48,7 @@ Level.prototype.init = function() {
     this.add(mLandscape.getBackground());
     this.add(mFloor);
     this.add(mObstacles);
+    this.add(mCollectables);
 };
 
 Level.prototype.initTerrain = function() {
@@ -54,6 +60,7 @@ Level.prototype.initTerrain = function() {
         aItem = new Phaser.Sprite(this.game, 0, 0, i % 2 == 0 ? 'slope-up' : 'slope-down');
         this.initPhysics(aItem);
         mFloor.add(aItem);
+        mItems.push(aItem);
         aItem.kill();
     }
 
@@ -62,6 +69,7 @@ Level.prototype.initTerrain = function() {
         aItem = new Phaser.Sprite(this.game, this.game.world.width / 2 * i, this.game.world.centerY, 'platform');
         this.initPhysics(aItem);
         mFloor.add(aItem);
+        mItems.push(aItem);
         aItem.kill();
     }
 };
@@ -75,6 +83,21 @@ Level.prototype.initObstacles = function() {
 
         this.initPhysics(aItem);
         mObstacles.add(aItem);
+        mItems.push(aItem);
+        aItem.kill();
+    }
+};
+
+Level.prototype.initCollectables = function() {
+    var aItem,
+        i;
+
+    for(i = 0; i < 15; i++) {
+        aItem = new Phaser.Sprite(this.game, 0, 0, 'heart');
+
+        this.initPhysics(aItem);
+        mCollectables.add(aItem);
+        mItems.push(aItem);
         aItem.kill();
     }
 };
@@ -98,35 +121,33 @@ Level.prototype.update = function() {
     // Get current difficulty configuration
     aDifficulty = this.getDifficulty();
 
-    // Let's check who is the block touching the player
+    // Let's check which is the block touching the player
     // and if anything has moved out of the screen.
-    mFloor.forEachAlive(function(theItem) {
-        if(this.isFloor(theItem) && theItem.x > 0 && theItem.x <= this.game.width * Constants.PLAYER_POSITION_X) {
-            mCurrentPlayerFloor = theItem.x > mCurrentPlayerFloor.x ? theItem : mCurrentPlayerFloor;
-        }
+    for(i = 0, aTotal = mItems.length; i < aTotal; i++) {
+        aItem = mItems[i];
 
-        // Update item velocity according to game difficulty
-        theItem.body.velocity.x = aDifficulty.speed;
-
-        if(theItem.x <= -theItem.width) {
-            if(this.isFloor(theItem)) {
-                this.addNewPieceOfFloor(aDifficulty);
+        if(aItem.alive) {
+            if(this.isFloor(aItem) && aItem.x > 0 && aItem.x <= this.game.width * Constants.PLAYER_POSITION_X) {
+                mCurrentPlayerFloor = aItem.x > mCurrentPlayerFloor.x ? aItem : mCurrentPlayerFloor;
             }
-            theItem.kill();
+            // Update item velocity according to game difficulty
+            aItem.body.velocity.x = aDifficulty.speed;
+
+            // Outside of screen?
+            if(aItem.x <= -aItem.width) {
+                aItem.kill();
+
+                if(this.isFloor(aItem)) {
+                    this.addNewPieceOfFloor(aDifficulty);
+                }
+            }
         }
-    }, this);
+    };
 
     // Is there a gap on the screen?
     if(mLastAdded && mLastAdded.x + mLastAdded.width < this.game.width) {
         this.addNewPieceOfFloor(aDifficulty);
     }
-
-    // Check if obstacles left the screen.
-    mObstacles.forEachAlive(function(theItem) {
-        if(theItem.x <= -theItem.width) {
-            theItem.kill();
-        }
-    }, this);
 };
 
 Level.prototype.isFloor = function(theItem) {
@@ -180,9 +201,26 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
         // Tigh things together
         aNew.x -= 15;
         this.addNewObstacleIfAppropriate(aNew, theDifficulty);
+        this.addNewCollectableIfAppropriate(aNew, theDifficulty);
     }
 
     mLastAdded = aNew;
+};
+
+Level.prototype.addNewCollectableIfAppropriate = function(theWhere, theDifficulty) {
+    var i,
+        aItem;
+
+    if(theWhere.key == 'platform') {
+        for(i = 0; i < 2; i++) {
+            aItem = mCollectables.getFirstDead();
+
+            if(aItem) {
+                aItem.reset(30 + theWhere.x + 100 * i, theWhere.y - 50);
+                aItem.body.velocity.x = theDifficulty.speed;
+            }
+        }
+    }
 };
 
 Level.prototype.addNewObstacleIfAppropriate = function(theWhere, theDifficulty) {
@@ -193,7 +231,7 @@ Level.prototype.addNewObstacleIfAppropriate = function(theWhere, theDifficulty) 
 
     if(theWhere.key == 'platform' && this.game.rnd.frac() <= theDifficulty.obstacles_chance) {
         for(i = 0; i < theDifficulty.obstacles_per_platform; i++) {
-            aObstacle = aNew = this.getFirstDeadByType(mObstacles, this.game.rnd.frac() < 0.5 ? 'obstacle-top' : 'obstacle-bottom');
+            aObstacle = this.getFirstDeadByType(mObstacles, this.game.rnd.frac() < 0.5 ? 'obstacle-top' : 'obstacle-bottom');
 
             if(aObstacle) {
                 aPosX = theDifficulty.obstacle_min_pos + theWhere.x + theDifficulty.obstacle_spacing * i;
@@ -238,6 +276,10 @@ Level.prototype.getSlopes = function() {
 
 Level.prototype.getObstacles = function() {
     return mObstacles;
+};
+
+Level.prototype.getCollectables = function() {
+    return mCollectables;
 };
 
 Level.prototype.getDifficulty = function() {

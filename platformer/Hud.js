@@ -32,3 +32,7 @@ Hud.prototype.refresh = function() {
 Hud.prototype.getPlayState = function() {
     return Game.state.states[Game.state.current];
 };
+
+Hud.prototype.getHeartIconPosition = function() {
+    return {x: mHealthBar.x + mHealthIcon.x, y: mHealthBar.y + mHealthIcon.y};
+};
