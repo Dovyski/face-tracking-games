@@ -21,12 +21,14 @@ var LoadState = function() {
 
 		// Assets from external authors
 		this.game.load.spritesheet('player', 'assets/player.png', 74, 128); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
-		this.game.load.image('platform', 'assets/platform.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
+		this.game.load.image('platform', 'assets/platform.png?1'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('slope-up', 'assets/slope-up.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('slope-down', 'assets/slope-down.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('obstacle-bottom', 'assets/obstacle-bottom.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('obstacle-top', 'assets/obstacle-top.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.spritesheet('dust', 'assets/dust.png', 64, 40); // ansimuz, Public domain, http://opengameart.org/content/animated-explosions
+		this.game.load.image('water', 'assets/water.png');  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
+		this.game.load.spritesheet('clouds', 'assets/clouds.png', 192, 60);  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 
 		Game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 

@@ -41,6 +41,7 @@ PlayState = function() {
 
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
+		this.game.add.existing(mLevel.getForeground());
 
 		mHud = new Hud();
 		this.game.add.existing(mHud);

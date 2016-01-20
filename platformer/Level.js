@@ -7,6 +7,7 @@ var Level = function (theGame) {
         mObstacles,
         mCurrentPlayerFloor,
         mFlatCounter,
+        mLandscape,
         mLastAdded;
 
     // Constructor
@@ -24,8 +25,9 @@ Level.prototype.init = function() {
     var aItem,
         i;
 
-    mFloor = this.game.add.group();
-    mObstacles = this.game.add.group();
+    mLandscape = new Landscape(this.game);
+    mFloor = new Phaser.Group(this.game);
+    mObstacles = new Phaser.Group(this.game);
     mLastAdded = {x: 0, y: this.game.world.centerY, width: 0, height: 0};
     mCurrentPlayerFloor = mLastAdded;
     mFlatCounter = 0;
@@ -38,7 +40,9 @@ Level.prototype.init = function() {
         this.addNewPieceOfFloor(this.getDifficulty());
     }
 
+    this.add(mLandscape.getBackground());
     this.add(mFloor);
+    this.add(mObstacles);
 };
 
 Level.prototype.initTerrain = function() {
@@ -238,4 +242,12 @@ Level.prototype.getObstacles = function() {
 
 Level.prototype.getDifficulty = function() {
     return Game.state.states[Game.state.current].getDifficulty();
+};
+
+Level.prototype.getBackground = function() {
+    return mLandscape.getBackground();
+};
+
+Level.prototype.getForeground = function() {
+    return mLandscape.getForeground();
 };
