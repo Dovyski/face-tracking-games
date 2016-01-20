@@ -171,7 +171,7 @@ Player.prototype.dash = function() {
     if(!this.dashing && this.mTouchingFloor) {
         this.dashing = true;
         this.animations.play('dash');
-        this.body.setSize(100, 30, 0, 0);
+        this.body.setSize(50, 30, 0, 0);
         this.anchor.set(0.5);
         this.angle = -90;
         this.y += this.height;
@@ -181,6 +181,10 @@ Player.prototype.dash = function() {
 
         // Emit some dust \o/
         this.mDustEmitter.start(false, 1000, 50);
+
+        // Fix any wrong placement during the transition from other
+        // state (dash, jump, etc).
+        this.adjustPosition(this.mCurrentFloor);
 
     } else if(this.dashing) {
         // If the player is already dashing and more of it

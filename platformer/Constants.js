@@ -3,6 +3,7 @@
  */
 
 var Constants = new function() {
+	this.GAME_DEBUG				= false;
 	this.GAME_SEED 				= 1234;
 	this.GAME_WIDTH 			= 1024;
 	this.GAME_HEIGHT 			= 768;

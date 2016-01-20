@@ -136,16 +136,21 @@ PlayState = function() {
 	};
 
 	this.handleObstacleOverlap = function(thePlayer, theObstacle) {
-		thePlayer.hurt();
-		// TODO: score just once.
-		mScore.wrong++;
-
-		mHud.refresh();
+		if(theObstacle.key != 'obstacle-top' || !thePlayer.dashing) {
+			thePlayer.hurt();
+			mScore.wrong++; // TODO: score just once.
+			mHud.refresh();
+		}
 	};
 
 	this.render = function() {
-		//this.game.debug.body(mPlayer);
-		//this.game.debug.body(mLevel.getCurrentPlayerFloor());
+		if(!Constants.GAME_DEBUG) return;
+
+		this.game.debug.body(mPlayer);
+
+		mLevel.getObstacles().forEachAlive(function(theItem) {
+			this.game.debug.body(theItem);
+		}, this);
 	};
 
 	// Getters

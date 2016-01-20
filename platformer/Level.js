@@ -84,6 +84,13 @@ Level.prototype.initObstacles = function() {
         this.initPhysics(aItem);
         mObstacles.add(aItem);
         mItems.push(aItem);
+
+        if(aItem.key == 'obstacle-bottom') {
+            aItem.body.setSize(30, 50, 15, 20);
+        } else {
+            aItem.body.setSize(40, 40, 0, 0);
+        }
+
         aItem.kill();
     }
 };
