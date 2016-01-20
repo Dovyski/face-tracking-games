@@ -40,9 +40,11 @@ var LoadState = function() {
 		Game.load.image('time-dialog', 'assets/time_dialog.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 
 		// SFX
-		Game.load.audio('sfx-right', 'assets/right.ogg'); // Fourier, CC-BY 3.0, https://soundcloud.com/third-octave
-		Game.load.audio('sfx-wrong', 'assets/wrong.ogg'); // ViRiX, CC-BY 3.0, http://opengameart.org/content/ui-failed-or-error, "Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix"
-		Game.load.audio('sfx-new-question', 'assets/new_question.ogg'); // StumpyStrust, CC-0, http://opengameart.org/content/ui-sounds
+		Game.load.audio('sfx-hurt', 'assets/sfx/slightscream-04.mp3'); // Iwan Gabovitch, CC-BY-SA 3.0, http://opengameart.org/content/15-vocal-male-strainhurtpainjump-sounds
+		Game.load.audio('sfx-jump', 'assets/sfx/slightscream-01.mp3'); // Iwan Gabovitch, CC-BY-SA 3.0, http://opengameart.org/content/15-vocal-male-strainhurtpainjump-sounds
+		Game.load.audio('sfx-heart', 'assets/sfx/coin1.mp3'); // Luke.RUSTLTD, CC-0, http://opengameart.org/content/10-8bit-coin-sounds
+		Game.load.audio('sfx-dash', 'assets/sfx/rustle13.mp3'); // qubodup, CC-0, http://opengameart.org/content/20-rustles-dry-leaves
+		Game.load.audio('sfx-music', 'assets/sfx/music.mp3'); // RevampedPRO, CC-BY 3.0, http://opengameart.org/content/platformer-game-music-pack
 
 		// Load all JS required to make the face tracking thing work.
 		Game.load.script('camera.js', '../js/ftg.camera.js');

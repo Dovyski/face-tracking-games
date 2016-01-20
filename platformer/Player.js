@@ -12,6 +12,10 @@ Player = function (theGame) {
     this.mAcceleration;
     this.mDustEmitter;
 
+    var mSfxJump,
+        mSfxHurt,
+        mSfxDash;
+
     // Constructor
     Phaser.Sprite.call(this, theGame, theGame.width * 0.15, theGame.world.centerY + 10, 'player');
     this.init();
@@ -37,6 +41,10 @@ Player.prototype.init = function() {
     this.mHealth = Constants.GAME_HEALTH_MAX;
     this.mVelocity = new Phaser.Point();
     this.mAcceleration = new Phaser.Point(0, 1);
+
+    mSfxJump = this.game.add.audio('sfx-jump', 0.8);
+    mSfxHurt = this.game.add.audio('sfx-hurt', 0.8);
+    mSfxDash = this.game.add.audio('sfx-dash', 0.8);
 
     this.run();
 };
@@ -143,6 +151,7 @@ Player.prototype.jump = function() {
         this.run(); // to prevent any dash rotation/animation
         this.animations.play('jump');
         this.mVelocity.y = -15;
+        mSfxJump.play();
     }
 };
 
@@ -156,6 +165,7 @@ Player.prototype.dash = function() {
         this.y += this.height;
 
         this.mDashTimer = 50;
+        mSfxDash.play();
 
         // Emit some dust \o/
         this.mDustEmitter.start(false, 1000, 50);
@@ -179,6 +189,7 @@ Player.prototype.heal = function() {
 Player.prototype.hurt = function() {
     if(!this.isFlickering()) {
         this.mHealth -= Constants.GAME_MISTAKE_HEALTH;
+        mSfxHurt.play();
 
         if(this.mHealth < 0) {
             this.mHealth = 0;

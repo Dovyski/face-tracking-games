@@ -10,6 +10,8 @@ PlayState = function() {
 		mMatchTime,			// Remaining time for the match
 		mDustEmitter,
 		mDifficultyIndex,
+		mSfxHeal,
+		mSfxMusic,
 		mScore = {			// Info regarding global score (throughout the game session)
 			right: 0,
 			wrong: 0,
@@ -45,6 +47,15 @@ PlayState = function() {
 
 		mHud = new Hud();
 		this.game.add.existing(mHud);
+
+		// SFX and music
+		mSfxHeal = this.game.add.audio('sfx-heart', 0.8);
+		mSfxMusic = this.game.add.audio('sfx-music', 0.6, true);
+
+		// Start title music as soon as possible
+		this.game.sound.setDecodedCallback([mSfxMusic], function() {
+			mSfxMusic.play();
+		}, this);
 
 		if(GlobalInfo && GlobalInfo.data) {
 			GlobalInfo.data.markGameStarted();
@@ -113,6 +124,7 @@ PlayState = function() {
 		if(theCollectable.alive) {
 			theCollectable.alive = false;
 			mScore.right++;
+			mSfxHeal.play();
 
 			aTween = this.game.add.tween(theCollectable).to(mHud.getHeartIconPosition(), 500, Phaser.Easing.Linear.None, true);
 
