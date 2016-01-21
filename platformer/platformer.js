@@ -14,6 +14,7 @@ Game.state.add('load', LoadState);
 Game.state.add('over', GameOverState);
 Game.state.add('menu', MenuState);
 Game.state.add('boot', BootState);
+Game.state.add('tutorial', TutorialState);
 
 // Start the initial state
 Game.state.start('boot');

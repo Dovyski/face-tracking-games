@@ -7,7 +7,7 @@ var LoadState = function() {
 		mLoadingBar;
 
 	this.create = function() {
-		Game.state.start('play');
+		Game.state.start('tutorial');
 	};
 
 	this.preload = function() {
@@ -18,6 +18,7 @@ var LoadState = function() {
 
 		// Assets by myself
 		this.load.image('pixel', 'assets/pixel.png'); // By Fernando Bevilacqua, public domain
+		this.load.image('tutorial', 'assets/tutorial.png');
 
 		// Assets from external authors
 		this.game.load.spritesheet('player', 'assets/player.png', 74, 128); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
