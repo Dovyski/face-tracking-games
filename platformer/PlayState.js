@@ -84,6 +84,8 @@ PlayState = function() {
 				GlobalInfo.score = mScore;
 			}
 			// TODO: disable face tracking here
+			mSfxMusic.stop();
+			mSfxMusic.destroy();
 			this.game.state.start('over');
 		}
 
