@@ -24,7 +24,7 @@ var MenuState = function() {
 	};
 
 	this.onPlay = function() {
-		Game.state.start('play');
+		Game.state.start('tutorial');
 	};
 
 	this.onCredits = function() {
