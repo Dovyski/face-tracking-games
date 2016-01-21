@@ -105,14 +105,12 @@ PlayState = function() {
 
 		aKeyboard = this.game.input.keyboard;
 
-	    if (aKeyboard.isDown(Phaser.Keyboard.SPACEBAR, 10)) {
-			if(aKeyboard.isDown(Phaser.Keyboard.UP, 10)) {
-		        mPlayer.jump();
+		if(aKeyboard.isDown(Phaser.Keyboard.UP, 10)) {
+	        mPlayer.jump();
 
-			} else if(aKeyboard.isDown(Phaser.Keyboard.DOWN, 10)){
-				mPlayer.dash();
-			}
-	    }
+		} else if(aKeyboard.isDown(Phaser.Keyboard.S, 10)){
+			mPlayer.dash();
+		}
 
 		mPlayer.adjustPosition(mLevel.getCurrentPlayerFloor());
 
