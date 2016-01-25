@@ -9,19 +9,21 @@
         }
 
 		#info {
+			position: absolute;
+			top: 0;
+			left: 0;
 			width : 100%;
-			text-align: center;
+			text-align: left;
 			font-size: 2em;
 		}
-		#game {
-			width : 100%;
-			height : 100%;
+
+		#info iframe {
+			overflow: none;
 		}
     </style>
 </head>
 <body>
 	<div id="info"></div>
-	<div id="game"></div>
 
 	<script type="text/javascript" src="../js/3rdparty/jquery-2.2.0.min.js"></script>
 	<script type="text/javascript" src="../js/ftg.utils.js"></script>

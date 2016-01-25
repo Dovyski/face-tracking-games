@@ -14,7 +14,7 @@ FTG.Utils.getURLParamByName = function(theName) {
     aRegex = new RegExp('[\\?&]' + theName + '=([^&#]*)'),
     aResults = aRegex.exec(location.search);
 
-    return aResults === null ? '' : decodeURIComponent(aResults[1].replace(/\+/g, ' '));
+    return aResults === null ? null : decodeURIComponent(aResults[1].replace(/\+/g, ' '));
 };
 
 // Polyfill for older browsers...
