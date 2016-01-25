@@ -16,3 +16,10 @@ FTG.Utils.getURLParamByName = function(theName) {
 
     return aResults === null ? '' : decodeURIComponent(aResults[1].replace(/\+/g, ' '));
 };
+
+// Polyfill for older browsers...
+if (!Date.now) {
+	Date.now = function now() {
+		return new Date().getTime();
+	};
+}
