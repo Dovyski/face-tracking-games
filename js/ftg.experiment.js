@@ -83,27 +83,37 @@ FTG.Experiment.prototype.startNewGame = function() {
     }
 };
 
-FTG.Experiment.prototype.concludeCurrentGame = function() {
-    var aGame;
+FTG.Experiment.prototype.concludeCurrentQuestionnaire = function(theAnswers) {
+    var aSelf = this;
 
-    aGame = this.getCurrentGame();
-    $('#info').html('game has been concluded ' + aGame.name + ', ' + aGame.id);
-    $('#info').append('Questions here');
+    $.ajax({
+        url: "../backend/",
+        method: 'POST',
+        data: 'uid=0&game=0&' + theAnswers,
+        dataType: 'json'
+    }).done(function(theData) {
+        aSelf.rest();
+    }).fail(function(theXHR, theText) {
+        console.error('Something wrong: ' + theXHR.responseText, theXHR, theText);
+    });
 
     // TODO: remove this block
     $('#info').append('<button>Continue</button>');
-    var aSelf = this;
     $('#info button').click(function() {
-        // TODO: move this to a new method
-        if(aSelf.anyMoreGamesToPlay()) {
-            aSelf.rest();
-        } else {
-            console.log('[Experiment] No more games to play, finishing now');
-            aSelf.finish();
-        }
+        aSelf.rest();
     });
+};
+
+FTG.Experiment.prototype.concludeCurrentGame = function() {
+    var aGame,
+        aQuestions;
+
+    aGame = this.getCurrentGame();
 
     console.log('[Experiment] Current game (' + aGame.name + ', id=' + aGame.id + ') was concluded.');
+    $('#info').html('<h2>Question</h2><p>Regarding the game you just played, please answer the questions below.</p>');
+
+    aQuestions = new FTG.Questionnaire('info', this.mUid, aGame.id, this.concludeCurrentQuestionnaire, this);
 };
 
 FTG.Experiment.prototype.rest = function() {

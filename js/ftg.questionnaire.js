@@ -41,7 +41,9 @@
 FTG.Questionnaire.prototype.init = function() {
     var i,
         j,
+        aDiv,
         aQuestion,
+        aSelf = this;
         aContent = '';
 
     for(i = 0; i < this.mQuestions.length; i++) {
@@ -56,4 +58,12 @@ FTG.Questionnaire.prototype.init = function() {
     }
 
     $('#' + this.mContainerId).append('<form id="ftg-questionnaire">' + aContent + '</form>');
+
+    $('#ftg-questionnaire input:radio').change(function() {
+        var aAnswered = $('#ftg-questionnaire input:radio:checked').length;
+
+        if(aAnswered >= aSelf.mQuestions.length) {
+            aSelf.mDoneCallback.call(aSelf.mCallbackContext, $('#ftg-questionnaire').serialize());
+        }
+    });
 };
