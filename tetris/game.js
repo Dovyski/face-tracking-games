@@ -313,7 +313,7 @@ Game.PlayGame.prototype = {
 
 					if(ENABLE_DATA_LOG) {
 						// Force data send to prevent losing information regarding the board configuration
-						GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game, true);
+						GlobalInfo.data.send(GlobalInfo.user, GlobalInfo.game, true);
 					}
 				}
 			}
@@ -384,7 +384,7 @@ Game.PlayGame.prototype = {
 		if(aEmotions.length > 0 && ENABLE_DATA_LOG) {
 			// Yeah, they are, collect them
 			GlobalInfo.data.log({e: aEmotions, p: aPoints});
-			GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
+			GlobalInfo.data.send(GlobalInfo.user, GlobalInfo.game);
 		}
 
 
@@ -393,10 +393,6 @@ Game.PlayGame.prototype = {
 
 		if(playingTime >= MAX_PLAYING_TIME) {
 			this.game.state.start('Lose');
-		}
-
-		if(GlobalInfo && GlobalInfo.data) {
-			GlobalInfo.data.update();
 		}
 	}
 
