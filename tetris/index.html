@@ -6,9 +6,9 @@
 	<script src="../js/3rdparty/phaser.min.js"></script>
 	<script src="../card-flipper/SetupState.js"></script>
 	<script src="load.js"></script>
-	<script src="mainmenu.js?1"></script>
+	<script src="mainmenu.js?5"></script>
 	<script src="block.js"></script>
-	<script src="game.js?1"></script>
+	<script src="game.js?2"></script>
 	<style type="text/css">
 		body {
 			margin: 0;
@@ -69,8 +69,6 @@ gamevar.state.add('menu',Game.MainMenu);
 gamevar.state.add('Game',Game.PlayGame);
 
 gamevar.state.add('Lose',Game.LoseScreen);
-
-gamevar.state.add('Win',Game.WinScreen);
 
 gamevar.state.start('Load');
 

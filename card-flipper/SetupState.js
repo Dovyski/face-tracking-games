@@ -32,7 +32,7 @@ if(aExperiment.instance) {
 	// everything based on the external information
 	// that were provived by the experiment manager.
 
-	GlobalInfo.experiment = aExperiment;
+	GlobalInfo.experiment = aExperiment.instance;
 	GlobalInfo.user = getURLParamByName('user');
 	GlobalInfo.game = getURLParamByName('game');
 
