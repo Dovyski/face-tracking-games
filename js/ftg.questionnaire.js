@@ -43,16 +43,16 @@ FTG.Questionnaire.prototype.init = function() {
         j,
         aDiv,
         aQuestion,
-        aSelf = this;
+        aSelf = this,
         aContent = '';
 
     for(i = 0; i < this.mQuestions.length; i++) {
         aQuestion = this.mQuestions[i];
-        aContent += '<p>' + aQuestion.text + '</p>';
+        aContent += '<p id="q' + i + '">' + aQuestion.text + '</p>';
 
         for(j = 0; j < aQuestion.options.length; j++) {
             aContent +=
-                '<input type="radio" name="q' + i + '" value="' + aQuestion.options[j].value + '" /> ' +
+                '<input type="radio" name="a' + i + '" value="' + aQuestion.options[j].value + '" /> ' +
                 aQuestion.options[j].value + ' (' + aQuestion.options[j].label + ')';
         }
     }
@@ -63,7 +63,18 @@ FTG.Questionnaire.prototype.init = function() {
         var aAnswered = $('#ftg-questionnaire input:radio:checked').length;
 
         if(aAnswered >= aSelf.mQuestions.length) {
-            aSelf.mDoneCallback.call(aSelf.mCallbackContext, $('#ftg-questionnaire').serialize());
+            aSelf.finish();
         }
     });
+};
+
+FTG.Questionnaire.prototype.finish = function() {
+    var aData = [],
+        i;
+
+    for(i = 0; i < this.mQuestions.length; i++) {
+        aData.push({q: $('#q' + i).html(), a: $('#ftg-questionnaire input:radio[name="a' + i + '"]:checked').val()});
+    }
+
+    this.mDoneCallback.call(this.mCallbackContext, aData);
 };

@@ -28,7 +28,7 @@ FTG.Experiment.instance = null;
 FTG.Experiment.prototype.init = function() {
     this.mUid = FTG.Utils.getURLParamByName('id');
 
-    this.mCurrentGame = -1;
+    this.mCurrentGame = -1; // TODO: get from URL.
     this.mRestTime = FTG.Utils.getURLParamByName('rest') || 60000;
 
     console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime);
@@ -83,24 +83,32 @@ FTG.Experiment.prototype.startNewGame = function() {
     }
 };
 
-FTG.Experiment.prototype.concludeCurrentQuestionnaire = function(theAnswers) {
+FTG.Experiment.prototype.concludeCurrentQuestionnaire = function(theData) {
     var aSelf = this;
 
-    $.ajax({
-        url: "../backend/",
-        method: 'POST',
-        data: 'uid=0&game=0&' + theAnswers,
-        dataType: 'json'
-    }).done(function(theData) {
-        aSelf.rest();
-    }).fail(function(theXHR, theText) {
-        console.error('Something wrong: ' + theXHR.responseText, theXHR, theText);
-    });
+    console.log('[Experiment] Sending questionnaire data.', theData);
 
-    // TODO: remove this block
-    $('#info').append('<button>Continue</button>');
-    $('#info button').click(function() {
-        aSelf.rest();
+    $.ajax({
+        url: '../backend/',
+        method: 'POST',
+        data: {
+            method: 'answer',
+            uid: this.mUid,
+            game: this.getCurrentGame().id,
+            data: JSON.stringify({t: Date.now(), d: theData})
+        },
+        dataType: 'json'
+
+    }).done(function(theData) {
+        if(theData.success) {
+            console.log('[Experiment] Questionnaire data has been saved!');
+            aSelf.rest();
+        } else {
+            console.error('[Experiment] Backend didn\'t like the answers: ' + theData.message);
+        }
+    }).fail(function(theXHR, theText) {
+        // TODO: show some user friendly messages?
+        console.error('Something wrong: ' + theXHR.responseText, theXHR, theText);
     });
 };
 
