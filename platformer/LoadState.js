@@ -7,7 +7,7 @@ var LoadState = function() {
 		mLoadingBar;
 
 	this.create = function() {
-		this.game.state.start('menu');
+		this.game.state.start('setup');
 	};
 
 	this.preload = function() {

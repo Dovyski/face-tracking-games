@@ -71,7 +71,7 @@ PlayState = function() {
 			if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
 				// Yeah, they are, collect them
 				GlobalInfo.data.log({e: aEmotions, p: aPoints, s: mScore});
-				GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
+				GlobalInfo.data.send(GlobalInfo.user, GlobalInfo.game);
 			}
 		}
 
@@ -87,10 +87,6 @@ PlayState = function() {
 			mSfxMusic.stop();
 			mSfxMusic.destroy();
 			this.game.state.start('over');
-		}
-
-		if(GlobalInfo && GlobalInfo.data) {
-			GlobalInfo.data.update();
 		}
 	};
 
