@@ -7,7 +7,7 @@
 
 require_once(dirname(__FILE__) . '/config.php');
 
-$aUid 	 = isset($_REQUEST['uid']) ? $_REQUEST['uid'] : 0;
+$aUser 	 = isset($_REQUEST['user']) ? $_REQUEST['user'] : 0;
 $aGame 	 = isset($_REQUEST['game']) ? $_REQUEST['game'] : 0;
 $aMethod = isset($_REQUEST['method']) ? $_REQUEST['method'] : 'tracking';
 $aRet	 = array();
@@ -16,7 +16,7 @@ $aDb = new PDO('sqlite:' . DB_FILE);
 $aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 try {
-	if($aUid == 0 || $aGame == 0) {
+	if($aUser == 0 || $aGame == 0) {
 		throw new Exception('Empty UID or game id.');
 	}
 
@@ -35,7 +35,7 @@ try {
 			$aNow = time();
 			$aStmt->bindParam(':game', $aGame);
 			$aStmt->bindParam(':timestamp', $aNow);
-			$aStmt->bindParam(':uuid', $aUid);
+			$aStmt->bindParam(':uuid', $aUser);
 			$aStmt->bindParam(':data', $aData);
 
 			$aStmt->execute();

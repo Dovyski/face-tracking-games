@@ -98,7 +98,7 @@ var PlayState = function() {
 			if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
 				// Yeah, they are, collect them
 				GlobalInfo.data.log({e: aEmotions, p: aPoints, s: mTurnBasedScore});
-				GlobalInfo.data.send(GlobalInfo.uuid, GlobalInfo.game);
+				GlobalInfo.data.send(GlobalInfo.user, GlobalInfo.game);
 			}
 		}
 
@@ -112,10 +112,6 @@ var PlayState = function() {
 			}
 			// TODO: disable face tracking here
 			Game.state.start('over');
-		}
-
-		if(GlobalInfo && GlobalInfo.data) {
-			GlobalInfo.data.update();
 		}
 	};
 

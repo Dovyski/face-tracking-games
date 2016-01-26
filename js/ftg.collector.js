@@ -13,8 +13,6 @@ FTG.Collector = function() {
 	var mLastTimeCollected = 0;
 	var mLastTimeSent = 0;
 	var mTimeGameStarted = 0;
-	var mDebugConsole;
-	var mUid;
 	var mServerURL = '../backend/';
 	var mData = [];
 
@@ -44,42 +42,6 @@ FTG.Collector = function() {
 		return aMinutes.substr(-2) + ':' + aSeconds.substr(-2);
 	};
 
-	// Get variables in the game URL (the ones like ?var=value&var2=value)
-	var getURLParamByName = function(theName) {
-		var aRegex;
-
-        theName = theName.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        aRegex = new RegExp('[\\?&]' + theName + '=([^&#]*)'),
-        aResults = aRegex.exec(location.search);
-
-        return aResults === null ? '' : decodeURIComponent(aResults[1].replace(/\+/g, ' '));
-    };
-
-	var init = function() {
-		var aContainer;
-
-		// Get the user ID from the URL
-		mUid = getURLParamByName('id');
-
-		if(mUid == '') {
-			alert('Oops! There is no Uid?');
-		}
-
-		aContainer = document.getElementById('container'); // TODO: get this from config
-
-		if(aContainer) {
-			mDebugConsole = document.createElement('span');
-			mDebugConsole.id = 'collector-console';
-			mDebugConsole.style.position = 'absolute';
-			mDebugConsole.style.bottom = '-80px';
-			mDebugConsole.style.right = '20px';
-			mDebugConsole.innerHTML = 'Waiting for game start. Subject ID: ' + mUid;
-			aContainer.appendChild(mDebugConsole);
-		}
-	};
-
-	init();
-
 	// Adds a new entry to the data log.
 	this.log = function(theData, theForce) {
 		// Collect only if it is time to do it
@@ -105,7 +67,7 @@ FTG.Collector = function() {
 			mLastTimeSent = getTimestamp();
 
 		    aData = new FormData();
-			aData.append('uid', mUid);
+			aData.append('user', theUid);
 			aData.append('game', theGameId);
 			aData.append('data', JSON.stringify(mData));
 
@@ -132,10 +94,5 @@ FTG.Collector = function() {
 	// Informs the data collector that the game has started.
 	this.markGameStarted = function() {
 		mTimeGameStarted = getTimestamp();
-	};
-
-	// Update the data collector internal functions (e.g. debug panel)
-	this.update = function() {
-		mDebugConsole.innerHTML = '<strong>Subject ID:</strong> ' + mUid + '<br /><strong>Time:</strong> ' + formaTime(getTimestamp() - mTimeGameStarted);
 	};
 };

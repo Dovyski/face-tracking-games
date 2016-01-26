@@ -11,7 +11,7 @@
      this.mCurrentGame;
      this.mRestTime;
      this.mGames = [
-         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1024, height: 768},
+         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1524, height: 768},
          {id: 2, name: 'tetris', url: '../tetris/', width: 640, height: 480},
          {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768}
      ];
@@ -26,7 +26,7 @@ FTG.Experiment.instance = null;
 // Methods
 
 FTG.Experiment.prototype.init = function() {
-    this.mUid = FTG.Utils.getURLParamByName('id');
+    this.mUid = FTG.Utils.getURLParamByName('user');
 
     this.mCurrentGame = -1; // TODO: get from URL.
     this.mRestTime = FTG.Utils.getURLParamByName('rest') || 60000;
@@ -55,8 +55,8 @@ FTG.Experiment.prototype.greetings = function() {
     });
 };
 
-FTG.Experiment.prototype.generateGameURL = function(theBaseURL) {
-    return theBaseURL + '?id=' + this.mUid;
+FTG.Experiment.prototype.generateGameURL = function(theGameInfo) {
+    return theGameInfo.url + '?user=' + this.mUid + '&game=' + theGameInfo.id + '&rand=' + Math.random();
 };
 
 FTG.Experiment.prototype.startNewGame = function() {
@@ -68,7 +68,10 @@ FTG.Experiment.prototype.startNewGame = function() {
         aGame = this.getCurrentGame();
 
         console.log('[Experiment] New game about to start: ' + aGame.name + ' (id=' + aGame.id + ')');
-        $('#info').html('<iframe src="' + this.generateGameURL(aGame.url) + '" style="width: ' + aGame.width + 'px; height: ' + aGame.height + 'px;"></iframe>');
+
+        // Add the game iframe and ajust its src property (prevent chache issues)
+        $('#info').html('<iframe id="game" style="width: ' + aGame.width + 'px; height: ' + aGame.height + 'px;"></iframe>');
+        document.getElementById('game').src = this.generateGameURL(aGame);
 
         // TODO: remove this block
         $('#info').append('<button>Conclude</button>');
