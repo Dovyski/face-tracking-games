@@ -169,7 +169,7 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
     if(mLastAdded != null) {
         // Yes.
         // Was the last added element a platform?
-        if(mLastAdded.key == 'platform' && mFlatCounter++ >= theDifficulty.platforms_before_slope) {
+        if(mLastAdded.key == 'platform' && ++mFlatCounter >= theDifficulty.platforms_before_slope) {
             // Yep! We can add a slope here then to make things more interesting.
             if(mLastAdded.y <= this.game.height * theDifficulty.slope_max_hight) {
                 // We are too high right now, no room for up-slopes.

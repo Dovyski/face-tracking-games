@@ -18,13 +18,53 @@ var Constants = new function() {
 	this.DIFFICULTY	= [						// Controls the difficulty of the game. Each entry means a piece of time
 		{
 			speed: -150,					// Speed of the platforms
-			obstacles_chance: 1.0,			// Chances of adding obstacles on a platform
-			obstacles_per_platform: 3,		// Number of obstacles for each platform
-			obstacle_min_pos: 150,			// Min. amount of pixels from the begining of the platform until the obstacle.
+			obstacles_chance: 0.3,			// Chances of adding obstacles on a platform
+			obstacles_per_platform: 1,		// Number of obstacles for each platform
+			obstacle_min_pos: 250,			// Min. amount of pixels from the begining of the platform until the obstacle.
 			obstacle_spacing: 200,			// Amount of pixels between the obstacles.
-			platforms_before_slope: 1,		// Number of flat platforms before adding a slope
-			slope_max_hight: 0.3,			// Relative to screen height, this is the maxium height the player can reach before a slope-down must be added.
-			slope_min_hight: 0.7			// Relative to screen height, this is the minimum height the player can reach before a slope-up must be added.
+			platforms_before_slope: 5,		// Number of flat platforms before adding a slope
+			slope_max_hight: 0.5,			// Relative to screen height, this is the maxium height the player can reach before a slope-down must be added.
+			slope_min_hight: 0.6			// Relative to screen height, this is the minimum height the player can reach before a slope-up must be added.
+		},
+		{
+			speed: -175,
+			obstacles_chance: 0.6,
+			obstacles_per_platform: 1,
+			obstacle_min_pos: 200,
+			obstacle_spacing: 200,
+			platforms_before_slope: 4,
+			slope_max_hight: 0.4,
+			slope_min_hight: 0.65
+		},
+		{
+			speed: -200,
+			obstacles_chance: 0.85,
+			obstacles_per_platform: 1,
+			obstacle_min_pos: 180,
+			obstacle_spacing: 200,
+			platforms_before_slope: 3,
+			slope_max_hight: 0.4,
+			slope_min_hight: 0.7
+		},
+		{
+			speed: -225,
+			obstacles_chance: 0.9,
+			obstacles_per_platform: 2,
+			obstacle_min_pos: 170,
+			obstacle_spacing: 300,
+			platforms_before_slope: 2,
+			slope_max_hight: 0.4,
+			slope_min_hight: 0.75
+		},
+		{
+			speed: -250,
+			obstacles_chance: 1,
+			obstacles_per_platform: 2,
+			obstacle_min_pos: 130,
+			obstacle_spacing: 300,
+			platforms_before_slope: 1,
+			slope_max_hight: 0.35,
+			slope_min_hight: 0.8
 		}
 	];
 };
