@@ -97,11 +97,17 @@ PlayState = function() {
 	};
 
 	this.update = function() {
-		var aKeyboard;
+		var aKeyboard,
+			aOldDifficultyIndex;
 
 		// Calculate the difficulty index based on the game duration
+		aOldDifficultyIndex = mDifficultyIndex;
 		mDifficultyIndex = (1 - mMatchTime / Constants.GAME_MATCH_DURATION) * Constants.DIFFICULTY.length;
 		mDifficultyIndex |= 0; // cast to int
+
+		if(aOldDifficultyIndex != mDifficultyIndex) {
+			console.log('Difficulty has changed to ' + mDifficultyIndex);
+		}
 
 		this.updateTimeAndTracking();
 

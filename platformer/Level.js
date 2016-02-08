@@ -223,7 +223,7 @@ Level.prototype.addNewCollectableIfAppropriate = function(theWhere, theDifficult
             aItem = mCollectables.getFirstDead();
 
             if(aItem) {
-                aItem.reset(30 + theWhere.x + 100 * i, theWhere.y - 50);
+                aItem.reset(5 + theWhere.x + 300 * i, theWhere.y - 50 - (this.game.rnd.frac() < 0.5 ? 130 : 0));
                 aItem.body.velocity.x = theDifficulty.speed;
             }
         }
