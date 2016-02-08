@@ -18,6 +18,9 @@ var Constants = new function() {
 	this.DIFFICULTY	= [						// Controls the difficulty of the game. Each entry means a piece of time
 		{
 			speed: -150,					// Speed of the platforms
+			collectable_chance: 0.7,		// Chances of adding collectables
+			collectables_per_platforms: 2,	// Number of collectables for each platform
+			collectable_spacing: 300,		// Amount of pixels between the collectables.
 			obstacles_chance: 0.3,			// Chances of adding obstacles on a platform
 			obstacles_per_platform: 1,		// Number of obstacles for each platform
 			obstacle_min_pos: 250,			// Min. amount of pixels from the begining of the platform until the obstacle.
@@ -28,6 +31,9 @@ var Constants = new function() {
 		},
 		{
 			speed: -175,
+			collectable_chance: 0.8,
+			collectables_per_platforms: 2,
+			collectable_spacing: 300,
 			obstacles_chance: 0.6,
 			obstacles_per_platform: 1,
 			obstacle_min_pos: 200,
@@ -38,6 +44,9 @@ var Constants = new function() {
 		},
 		{
 			speed: -200,
+			collectable_chance: 0.9,
+			collectables_per_platforms: 2,
+			collectable_spacing: 300,
 			obstacles_chance: 0.85,
 			obstacles_per_platform: 1,
 			obstacle_min_pos: 180,
@@ -48,6 +57,9 @@ var Constants = new function() {
 		},
 		{
 			speed: -225,
+			collectable_chance: 1,
+			collectables_per_platforms: 2,
+			collectable_spacing: 300,
 			obstacles_chance: 0.9,
 			obstacles_per_platform: 2,
 			obstacle_min_pos: 170,
@@ -58,6 +70,9 @@ var Constants = new function() {
 		},
 		{
 			speed: -250,
+			collectable_chance: 1,
+			collectables_per_platforms: 2,
+			collectable_spacing: 300,
 			obstacles_chance: 1,
 			obstacles_per_platform: 2,
 			obstacle_min_pos: 130,

@@ -218,12 +218,12 @@ Level.prototype.addNewCollectableIfAppropriate = function(theWhere, theDifficult
     var i,
         aItem;
 
-    if(theWhere.key == 'platform') {
-        for(i = 0; i < 2; i++) {
+    if(theWhere.key == 'platform' && this.game.rnd.frac() <= theDifficulty.collectable_chance) {
+        for(i = 0; i < theDifficulty.collectables_per_platforms; i++) {
             aItem = mCollectables.getFirstDead();
 
             if(aItem) {
-                aItem.reset(5 + theWhere.x + 300 * i, theWhere.y - 50 - (this.game.rnd.frac() < 0.5 ? 130 : 0));
+                aItem.reset(5 + theWhere.x + theDifficulty.collectable_spacing * i, theWhere.y - 50 - (this.game.rnd.frac() < 0.5 ? 130 : 0));
                 aItem.body.velocity.x = theDifficulty.speed;
             }
         }
