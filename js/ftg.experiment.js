@@ -10,10 +10,11 @@
      this.mUid;
      this.mCurrentGame;
      this.mRestTime;
+     this.mEnableFaceTracking;
      this.mGames = [
-         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1524, height: 768},
-         {id: 2, name: 'tetris', url: '../tetris/', width: 640, height: 480},
-         {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768}
+         {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768},
+         {id: 2, name: 'tetris', url: '../tetris/', width: 1024, height: 800},
+         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1524, height: 768}
      ];
 
     // Initialize the whole thing up
@@ -30,11 +31,12 @@ FTG.Experiment.prototype.init = function() {
 
     this.mCurrentGame = -1; // TODO: get from URL.
     this.mRestTime = FTG.Utils.getURLParamByName('rest') || 60000;
+    this.mEnableFaceTracking = FTG.Utils.getURLParamByName('face') || false;
 
-    console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime);
+    console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime + ', facial tracking: ' + this.mEnableFaceTracking);
 
     if(this.mUid == null) {
-        alert('User id not informed!');
+        alert('User id not informed! Append ?user=DDD to the URL.');
     } else {
         this.greetings();
     }
@@ -56,7 +58,7 @@ FTG.Experiment.prototype.greetings = function() {
 };
 
 FTG.Experiment.prototype.generateGameURL = function(theGameInfo) {
-    return theGameInfo.url + '?user=' + this.mUid + '&game=' + theGameInfo.id + '&rand=' + Math.random();
+    return theGameInfo.url + '?user=' + this.mUid + '&game=' + theGameInfo.id + '&rand=' + Math.random() + '&face=' + this.mEnableFaceTracking;
 };
 
 FTG.Experiment.prototype.startNewGame = function() {

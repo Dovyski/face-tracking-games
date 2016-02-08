@@ -377,16 +377,22 @@ Game.PlayGame.prototype = {
 			force_down_max_time = Math.floor(MAX_VELOCITY * progress);
 		}
 
-		var aEmotions = GlobalInfo.expression.getEmotions();
-		var aPoints = GlobalInfo.expression.getPoints();
+		if(GlobalInfo) {
+			if(GlobalInfo.expression) {
+				var aEmotions = GlobalInfo.expression.getEmotions();
+				var aPoints = GlobalInfo.expression.getPoints();
 
-		// Emotions are available for reading?
-		if(aEmotions.length > 0 && ENABLE_DATA_LOG) {
-			// Yeah, they are, collect them
-			GlobalInfo.data.log({e: aEmotions, p: aPoints});
-			GlobalInfo.data.send(GlobalInfo.user, GlobalInfo.game);
+				// Emotions are available for reading?
+				if(aEmotions.length > 0) {
+					// Yeah, they are, collect them
+					GlobalInfo.data.log({e: aEmotions, p: aPoints});
+				}
+			}
+
+			if(ENABLE_DATA_LOG) {
+				GlobalInfo.data.send(GlobalInfo.user, GlobalInfo.game);
+			}
 		}
-
 
 		// Limit gameplay time for the sake of the study
 		playingTime += this.game.time.elapsedMS;

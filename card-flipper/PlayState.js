@@ -90,14 +90,20 @@ var PlayState = function() {
 		// and generation of new questions.
 		updateTurnAndNewQuestionControl(aElapsed);
 
-		if(GlobalInfo && GlobalInfo.expression) {
-			var aEmotions = GlobalInfo.expression.getEmotions();
-			var aPoints = GlobalInfo.expression.getPoints();
+		if(GlobalInfo) {
+			if(GlobalInfo.expression) {
+				var aEmotions = GlobalInfo.expression.getEmotions();
+				var aPoints = GlobalInfo.expression.getPoints();
 
-			// Emotions are available for reading?
-			if(aEmotions.length > 0 && Constants.GAME_ENABLE_DATA_LOG) {
-				// Yeah, they are, collect them
-				GlobalInfo.data.log({e: aEmotions, p: aPoints, s: mTurnBasedScore});
+				// Emotions are available for reading?
+				if(aEmotions.length > 0) {
+					// Yeah, they are, collect them
+					GlobalInfo.data.log({e: aEmotions, p: aPoints});
+				}
+			}
+
+			if(Constants.GAME_ENABLE_DATA_LOG) {
+				GlobalInfo.data.log({s: mTurnBasedScore});
 				GlobalInfo.data.send(GlobalInfo.user, GlobalInfo.game);
 			}
 		}

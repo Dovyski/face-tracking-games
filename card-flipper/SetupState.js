@@ -26,16 +26,16 @@ function getURLParamByName(theName) {
 // Get reference to experiment manager (if any)
 var aExperiment = window.parent.FTG ? window.parent.FTG.Experiment : {};
 
+// Get current user and game id from URL
+GlobalInfo.user = getURLParamByName('user');
+GlobalInfo.game = getURLParamByName('game');
+
 // Are we running as part of an experiment?
 if(aExperiment.instance) {
 	// Yes, we are. In this case, we adjust
 	// everything based on the external information
 	// that were provived by the experiment manager.
-
 	GlobalInfo.experiment = aExperiment.instance;
-	GlobalInfo.user = getURLParamByName('user');
-	GlobalInfo.game = getURLParamByName('game');
-
 	console.log('Game is running in experiment mode (user: ' + GlobalInfo.user + ', game: ' + GlobalInfo.game + ')');
 }
 
@@ -51,7 +51,7 @@ SetupState.prototype = {
 	create: function() {
 		this.stage.backgroundColor = 0xFFCC99;
 
-		if(GlobalInfo.experiment) {
+		if(GlobalInfo.experiment || getURLParamByName('face') == 'false') {
 			// We are in an experiment. No need to show information about data collection, it has
 			// already been done.
 			this.initialize();
@@ -74,14 +74,23 @@ SetupState.prototype = {
 			overlay: 'overlay'
 		};
 
-		// Init all global stuff
-		GlobalInfo.expression = new FTG.ExpressionDetector(aConfig);
+		// Enable facial tracking only if someone told us to.
+		if(getURLParamByName('face') == 'true') {
+			GlobalInfo.expression = new FTG.ExpressionDetector(aConfig);
+		}
+
 		GlobalInfo.data = new FTG.Collector(aConfig);
 
-		// Make the facial detector run in a loop.
-		GlobalInfo.expression.start();
+		if(GlobalInfo.expression) {
+			// Make the facial detector run in a loop.
+			GlobalInfo.expression.start();
+			this.mReady = true;
 
-		this.mReady = true;
+		} else {
+			// We are not using facial tracking, so there is no need
+			// to wait here. Let's move along.
+			this.state.start('menu');
+		}
 	},
 
 	update: function() {
