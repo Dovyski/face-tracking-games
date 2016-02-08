@@ -5,6 +5,8 @@ var Hud = function () {
     // Properties
     var mHealthBar;
     var mHealthIcon;
+    var mScoreLabel;
+    var mScore;
 
     // Constructor
     Phaser.Group.call(this, Game);
@@ -18,15 +20,32 @@ Hud.prototype.constructor = Hud;
 // Public methods
 
 Hud.prototype.init = function() {
-    mHealthBar  = new ProgressBar(this.game.width * 0.75, 40, 210, 20, {line: 0xAA3030, fill: 0xC83E3E});
+    mHealthBar  = new ProgressBar(this.game.width * 0.7, 25, 210, 20, {line: 0xAA3030, fill: 0xC83E3E});
     mHealthIcon = new Phaser.Sprite(this.game, -30, -8, 'heart');
     mHealthBar.addChild(mHealthIcon);
 
+    mScoreLabel = new Phaser.Text(this.game, mHealthBar.x + 235, mHealthBar.y - 20, "score", { font: "Bold 18px Arial", fill: "#9E0000", align: "center" });
+    mScore = new Phaser.Text(this.game, mScoreLabel.x - 10, mScoreLabel.y + 15, "0000", { font: "Bold 32px Arial", fill: "#D60000", align: "center" });
+
     this.add(mHealthBar);
+    this.add(mScoreLabel);
+    this.add(mScore);
 };
 
 Hud.prototype.refresh = function() {
-    mHealthBar.setPercentage(this.getPlayState().getPlayer().getHealthPercentage());
+    var aState,
+        aScore;
+
+    aState = this.getPlayState();
+    mHealthBar.setPercentage(aState.getPlayer().getHealthPercentage());
+
+    aScore = aState.getScore().right;
+    mScore.text = '';
+    mScore.text += aScore < 1000 ? '0' : '';
+    mScore.text += aScore < 100 ? '0' : '';
+    mScore.text += aScore < 10 ? '0' : '';
+
+    mScore.text += aScore;
 };
 
 Hud.prototype.getPlayState = function() {

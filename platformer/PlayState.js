@@ -139,7 +139,8 @@ PlayState = function() {
 			aTween.onComplete.add(function(theItem) {
 				theItem.kill();
 				thePlayer.heal();
-			});
+				mHud.refresh();
+			}, this);
 		}
 	};
 
