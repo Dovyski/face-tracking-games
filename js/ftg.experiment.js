@@ -38,6 +38,10 @@ FTG.Experiment.prototype.init = function() {
     if(this.mUid == null) {
         alert('User id not informed! Append ?user=DDD to the URL.');
     } else {
+        // Reverse the order of the games for a subset of users.
+        if(this.mUid % 2 == 0) {
+            this.mGames.reverse();
+        }
         this.greetings();
     }
 };
