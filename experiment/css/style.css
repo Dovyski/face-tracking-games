@@ -29,6 +29,7 @@ body {
 }
 
 .questionnaire {
+    padding-bottom: 10px;
 }
 
 .questions {
@@ -46,4 +47,5 @@ body {
 .questions input[type="radio"]:checked + label{
     font-weight: bold;
     text-decoration: underline;
+    color: magenta;
 }
