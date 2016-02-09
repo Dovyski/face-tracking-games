@@ -74,7 +74,7 @@ Game.PlayGame.prototype = {
 
 		KEYLEFT = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 
-		KEYUP = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
+		KEYUP = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
 
 		KEYDOWN = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 
@@ -86,22 +86,6 @@ Game.PlayGame.prototype = {
 
 		this.scoretextmain = this.add.text(344,370," "+score+" ",{ font: "15px Arial", fill: "#fff", align: "center" })
 
-
-
-		this.resetbutton = this.add.sprite(320,520,'reset');
-
-		this.pausebutton = this.add.sprite(320,460,'pause');
-
-		this.pausebutton.inputEnabled = true;
-
-		this.resetbutton.inputEnabled = true;
-
-		this.pausebutton.events.onInputDown.add(this.pausebuttondown,this.pausebutton);
-
-		this.resetbutton.events.onInputDown.add(this.resetbuttondown,this.resetbutton);
-
-
-
 		oldsquares.length = 0;
 
 		squaresinrow.length = 0;
@@ -112,36 +96,6 @@ Game.PlayGame.prototype = {
 			GlobalInfo.data.markGameStarted();
 		}
 	},
-
-	pausebuttondown : function(){
-
-		if(this.game.paused==false)
-
-		{
-
-			this.game.paused = true;
-
-		}
-
-		else
-
-		{ this.game.paused = false;
-
-		}
-
-	},
-
-
-
-	resetbuttondown : function(){
-
-		this.game.state.start('MainMenu');
-
-	},
-
-
-
-
 
 	chooseblock : function(){
 
