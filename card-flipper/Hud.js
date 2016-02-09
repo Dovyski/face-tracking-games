@@ -30,7 +30,7 @@ Hud.prototype.constructor = Hud;
 Hud.prototype.init = function() {
     mRightWrongIcons   = new Phaser.Group(Game);
 
-    for(var i = 0; i < Constants.CARDS_FLIPS_TURN * 5; i++) {
+    for(var i = 0; i < Constants.CARDS_MAX; i++) {
         mRightWrongIcons.add(new RightWrongIcon());
     }
 

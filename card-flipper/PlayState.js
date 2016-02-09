@@ -16,6 +16,7 @@ var PlayState = function() {
 	var mMatchTime;			// Remaining time for the match
 	var mIsThinking;		// Informs if the player is in a thinking part of the game (e.g. card analysis)
 	var mHealth;			// Available health points.
+	var mDifficultyIndex;	// Regulates the game difficulty.
 	var mScore = {			// Info regarding global score (throughout the game session)
 		right: 0,
 		wrong: 0,
@@ -27,7 +28,6 @@ var PlayState = function() {
 		miss: 0
 	};
 	var mSfxNewQuestion;
-	var mDifficulty = {};
 	var mTutorial;
 
 	this.create = function() {
@@ -58,11 +58,9 @@ var PlayState = function() {
 			mCards.add(aCard);
 		}
 
-		mDifficulty['CARDS_FLIPS_TURN'] = Constants.CARDS_FLIPS_TURN;
-		mDifficulty['QUESTION_DURATION'] = Constants.QUESTION_DURATION;
-		mDifficulty['QUESTION_DOWN_PACE'] = Constants.QUESTION_DOWN_PACE;
+		mDifficultyIndex = 0;
 
-		mQuestionTime = mDifficulty['QUESTION_DURATION'];
+		mQuestionTime = getDifficulty().QUESTION_DURATION;
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
@@ -84,7 +82,15 @@ var PlayState = function() {
 	};
 
 	this.update = function() {
-		var aElapsed = Game.time.elapsedMS;
+		var aElapsed = Game.time.elapsedMS,
+			aOldDifficultyIndex;
+
+		aOldDifficultyIndex = mDifficultyIndex;
+		updateDifficultiIndex();
+
+		if(aOldDifficultyIndex != mDifficultyIndex) {
+			console.log('Difficulty has changed to ' + mDifficultyIndex);
+		}
 
 		// Update everything related to turn control (time)
 		// and generation of new questions.
@@ -147,6 +153,11 @@ var PlayState = function() {
 		mHud.refresh();
 	}
 
+	var updateDifficultiIndex = function() {
+		mDifficultyIndex = (1 - mMatchTime / Constants.GAME_MATCH_DURATION) * Constants.DIFFICULTY.length;
+		mDifficultyIndex |= 0; // cast to int
+	};
+
 	var updateTurnAndNewQuestionControl = function(theElapsed) {
 		// Update counters regarding question
 		mQuestionTimer -= theElapsed;
@@ -154,24 +165,21 @@ var PlayState = function() {
 		// Check if it is time to ask a new question
 		if(mQuestionTimer <= 0) {
 			generateNewQuestion();
-			mQuestionTime = mQuestionCounter == 1 ? Constants.QUESTION_DURATION_1ST : mDifficulty['QUESTION_DURATION'];
+			mQuestionTime = mQuestionCounter == 1 ? Constants.QUESTION_DURATION_1ST : getDifficulty().QUESTION_DURATION;
 			mQuestionTimer = mQuestionTime;
-
-			// Make the game a bit more harder for the next time :D
-			increaseDifficultyLevel();
 		}
 
 		// If all cards have been analyzed already,
 		// speed up the turn count down
 		if(mIsThinking && countFlippingCards() == 0) {
-			mQuestionTimer -= mQuestionCounter == 1 ? Constants.QUESTION_DOWN_PACE_1ST : mDifficulty['QUESTION_DOWN_PACE'];
+			mQuestionTimer -= mQuestionCounter == 1 ? Constants.QUESTION_DOWN_PACE_1ST : getDifficulty().QUESTION_DOWN_PACE;
 		}
 	};
 
 	var flipRandomCardsUp = function() {
 		var aCard,
 		 	i,
-			aTotal = mDifficulty['CARDS_FLIPS_TURN'];
+			aTotal = getDifficulty().CARDS_FLIPS_TURN;
 
 		for(i = 0; i < aTotal; i++) {
 			aCard = mCards.getRandom();
@@ -273,17 +281,8 @@ var PlayState = function() {
 		mSfxNewQuestion.play();
 	};
 
-	var increaseDifficultyLevel = function() {
-		var aProgress = 1 - mMatchTime / Constants.GAME_MATCH_DURATION;
-
-		aProgress = aProgress < 0 ? 0 : aProgress;
-		aProgress = aProgress > 1 ? 1 : aProgress;
-
-		mDifficulty['CARDS_FLIPS_TURN']	= Math.floor(Constants.CARDS_FLIPS_TURN * (1 + aProgress * 4));
-		mDifficulty['QUESTION_DURATION'] = Math.floor(Constants.QUESTION_DURATION * (1 - aProgress));
-		mDifficulty['QUESTION_DOWN_PACE'] = Math.floor(Constants.QUESTION_DOWN_PACE * (1 + aProgress * 10));
-
-		console.log('Progress: ', aProgress, mQuestionTime);
+	var getDifficulty = function() {
+		return Constants.DIFFICULTY[mDifficultyIndex];
 	};
 
 	this.terminateCurrentTurn = function() {
@@ -291,7 +290,6 @@ var PlayState = function() {
 	}
 
 	// Getters
-
 	this.getQuestion = function() {
 		return mQuestion;
 	};

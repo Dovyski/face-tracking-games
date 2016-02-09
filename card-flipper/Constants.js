@@ -14,14 +14,39 @@ var Constants = new function() {
 
 	this.CARDS_MAX 				= 25;		// Total number of cards in the game
 	this.CARDS_PER_ROW 			= 5;		// Amount of cards in each row
-	this.CARDS_FLIPS_TURN		= 2;		// Amount of cards that will will be flipped every time a new question is generated.
 	this.CARDS_COLORS			= 7;
 	this.CARDS_DIST_TARGET		= 100;
 
-	this.QUESTION_DURATION		= 70000;			// Time, in milliseconds, a question should remain active
 	this.QUESTION_DURATION_1ST	= 2 * 60 * 1000;	// Time, in milliseconds, a question should remain active during the very fist question
-	this.QUESTION_DOWN_PACE		= 100;				// Time, in milliseconds, to decrease time bar if there are no more cards to flip.
 	this.QUESTION_DOWN_PACE_1ST = 800;				// Same as QUESTION_DOWN_PACE, but for the very first question.
 
 	this.HUD_RIGHT_WRONG_TTL	= 1000;				// Time, in milliseconds, the "right/wrong" sign remains on the screen.
+
+	this.DIFFICULTY = [
+		{
+			CARDS_FLIPS_TURN: 2,					// Amount of cards that will will be flipped every time a new question is generated.
+			QUESTION_DURATION: 70000,				// Time, in milliseconds, a question should remain active
+			QUESTION_DOWN_PACE: 100					// Time, in milliseconds, to decrease time bar if there are no more cards to flip.
+		},
+		{
+			CARDS_FLIPS_TURN: 3,
+			QUESTION_DURATION: 50000,
+			QUESTION_DOWN_PACE: 1100
+		},
+		{
+			CARDS_FLIPS_TURN: 4,
+			QUESTION_DURATION: 40000,
+			QUESTION_DOWN_PACE: 1100
+		},
+		{
+			CARDS_FLIPS_TURN: 5,
+			QUESTION_DURATION: 20000,
+			QUESTION_DOWN_PACE: 1100
+		},
+		{
+			CARDS_FLIPS_TURN: 6,
+			QUESTION_DURATION: 15000,
+			QUESTION_DOWN_PACE: 1100
+		}
+	];
 };
