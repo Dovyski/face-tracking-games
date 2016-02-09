@@ -30,6 +30,8 @@ var LoadState = function() {
 		this.game.load.image('water', 'assets/water.png');  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.spritesheet('clouds', 'assets/clouds.png', 192, 60);  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('tutorial', 'assets/tutorial.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
+		this.game.load.image('key-up', 'assets/key-up.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
+		this.game.load.image('key-s', 'assets/key-s.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
 		this.game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		this.game.load.spritesheet('blue-button', 'assets/blue_button.png', 190, 49); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		this.game.load.image('dialog-small', 'assets/dialog_small.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
