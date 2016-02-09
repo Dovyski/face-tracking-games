@@ -203,16 +203,14 @@ Player.prototype.heal = function() {
 };
 
 Player.prototype.hurt = function() {
-    if(!this.isFlickering()) {
-        this.mHealth -= Constants.GAME_MISTAKE_HEALTH;
-        mSfxHurt.play();
+    this.mHealth -= Constants.GAME_MISTAKE_HEALTH;
+    mSfxHurt.play();
 
-        if(this.mHealth < 0) {
-            this.mHealth = 0;
-        }
-
-        this.flicker(1000);
+    if(this.mHealth < 0) {
+        this.mHealth = 0;
     }
+
+    this.flicker(1000);
 };
 
 Player.prototype.flicker = function(theDuration) {
