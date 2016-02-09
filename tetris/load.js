@@ -26,11 +26,12 @@ Game.Load.prototype = {
 		this.load.image('reset','assets/refresh.png');
 		this.load.image('lose','assets/lose.png');
 		this.load.image('arrow','assets/arrow.png?3');
-		this.load.image('title','assets/Title.png');
+		this.load.image('title','assets/Title.png?1');
 		this.load.image('logo','assets/logo2.png');
 		this.load.image('win','assets/win.png');
 		this.load.spritesheet('blocks','assets/blocks.png',30,30);
 		this.load.image('bck','assets/Bck.png');
+		this.load.image('ingame-controls','assets/ingame-controls.png');
 
 		// Assets required by setup state, etc.
 		this.load.spritesheet('blue-button', '../card-flipper/assets/blue_button.png', 190, 49); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl

@@ -85,7 +85,7 @@ Game.LoseScreen.prototype = {
 
 		this.game.world.bounds.height = 600;
 
-		this.lose = this.game.add.text(this.game.world.centerX,this.game.world.centerY,'Game over. Click here to continue', { font: "24px Arial", fill: "#fff", align: "center" });
+		this.lose = this.game.add.text(this.game.world.centerX,this.game.world.centerY,'Game over.\nClick anywhere to continue', { font: "24px Arial", fill: "#fff", align: "center" });
 
 		this.lose.anchor.setTo(0.5,0.5);
 
