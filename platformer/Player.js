@@ -69,10 +69,10 @@ Player.prototype.update = function() {
     if(this.mFlickeringTimer > 0) {
         this.mFlickeringTimer -= this.game.time.elapsedMS;
 
-        this.visible = !this.visible;
+        this.tint = this.tint == 0xff0000 ? 0xffffff : 0xff0000;
 
         if(this.mFlickeringTimer <= 0) {
-            this.visible = true;
+            this.tint = 0xffffff;
         }
     }
 };
