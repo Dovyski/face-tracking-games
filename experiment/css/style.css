@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+}
+
+#info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width : 100%;
+    text-align: left;
+    font-size: 2em;
+}
+
+#info iframe {
+    overflow: none;
+}
+
+.greetings,
+.questionnaire {
+    padding-left: 50px;
+}
+
+.greetings button {
+    width: 200px;
+    height: 60px;
+    background-color: green;
+    color: white;
+    font-size: 30px;
+}
+
+.questionnaire {
+}
+
+.questions {
+
+}
+
+.questions p {
+    font-weight: bold;
+}

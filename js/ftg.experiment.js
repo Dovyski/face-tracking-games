@@ -50,10 +50,12 @@ FTG.Experiment.prototype.greetings = function() {
     var aSelf = this;
 
     $('#info').html(
-        '<h1>Instructions</h1>' +
-        '<p>User: ' + this.mUid + '</p>' +
-        '<p>Info info info</p>' +
-        '<button>Start</button>'
+        '<div class="greetings">' +
+            '<h1>Instructions</h1>' +
+            '<p>User: ' + this.mUid + '</p>' +
+            '<p>Welcome! Please wait the researcher let you know when to start.<br/>When you are told to start, click the "Start" button below.<br /><br />Thank you for being part of this research!</p>' +
+            '<button>Start</button>' +
+        '</div>'
     );
 
     $('#info button').click(function() {
@@ -102,7 +104,7 @@ FTG.Experiment.prototype.concludeCurrentQuestionnaire = function(theData) {
         method: 'POST',
         data: {
             method: 'answer',
-            uid: this.mUid,
+            user: this.mUid,
             game: this.getCurrentGame().id,
             data: JSON.stringify({t: Date.now(), d: theData})
         },
@@ -128,9 +130,15 @@ FTG.Experiment.prototype.concludeCurrentGame = function() {
     aGame = this.getCurrentGame();
 
     console.log('[Experiment] Current game (' + aGame.name + ', id=' + aGame.id + ') was concluded.');
-    $('#info').html('<h2>Question</h2><p>Regarding the game you just played, please answer the questions below.</p>');
+    $('#info').html(
+        '<div class="questionnaire">' +
+            '<h2>Question</h2>' +
+            '<p>Regarding the game you just played, please answer the questions below.</p>' +
+            '<div id="questions" class="questions"></div>' +
+        '</div>'
+    );
 
-    aQuestions = new FTG.Questionnaire('info', this.mUid, aGame.id, this.concludeCurrentQuestionnaire, this);
+    aQuestions = new FTG.Questionnaire('questions', this.mUid, aGame.id, this.concludeCurrentQuestionnaire, this);
 };
 
 FTG.Experiment.prototype.rest = function() {

@@ -48,7 +48,7 @@ FTG.Questionnaire.prototype.init = function() {
 
     for(i = 0; i < this.mQuestions.length; i++) {
         aQuestion = this.mQuestions[i];
-        aContent += '<p id="q' + i + '">' + aQuestion.text + '</p>';
+        aContent += '<p id="q' + i + '">' + (i + 1) + ') ' + aQuestion.text + '</p>';
 
         for(j = 0; j < aQuestion.options.length; j++) {
             aContent +=
