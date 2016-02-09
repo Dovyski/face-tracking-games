@@ -17,7 +17,7 @@ body {
 
 .greetings,
 .questionnaire {
-    padding-left: 50px;
+    padding: 0 50px 10px 50px;
 }
 
 .greetings button {
@@ -33,18 +33,23 @@ body {
 }
 
 .questions {
-
 }
 
-.questions p {
+.question {
+    margin-bottom: 40px;
+}
+
+.question p {
     font-weight: bold;
+    line-height: 30px;
+    margin: 0 0 5px 0;
 }
 
-.questions label {
+.question label {
     margin-right: 20px;
 }
 
-.questions input[type="radio"]:checked + label{
+.question input[type="radio"]:checked + label{
     font-weight: bold;
     text-decoration: underline;
     color: magenta;
