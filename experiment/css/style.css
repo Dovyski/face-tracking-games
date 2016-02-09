@@ -38,3 +38,12 @@ body {
 .questions p {
     font-weight: bold;
 }
+
+.questions label {
+    margin-right: 20px;
+}
+
+.questions input[type="radio"]:checked + label{
+    font-weight: bold;
+    text-decoration: underline;
+}

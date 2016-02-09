@@ -42,6 +42,7 @@ FTG.Questionnaire.prototype.init = function() {
     var i,
         j,
         aDiv,
+        aId,
         aQuestion,
         aSelf = this,
         aContent = '';
@@ -51,9 +52,10 @@ FTG.Questionnaire.prototype.init = function() {
         aContent += '<p id="q' + i + '">' + (i + 1) + ') ' + aQuestion.text + '</p>';
 
         for(j = 0; j < aQuestion.options.length; j++) {
+            aId = 'id' + i + j;
             aContent +=
-                '<input type="radio" name="a' + i + '" value="' + aQuestion.options[j].value + '" /> ' +
-                aQuestion.options[j].value + ' (' + aQuestion.options[j].label + ')';
+                '<input type="radio" name="a' + i + '" value="' + aQuestion.options[j].value + '" id="' + aId + '"/> ' +
+                '<label for="' + aId + '">' + aQuestion.options[j].value + ' ' + aQuestion.options[j].label + '</label>';
         }
     }
 
