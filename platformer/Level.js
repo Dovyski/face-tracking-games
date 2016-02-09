@@ -41,8 +41,8 @@ Level.prototype.init = function() {
     this.initCollectables();
 
     // Add a few pieces of floor to start with
-    for(i = 0; i < 4; i++) {
-        this.addNewPieceOfFloor(this.getDifficulty());
+    for(i = 0; i < 3; i++) {
+        this.addNewPieceOfFloor(this.getDifficulty(), true);
     }
 
     this.add(mLandscape.getBackground());
@@ -168,7 +168,7 @@ Level.prototype.isObstacle = function(theItem) {
     return theItem.key == 'obstacle-top' || theItem.key == 'obstacle-bottom';
 };
 
-Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
+Level.prototype.addNewPieceOfFloor = function(theDifficulty, theTerrainOnly) {
     var aNew;
 
     // Do we have any previously added element as
@@ -214,8 +214,11 @@ Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
         aNew.body.velocity.x = theDifficulty.speed;
         // Tigh things together
         aNew.x -= 15;
-        this.addNewObstacleIfAppropriate(aNew, theDifficulty);
-        this.addNewCollectableIfAppropriate(aNew, theDifficulty);
+
+        if(!theTerrainOnly) {
+            this.addNewObstacleIfAppropriate(aNew, theDifficulty);
+            this.addNewCollectableIfAppropriate(aNew, theDifficulty);
+        }
     }
 
     mLastAdded = aNew;
