@@ -13,9 +13,9 @@ PlayState = function() {
 		mSfxHeal,
 		mSfxMusic,
 		mScore = {			// Info regarding global score (throughout the game session)
-			right: 0,
-			wrong: 0,
-			miss: 0
+			collectable: 0, // Amount of collectables (e.g. hearts) the player collected
+			overcome: 0,	// Number of obstacles the player successfully overcame (jumped over or slided below)
+			hurt: 0			// Number of times the player got hit by obstacles
 		};
 
 	this.create = function() {
@@ -40,6 +40,8 @@ PlayState = function() {
 		mDustEmitter.setRotation(0, 0);
 		mDustEmitter.makeParticles();
 		mPlayer.setDustEmitter(mDustEmitter);
+
+		mDifficultyIndex = 0;
 
 		// Init misc stuff
 		mMatchTime = Constants.GAME_MATCH_DURATION;
@@ -98,7 +100,8 @@ PlayState = function() {
 
 	this.update = function() {
 		var aKeyboard,
-			aOldDifficultyIndex;
+			aOldDifficultyIndex,
+			aPlayerObstacle;
 
 		// Calculate the difficulty index based on the game duration
 		aOldDifficultyIndex = mDifficultyIndex;
@@ -131,7 +134,7 @@ PlayState = function() {
 
 		if(theCollectable.alive) {
 			theCollectable.alive = false;
-			mScore.right++;
+			mScore.collectable++;
 			mSfxHeal.play();
 
 			aTween = this.game.add.tween(theCollectable).to(mHud.getHeartIconPosition(), 500, Phaser.Easing.Linear.None, true);
@@ -145,10 +148,23 @@ PlayState = function() {
 	};
 
 	this.handleObstacleOverlap = function(thePlayer, theObstacle) {
-		if(theObstacle.key != 'obstacle-top' || !thePlayer.dashing) {
+		if(!theObstacle.touched && (theObstacle.key != 'obstacle-top' || !thePlayer.dashing)) {
+			// Mark the obstacle as touched by the player, so it
+			// will not be handled again in the collision or
+			// generate score points.
+			theObstacle.touched = true;
+
+			mScore.hurt++;
 			thePlayer.hurt();
-			mScore.wrong++; // TODO: score just once.
 			mHud.refresh();
+		}
+	};
+
+	this.handleObstacleRemoval = function(theObstacle) {
+		if(!theObstacle.touched) {
+			// An obstacle just went outside the screen without
+			// being touched by the player. Let's score that.
+			mScore.overcome++;
 		}
 	};
 

@@ -146,6 +146,9 @@ Level.prototype.update = function() {
 
                 if(this.isFloor(aItem)) {
                     this.addNewPieceOfFloor(aDifficulty);
+
+                } else if(this.isObstacle(aItem)) {
+                    this.getPlayState().handleObstacleRemoval(aItem);
                 }
             }
         }
@@ -159,6 +162,10 @@ Level.prototype.update = function() {
 
 Level.prototype.isFloor = function(theItem) {
     return theItem.key == 'platform' || theItem.key == 'slope-up' || theItem.key == 'slope-down';
+};
+
+Level.prototype.isObstacle = function(theItem) {
+    return theItem.key == 'obstacle-top' || theItem.key == 'obstacle-bottom';
 };
 
 Level.prototype.addNewPieceOfFloor = function(theDifficulty) {
@@ -246,6 +253,7 @@ Level.prototype.addNewObstacleIfAppropriate = function(theWhere, theDifficulty) 
 
                 aObstacle.reset(aPosX, aPosY);
                 aObstacle.body.velocity.x = theWhere.body.velocity.x;
+                aObstacle.touched = false; // mark as not touched by the player
 
                 if(aObstacle.key == 'obstacle-top') {
                     aObstacle.anchor.setTo(0.5);
@@ -289,8 +297,12 @@ Level.prototype.getCollectables = function() {
     return mCollectables;
 };
 
+Level.prototype.getPlayState = function() {
+    return this.game.state.states[Game.state.current];
+};
+
 Level.prototype.getDifficulty = function() {
-    return Game.state.states[Game.state.current].getDifficulty();
+    return this.getPlayState().getDifficulty();
 };
 
 Level.prototype.getBackground = function() {
