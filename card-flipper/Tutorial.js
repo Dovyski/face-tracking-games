@@ -12,9 +12,7 @@ var Tutorial = function () {
     var mInfoGood;
     var mInfoBad;
     var mInfoTime;
-    var mTextGood;
     var mTextDrag;
-    var mTextBad;
     var mTextTrash;
 
     // Constructor
@@ -38,29 +36,22 @@ Tutorial.STEP_EXPLAIN_TIME = 5;
 Tutorial.prototype.init = function() {
     var aText;
 
-    this.mInfoGood = new Phaser.Sprite(Game, 35, 5, 'tutorial-good');
-    this.mInfoBad = new Phaser.Sprite(Game, 510, 120, 'tutorial-bad');
+    this.mInfoGood = new Phaser.Sprite(Game, 71, 30, 'tutorial-good');
+    this.mInfoBad = new Phaser.Sprite(Game, 318, 45, 'tutorial-bad');
     this.mInfoTime = new Phaser.Sprite(Game, 45, 85, 'tutorial-time');
 
-    this.mTextGood = new Phaser.Text(Game, Game.world.centerX - 220, 155, 'You must feed the monster with mushrooms. Choose the ones different from the poisonous indication.', {fontSize: 26, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 450 });
-    this.mTextDrag = new Phaser.Text(Game, 25, Game.world.centerY - 95, 'Drag this\nsafe mushroom into the monster.', {fontSize: 30, fill: '#2DB200', align: 'left', wordWrap: true, wordWrapWidth: 300 });
-
-    this.mTextBad = new Phaser.Text(Game, Game.world.centerX - 250, Game.world.centerY - 100, 'This mushroom is identical to the poisonous indication!', {fontSize: 26, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 300 });
-    this.mTextTrash = new Phaser.Text(Game, Game.world.centerX - 360, Game.world.centerY + 230, 'Drag this bad mushroom into the trash.', {fontSize: 30, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 400 });
+    this.mTextDrag = new Phaser.Text(Game, 220, Game.world.centerY, 'Drag and drop the \nsafe non-poisonous mushroom into the monster.', {fontSize: 30, fill: '#2DB200', align: 'center', wordWrap: true, wordWrapWidth: 450 });
+    this.mTextTrash = new Phaser.Text(Game, Game.world.centerX - 360, Game.world.centerY + 230, 'Drag the bad (poisonous) mushroom into the trash.', {fontSize: 30, fill: '#FE2D2B', align: 'center', wordWrap: true, wordWrapWidth: 400 });
 
     this.mInfoGood.visible = false;
-    this.mTextGood.visible = false;
     this.mTextDrag.visible = false;
     this.mInfoBad.visible = false;
-    this.mTextBad.visible = false;
     this.mTextTrash.visible = false;
     this.mInfoTime.visible = false;
 
     this.add(this.mInfoGood);
-    this.add(this.mTextGood);
     this.add(this.mTextDrag);
     this.add(this.mInfoBad);
-    this.add(this.mTextBad);
     this.add(this.mTextTrash);
     this.add(this.mInfoTime);
 };
@@ -120,7 +111,6 @@ Tutorial.prototype.update = function() {
                 ], Game.world.children);
 
                 this.mInfoGood.visible = true; this.mInfoGood.alpha = 1;
-                this.mTextGood.visible = true; this.mTextGood.alpha = 1;
                 this.mTextDrag.visible = true; this.mTextDrag.alpha = 1;
 
                 Game.add.tween(this.mTextDrag).to({alpha: 0.3}, 800, Phaser.Easing.Linear.None, true, 0, -1, true).start();
@@ -133,7 +123,6 @@ Tutorial.prototype.update = function() {
                 // The player got it! :D
                 mGoodCard.alpha = 0.2;
                 this.mInfoGood.destroy();
-                this.mTextGood.destroy();
                 this.mTextDrag.destroy();
                 this.stepTo(Tutorial.STEP_DRAG_BAD_CARD, 1000);
             }
@@ -150,7 +139,6 @@ Tutorial.prototype.update = function() {
                 ], Game.world.children);
 
                 this.mInfoBad.visible = true; this.mInfoBad.alpha = 1;
-                this.mTextBad.visible = true; this.mTextBad.alpha = 1;
                 this.mTextTrash.visible = true; this.mTextTrash.alpha = 1;
 
                 Game.add.tween(this.mTextTrash).to({alpha: 0.3}, 800, Phaser.Easing.Linear.None, true, 0, -1, true).start();
@@ -160,7 +148,6 @@ Tutorial.prototype.update = function() {
             // but this time with the bad card.
             if(mBadCard.isFlippedDown()) {
                 this.mInfoBad.destroy();
-                this.mTextBad.destroy();
                 this.mTextTrash.destroy();
                 mBadCard.alpha = 0.2;
                 this.stepTo(Tutorial.STEP_EXPLAIN_TIME, 2000);
