@@ -39,7 +39,7 @@ Hud.prototype.refresh = function() {
     aState = this.getPlayState();
     mHealthBar.setPercentage(aState.getPlayer().getHealthPercentage());
 
-    aScore = aState.getScore().right;
+    aScore = aState.getScore().collectable + aState.getScore().overcome;
     mScore.text = '';
     mScore.text += aScore < 1000 ? '0' : '';
     mScore.text += aScore < 100 ? '0' : '';
