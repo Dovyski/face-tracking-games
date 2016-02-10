@@ -20,7 +20,7 @@ body {
     padding: 0 50px 10px 50px;
 }
 
-.greetings button {
+#info button {
     width: 200px;
     height: 60px;
     background-color: green;
@@ -45,6 +45,10 @@ body {
     margin: 0 0 5px 0;
 }
 
+.question p.error {
+    color: red;
+}
+
 .question label {
     margin-right: 20px;
 }
@@ -53,4 +57,10 @@ body {
     font-weight: bold;
     text-decoration: underline;
     color: magenta;
+}
+
+.question input[type="text"] {
+    width: 600px;
+    height: 30px;
+    font-size: 0.8em;
 }
