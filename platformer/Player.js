@@ -193,8 +193,8 @@ Player.prototype.dash = function() {
     }
 };
 
-Player.prototype.heal = function() {
-    this.mHealth += Constants.GAME_CORRECT_HEALTH;
+Player.prototype.heal = function(theAmount) {
+    this.mHealth += theAmount;
 
     // Prevent overfeeding health
     if(this.mHealth >= Constants.GAME_HEALTH_MAX) {
@@ -202,8 +202,8 @@ Player.prototype.heal = function() {
     }
 };
 
-Player.prototype.hurt = function() {
-    this.mHealth -= Constants.GAME_MISTAKE_HEALTH;
+Player.prototype.hurt = function(theAmount) {
+    this.mHealth -= theAmount;
     mSfxHurt.play();
 
     if(this.mHealth < 0) {

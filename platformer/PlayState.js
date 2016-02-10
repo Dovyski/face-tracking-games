@@ -125,7 +125,7 @@ PlayState = function() {
 
 		mPlayer.adjustPosition(mLevel.getCurrentPlayerFloor());
 
-		this.game.physics.arcade.overlap(mPlayer, mLevel.getObstacles(), this.handleObstacleOverlap);
+		this.game.physics.arcade.overlap(mPlayer, mLevel.getObstacles(), this.handleObstacleOverlap, null, this);
 		this.game.physics.arcade.overlap(mPlayer, mLevel.getCollectables(), this.handleCollectable, null, this);
 	};
 
@@ -141,7 +141,7 @@ PlayState = function() {
 
 			aTween.onComplete.add(function(theItem) {
 				theItem.kill();
-				thePlayer.heal();
+				thePlayer.heal(this.getDifficulty().heal);
 				mHud.refresh();
 			}, this);
 		}
@@ -155,7 +155,7 @@ PlayState = function() {
 			theObstacle.touched = true;
 
 			mScore.hurt++;
-			thePlayer.hurt();
+			thePlayer.hurt(this.getDifficulty().hurt);
 			mHud.refresh();
 		}
 	};
@@ -185,7 +185,7 @@ PlayState = function() {
 	};
 
 	this.getDifficulty = function() {
-		return mDifficultyIndex >= 0 && mDifficultyIndex < Constants.DIFFICULTY.length ? Constants.DIFFICULTY[mDifficultyIndex] : Constants.DIFFICULTY[0];
+		return mDifficultyIndex >= 0 && mDifficultyIndex < Constants.DIFFICULTY.length ? Constants.DIFFICULTY[mDifficultyIndex] : Constants.DIFFICULTY[Constants.DIFFICULTY.length - 1];
 	};
 
 	this.getHud = function() {
