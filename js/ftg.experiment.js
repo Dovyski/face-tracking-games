@@ -190,6 +190,7 @@ FTG.Experiment.prototype.rest = function() {
     console.log('[Experiment] Resting for ' + (this.mRestTime/1000) + ' seconds...');
 
     this.enableCalmMusic(true);
+    $('#info').html('<div class="rest-container"><div><h1>Please, relax.</h1><p>Next game will start in a moment...</p></div></div>');
 
     aId = setInterval(function() {
         var aRemaining = aFuture - Date.now();
@@ -198,9 +199,6 @@ FTG.Experiment.prototype.rest = function() {
             clearInterval(aId);
             aSelf.enableCalmMusic(false);
             aSelf.startNewGame();
-
-        } else {
-            $('#info').html('Rest...' + aRemaining / 1000);
         }
     }, 200);
 };

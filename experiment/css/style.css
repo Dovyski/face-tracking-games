@@ -64,3 +64,16 @@ body {
     height: 30px;
     font-size: 0.8em;
 }
+
+.rest-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 350px;
+    width: 100%;
+    text-align: center;
+}
+
+.rest-container p,
+.rest-container h1 {
+    margin: 0;
+}
