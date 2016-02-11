@@ -11,6 +11,9 @@
      this.mCurrentGame;
      this.mRestTime;
      this.mEnableFaceTracking;
+     this.mBipSound;
+     this.mTanSound;
+
      this.mGames = [
          {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768},
          {id: 2, name: 'tetris', url: '../tetris/', width: 1024, height: 800},
@@ -32,6 +35,8 @@ FTG.Experiment.prototype.init = function() {
     this.mCurrentGame = -1; // TODO: get from URL.
     this.mRestTime = FTG.Utils.getURLParamByName('rest') || 60000;
     this.mEnableFaceTracking = FTG.Utils.getURLParamByName('face') || false;
+    this.mBipSound = document.getElementById('bip');
+    this.mTanSound = document.getElementById('tan');
 
     console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime + ', facial tracking: ' + this.mEnableFaceTracking);
 
@@ -44,6 +49,16 @@ FTG.Experiment.prototype.init = function() {
         }
         this.greetings();
     }
+};
+
+FTG.Experiment.prototype.playBipSound = function() {
+    this.mBipSound.currentTime = 0;
+    this.mBipSound.play();
+};
+
+FTG.Experiment.prototype.playTanSound = function() {
+    this.mTanSound.currentTime = 0;
+    this.mTanSound.play();
 };
 
 FTG.Experiment.prototype.greetings = function() {
@@ -61,6 +76,9 @@ FTG.Experiment.prototype.greetings = function() {
     $('#info button').click(function() {
         aSelf.startNewGame();
     });
+
+    // Play the bip sound to indicate everything is set.
+    this.playBipSound();
 };
 
 FTG.Experiment.prototype.generateGameURL = function(theGameInfo) {
@@ -76,6 +94,7 @@ FTG.Experiment.prototype.startNewGame = function() {
         aGame = this.getCurrentGame();
 
         console.log('[Experiment] New game about to start: ' + aGame.name + ' (id=' + aGame.id + ')');
+        this.playBipSound();
 
         // Add the game iframe and ajust its src property (prevent chache issues)
         $('#info').html('<iframe id="game" style="width: ' + aGame.width + 'px; height: ' + aGame.height + 'px;"></iframe>');
@@ -130,6 +149,8 @@ FTG.Experiment.prototype.concludeCurrentGame = function() {
     aGame = this.getCurrentGame();
 
     console.log('[Experiment] Current game (' + aGame.name + ', id=' + aGame.id + ') was concluded.');
+    this.playTanSound();
+
     $('#info').html(
         '<div class="questionnaire">' +
             '<h2>Questions</h2>' +
