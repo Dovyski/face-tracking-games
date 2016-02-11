@@ -13,6 +13,7 @@
      this.mEnableFaceTracking;
      this.mBipSound;
      this.mTanSound;
+     this.mCalmSound;
 
      this.mGames = [
          {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768},
@@ -33,10 +34,13 @@ FTG.Experiment.prototype.init = function() {
     this.mUid = FTG.Utils.getURLParamByName('user');
 
     this.mCurrentGame = -1; // TODO: get from URL.
-    this.mRestTime = FTG.Utils.getURLParamByName('rest') || 60000;
+    this.mRestTime = FTG.Utils.getURLParamByName('rest') || 3;
     this.mEnableFaceTracking = FTG.Utils.getURLParamByName('face') || false;
     this.mBipSound = document.getElementById('bip');
     this.mTanSound = document.getElementById('tan');
+    this.mCalmSound = document.getElementById('calm');
+
+    this.mRestTime *= 60 * 1000;
 
     console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime + ', facial tracking: ' + this.mEnableFaceTracking);
 
@@ -48,6 +52,15 @@ FTG.Experiment.prototype.init = function() {
             this.mGames.reverse();
         }
         this.greetings();
+    }
+};
+
+FTG.Experiment.prototype.enableCalmMusic = function(theStatus) {
+    if(theStatus) {
+        this.mCalmSound.loop = true;
+        this.mCalmSound.play();
+    } else {
+        this.mCalmSound.pause();
     }
 };
 
@@ -170,17 +183,20 @@ FTG.Experiment.prototype.concludeCurrentGame = function() {
 };
 
 FTG.Experiment.prototype.rest = function() {
-    var aFuture = Date.now() + 5000,
+    var aFuture = Date.now() + this.mRestTime,
         aSelf = this,
         aId;
 
-    console.log('[Experiment] Resting for SSS seconds...');
+    console.log('[Experiment] Resting for ' + (this.mRestTime/1000) + ' seconds...');
+
+    this.enableCalmMusic(true);
 
     aId = setInterval(function() {
         var aRemaining = aFuture - Date.now();
 
         if(aRemaining <= 0) {
             clearInterval(aId);
+            aSelf.enableCalmMusic(false);
             aSelf.startNewGame();
 
         } else {
