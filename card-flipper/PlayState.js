@@ -132,17 +132,17 @@ var PlayState = function() {
 		if(theType == 'right') {
 			mScore.right++;
 			mTurnBasedScore.right++;
-			mHealth += Constants.GAME_CORRECT_HEALTH;
+			mHealth += getDifficulty().GAME_CORRECT_HEALTH;
 
 		} else if(theType == 'wrong') {
 			mScore.wrong++;
 			mTurnBasedScore.wrong++;
-			mHealth -= Constants.GAME_MISTAKE_HEALTH;
+			mHealth -= getDifficulty().GAME_MISTAKE_HEALTH;
 
 		} else {
 			mScore.miss++;
 			mTurnBasedScore.miss++;
-			mHealth -= Constants.GAME_MISTAKE_HEALTH;
+			mHealth -= getDifficulty().GAME_MISTAKE_HEALTH;
 		}
 
 		// Prevent overfeeding the monster.
