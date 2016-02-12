@@ -11,15 +11,26 @@
      this.mCurrentGame;
      this.mRestTime;
      this.mEnableFaceTracking;
+     this.mFinished;
      this.mBipSound;
      this.mTanSound;
      this.mCalmSound;
 
      this.mGames = [
-         {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768},
+         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1524, height: 768},
          {id: 2, name: 'tetris', url: '../tetris/', width: 1024, height: 800},
-         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1524, height: 768}
+         {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768}
      ];
+
+     this.mGamesSorting = [
+         [0, 1, 2],
+         [0, 2, 1],
+         [1, 0, 2],
+         [1, 2, 0],
+         [2, 1, 0],
+         [2, 0, 1],
+     ];
+     this.mSorting;
 
     // Initialize the whole thing up
     this.init();
@@ -39,10 +50,12 @@ FTG.Experiment.prototype.init = function() {
     this.mBipSound = document.getElementById('bip');
     this.mTanSound = document.getElementById('tan');
     this.mCalmSound = document.getElementById('calm');
+    this.mSorting = this.mUid ? this.mUid % this.mGamesSorting.length : 0;
+    this.mFinished = false;
 
     this.mRestTime *= 60 * 1000;
 
-    console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime + ', facial tracking: ' + this.mEnableFaceTracking);
+    console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime + ', facial tracking: ' + this.mEnableFaceTracking + ', sorting: ' + this.mSorting + ' [' + this.mGamesSorting[this.mSorting].join(',') + ']');
 
     if(this.mUid == null) {
         alert('User id not informed! Append ?user=DDD to the URL.');
@@ -101,9 +114,8 @@ FTG.Experiment.prototype.generateGameURL = function(theGameInfo) {
 FTG.Experiment.prototype.startNewGame = function() {
     var aGame;
 
-    this.mCurrentGame++;
-
     if(this.anyMoreGamesToPlay()) {
+        this.mCurrentGame++;
         aGame = this.getCurrentGame();
 
         console.log('[Experiment] New game about to start: ' + aGame.name + ' (id=' + aGame.id + ')');
@@ -145,7 +157,13 @@ FTG.Experiment.prototype.concludeCurrentQuestionnaire = function(theData) {
     }).done(function(theData) {
         if(theData.success) {
             console.log('[Experiment] Questionnaire data has been saved!');
-            aSelf.rest();
+
+            if(aSelf.anyMoreGamesToPlay()) {
+                aSelf.rest();
+            } else {
+                aSelf.finish();
+            }
+
         } else {
             console.error('[Experiment] Backend didn\'t like the answers: ' + theData.message);
         }
@@ -204,17 +222,45 @@ FTG.Experiment.prototype.rest = function() {
 };
 
 FTG.Experiment.prototype.finish = function() {
-    console.log('[Experiment] The party is over! Last one to leave turns off the lights.');
-    $('#info').html('Finish');
+    if(this.mFinished) {
+        this.sendSubjectHome();
+        return;
+    }
+
+    console.log('[Experiment] Finishing up. Last chance to ask anything.');
+    this.playTanSound();
+
+    $('#info').html(
+        '<div class="questionnaire">' +
+            '<h2>Questions</h2>' +
+            '<p>Please tell us a bit about you.</p>' +
+            '<div id="questions" class="questions"></div>' +
+        '</div>'
+    );
+
+    aQuestions = new FTG.Questionnaire(
+        'questions',
+        this.mUid,
+        -1, // no game
+        FTG.Questions.User,
+        this.concludeCurrentQuestionnaire,
+        this
+    );
+
+    this.mFinished = true;
+};
+
+FTG.Experiment.prototype.sendSubjectHome = function() {
+    console.log('[Experiment] The party is over! Last one to leave turn off the lights.');
+    $('#info').html('<div class="rest-container"><div><h1>The end!</h1><p>You are good to go. Thank you for helping us help us all! :)</p></div></div>');
 };
 
 FTG.Experiment.prototype.getCurrentGame = function() {
-    // TODO: return game according to user id
-    return this.mGames[this.mCurrentGame];
+    return this.mGames[this.mGamesSorting[this.mSorting][this.mCurrentGame]];
 };
 
 FTG.Experiment.prototype.anyMoreGamesToPlay = function() {
-    return this.mCurrentGame < this.mGames.length;
+    return (this.mCurrentGame + 1) < this.mGamesSorting[this.mSorting].length;
 };
 
 // Start the party!
