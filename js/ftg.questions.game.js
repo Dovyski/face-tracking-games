@@ -48,13 +48,13 @@
          ]
      },
      {
-         text: 'On a scale from 1 to 5 (1: initial moments of the game, 5: final moments of the game), which part would <em>best</em> describe the moment you enjoyed the most (e.g. had more fun)?',
+         text: 'Which part of the game would <em>best</em> describe the moment you enjoyed the most (e.g. had more fun)?',
          options: [
-             {value: 1, label: ''},
-             {value: 2, label: ''},
-             {value: 3, label: ''},
-             {value: 4, label: ''},
-             {value: 5, label: ''}
+             {value: 1, label: '(Very beginning)'},
+             {value: 2, label: '(After beginning and before middle)'},
+             {value: 3, label: '(Middle)'},
+             {value: 4, label: '(After middle and before end)'},
+             {value: 5, label: '(Very end)'}
          ]
      },
  ];
