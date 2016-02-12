@@ -60,22 +60,27 @@ FTG.Questionnaire.prototype.finish = function() {
         i,
         aQuestion,
         aAnswer,
+        aLabel,
+        aItem,
         aAnswered = 0;
 
     for(i = 0; i < this.mQuestions.length; i++) {
         aQuestion = this.mQuestions[i];
+        aLabel = '';
 
         $('#q' + i).removeClass('error');
 
         if(aQuestion.options) {
-            aAnswer = $('#ftg-questionnaire input:radio[name="a' + i + '"]:checked').val();
+            aItem = $('#ftg-questionnaire input:radio[name="a' + i + '"]:checked');
+            aAnswer = aItem.val();
+            aLabel = $('label[for="' + aItem.attr('id') + '"]').text();
 
         } else if(aQuestion.input) {
             aAnswer = $('#ftg-questionnaire input:text[name="t' + i + '"]').val();
         }
 
         if(aAnswer && aAnswer != '') {
-            aData.push({q: $('#q' + i).html(), a: aAnswer});
+            aData.push({q: $('#q' + i).html(), a: aAnswer, al: aLabel});
 
         } else {
             $('#q' + i).addClass('error').fadeOut('fast').fadeIn();
