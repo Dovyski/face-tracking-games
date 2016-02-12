@@ -43,7 +43,7 @@ FTG.Questionnaire.prototype.render = function() {
                 aId = 'id' + i + j;
                 aContent +=
                     '<input type="radio" name="a' + i + '" value="' + aQuestion.options[j].value + '" id="' + aId + '"/> ' +
-                    '<label for="' + aId + '">' + aQuestion.options[j].value + ' ' + aQuestion.options[j].label + '</label>';
+                    '<label for="' + aId + '">' + (aQuestion.hide ? '' : aQuestion.options[j].value + ' ') + aQuestion.options[j].label + '</label>';
             }
         } else if(aQuestion.input) {
             aContent += '<input type="text" name="t' + i + '" value="" />';
