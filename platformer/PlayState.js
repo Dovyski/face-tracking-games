@@ -58,10 +58,6 @@ PlayState = function() {
 		this.game.sound.setDecodedCallback([mSfxMusic], function() {
 			mSfxMusic.play();
 		}, this);
-
-		if(GlobalInfo && GlobalInfo.data) {
-			GlobalInfo.data.markGameStarted();
-		}
 	};
 
 	this.updateTimeAndTracking = function() {

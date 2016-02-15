@@ -17,6 +17,8 @@ var GameOverState = function() {
 
 		this.mBackBtn 		= Game.add.button(this.mDialog.x + 35, this.mDialog.y + this.mDialog.height - 60, 'blue-button', this.onBack, this, 0, 1, 2);
 		this.mBackLabel 	= Game.add.text(this.mBackBtn.x + 60, this.mBackBtn.y + 7, 'Continue', {fill: '#000', fontSize: 24});
+
+		GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'game_end');
 	};
 
 	this.onBack = function() {

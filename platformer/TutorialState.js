@@ -22,6 +22,7 @@ TutorialState = function() {
 
 	this.update = function() {
 		if(this.game.input.activePointer.isDown) {
+			GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'game_start');
 			this.game.state.start('play');
 		}
 	};
