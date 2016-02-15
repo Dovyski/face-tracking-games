@@ -86,6 +86,10 @@ var PlayState = function() {
 
 		if(aOldDifficultyIndex != mDifficultyIndex) {
 			console.log('Difficulty has changed to ' + mDifficultyIndex);
+
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'difficulty', v: mDifficultyIndex}, true);
+			}
 		}
 
 		// Update everything related to turn control (time)
@@ -130,15 +134,27 @@ var PlayState = function() {
 			mTurnBasedScore.right++;
 			mHealth += getDifficulty().GAME_CORRECT_HEALTH;
 
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'right'}, true);
+			}
+
 		} else if(theType == 'wrong') {
 			mScore.wrong++;
 			mTurnBasedScore.wrong++;
 			mHealth -= getDifficulty().GAME_MISTAKE_HEALTH;
 
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'wrong'}, true);
+			}
+
 		} else {
 			mScore.miss++;
 			mTurnBasedScore.miss++;
 			mHealth -= getDifficulty().GAME_MISTAKE_HEALTH;
+
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'miss'}, true);
+			}
 		}
 
 		// Prevent overfeeding the monster.
@@ -163,6 +179,10 @@ var PlayState = function() {
 			generateNewQuestion();
 			mQuestionTime = mQuestionCounter == 1 ? Constants.QUESTION_DURATION_1ST : getDifficulty().QUESTION_DURATION;
 			mQuestionTimer = mQuestionTime;
+
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'question'}, true);
+			}
 		}
 
 		// If all cards have been analyzed already,
