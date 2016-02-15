@@ -75,10 +75,6 @@ var PlayState = function() {
 
 		mTutorial = new Tutorial();
 		Game.add.existing(mTutorial);
-
-		if(GlobalInfo && GlobalInfo.data) {
-			GlobalInfo.data.markGameStarted();
-		}
 	};
 
 	this.update = function() {

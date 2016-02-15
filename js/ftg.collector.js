@@ -12,7 +12,6 @@ FTG.Collector = function() {
 
 	var mLastTimeCollected = 0;
 	var mLastTimeSent = 0;
-	var mTimeGameStarted = 0;
 	var mServerURL = '../backend/';
 	var mData = [];
 
@@ -92,7 +91,9 @@ FTG.Collector = function() {
 	};
 
 	// Informs the data collector that the game has started.
-	this.markGameStarted = function() {
-		mTimeGameStarted = getTimestamp();
+	this.logMilestone = function(theUid, theGameId, theLabel) {
+		this.log(theLabel, true);
+		this.send(theUid, theGameId, true);
+		console.log('[Collector] Milestone log: ' + theLabel);
 	};
 };
