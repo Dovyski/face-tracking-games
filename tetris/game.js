@@ -132,21 +132,24 @@ Game.PlayGame.prototype = {
 			top,
 			row,
 			col;
-
-		for(i=0;i<20;i++){
-			ret[i] = [];
-			for(j=0;j<9;j++){
-				ret[i][j] = 0;
+		try {
+			for(i=0;i<20;i++){
+				ret[i] = [];
+				for(j=0;j<9;j++){
+					ret[i][j] = 0;
+				}
 			}
-		}
 
-		top = this.game.world.bounds.height - 19*height - height/2;
+			top = this.game.world.bounds.height - 19*height - height/2;
 
-		for(i = 0; i < oldsquares.length; i++) {
-			row = (oldsquares[i].y - top)/height;
-			col = Math.floor((oldsquares[i].x - this.game.world.bounds.x)/height);
+			for(i = 0; i < oldsquares.length; i++) {
+				row = (oldsquares[i].y - top)/height;
+				col = Math.floor((oldsquares[i].x - this.game.world.bounds.x)/height);
 
-			ret[row][col] = 1;
+				ret[row][col] = 1;
+			}
+		} catch(e) {
+
 		}
 
 		return ret;
