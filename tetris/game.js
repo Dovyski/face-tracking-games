@@ -178,7 +178,7 @@ Game.PlayGame.prototype = {
 
 			if(squaresinrow[i]==9){
 
-				GlobalInfo.data.log({event: 'scored', s: score, b: this.getboardsnapshot()}, true);
+				GlobalInfo.data.log({a: 'scored', s: score, b: this.getboardsnapshot()}, true);
 				score+=100;
 
 				for(var j=0;j<oldsquares.length;j++){
