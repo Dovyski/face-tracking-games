@@ -98,12 +98,18 @@ FTG.Experiment.prototype.greetings = function() {
             '<h1>Instructions</h1>' +
             '<p>User: ' + this.mUid + '</p>' +
             '<p>Welcome! Please wait the researcher let you know when to start.<br/>When you are told to start, click the "Start" button below.<br /><br />Thank you for being part of this research!</p>' +
-            '<button>Start</button>' +
+            '<button id="start">Start</button> <button id="heart">HR watch</button>' +
         '</div>'
     );
 
-    $('#info button').click(function() {
+    $('#start').click(function() {
         aSelf.startNewGame();
+    });
+
+    $('#heart').click(function() {
+        aSelf.mData.logMilestone(aSelf.mUid, -1, 'experiment_hr_start');
+        aSelf.playBipSound();
+        $(this).hide();
     });
 
     // Play the bip sound to indicate everything is set.

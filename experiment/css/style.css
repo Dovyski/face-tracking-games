@@ -28,6 +28,11 @@ body {
     font-size: 30px;
 }
 
+#heart {
+    background-color: red !important;
+    margin-left: 500px;
+}
+
 .questionnaire {
     padding-bottom: 10px;
 }
