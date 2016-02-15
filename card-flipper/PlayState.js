@@ -64,7 +64,7 @@ var PlayState = function() {
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		mHealth = Constants.GAME_HEALTH_MAX;
-		mSfxNewQuestion = Game.add.audio('sfx-new-question');
+		mSfxNewQuestion = Game.add.audio('sfx-new-question', Constants.SFX_VOLUME);
 		mIsThinking = false;
 
 		mQuestion = 1;

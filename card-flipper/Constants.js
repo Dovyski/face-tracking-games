@@ -19,6 +19,8 @@ var Constants = new function() {
 	this.QUESTION_DOWN_PACE_1ST = 800;				// Same as QUESTION_DOWN_PACE, but for the very first question.
 
 	this.HUD_RIGHT_WRONG_TTL	= 1000;				// Time, in milliseconds, the "right/wrong" sign remains on the screen.
+	this.MUSIC_VOLUME			= 1.0;
+	this.SFX_VOLUME				= 1.0;
 
 	this.DIFFICULTY = [
 		{ // 1
