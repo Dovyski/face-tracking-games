@@ -106,6 +106,10 @@ PlayState = function() {
 
 		if(aOldDifficultyIndex != mDifficultyIndex) {
 			console.log('Difficulty has changed to ' + mDifficultyIndex);
+
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'difficulty', v: mDifficultyIndex}, true);
+			}
 		}
 
 		this.updateTimeAndTracking();
@@ -135,6 +139,10 @@ PlayState = function() {
 
 			aTween = this.game.add.tween(theCollectable).to(mHud.getHeartIconPosition(), 500, Phaser.Easing.Linear.None, true);
 
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'collectable'}, true);
+			}
+
 			aTween.onComplete.add(function(theItem) {
 				theItem.kill();
 				thePlayer.heal(this.getDifficulty().heal);
@@ -153,6 +161,10 @@ PlayState = function() {
 			mScore.hurt++;
 			thePlayer.hurt(this.getDifficulty().hurt);
 			mHud.refresh();
+
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'hurt'}, true);
+			}
 		}
 	};
 
@@ -161,6 +173,10 @@ PlayState = function() {
 			// An obstacle just went outside the screen without
 			// being touched by the player. Let's score that.
 			mScore.overcome++;
+
+			if(GlobalInfo && GlobalInfo.data) {
+				GlobalInfo.data.log({a: 'overcome'}, true);
+			}
 		}
 	};
 
