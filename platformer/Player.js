@@ -44,9 +44,9 @@ Player.prototype.init = function() {
     this.mAcceleration = new Phaser.Point(0, 1);
     this.mCurrentFloor = null;
 
-    mSfxJump = this.game.add.audio('sfx-jump', 0.8);
-    mSfxHurt = this.game.add.audio('sfx-hurt', 0.8);
-    mSfxDash = this.game.add.audio('sfx-dash', 0.8);
+    mSfxJump = this.game.add.audio('sfx-jump', Constants.SFX_VOLUME);
+    mSfxHurt = this.game.add.audio('sfx-hurt', Constants.SFX_VOLUME);
+    mSfxDash = this.game.add.audio('sfx-dash', Constants.SFX_VOLUME);
 
     this.run();
 };

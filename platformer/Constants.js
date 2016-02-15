@@ -13,6 +13,9 @@ var Constants = new function() {
 
 	this.PLAYER_POSITION_X		= 0.15; 	// Relative to screen width, percentage of player's position (from the left).
 
+	this.MUSIC_VOLUME			= 0.6;
+	this.SFX_VOLUME				= 0.8;
+
 	this.DIFFICULTY	= [						// Controls the difficulty of the game. Each entry means a piece of time
 		{ // 0
 			speed: -150,					// Speed of the platforms
