@@ -25,7 +25,7 @@ var MenuState = function() {
 	};
 
 	this.onPlay = function() {
-		GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'game_start');
+		GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'tutorial_start');
 		Game.state.start('play');
 	};
 

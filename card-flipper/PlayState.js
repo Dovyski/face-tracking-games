@@ -245,6 +245,9 @@ var PlayState = function() {
 
 				// Reset match timer to ignore time spent during tutorial
 				mMatchTime = Constants.GAME_MATCH_DURATION;
+
+				// Log start of the game
+				GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'game_start');
 			}
 		}
 
