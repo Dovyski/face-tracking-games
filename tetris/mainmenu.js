@@ -45,6 +45,7 @@ Game.MainMenu.prototype = {
 
 		// The id of this game if it has not been already
 		GlobalInfo.game = GlobalInfo.game || 2;
+		GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'menu_start');
 	},
 
 
@@ -52,7 +53,7 @@ Game.MainMenu.prototype = {
 	playclicked : function() {
 
 		score = 0;
-
+		GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'game_start');
 		this.game.state.start('Game');
 
 	},
@@ -98,6 +99,8 @@ Game.LoseScreen.prototype = {
 		this.scoretextmain = this.add.text(this.game.world.centerX,450,score,{ font: "40px Arial", fill: "#fff", align: "center" })
 
 		this.scoretextmain.anchor.setTo(0.5,0.5);
+
+		GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'game_end');
 	},
 
 	update : function() {

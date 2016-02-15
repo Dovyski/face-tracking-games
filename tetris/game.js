@@ -87,10 +87,6 @@ Game.PlayGame.prototype = {
 		squaresinrow.length = 0;
 
 		score = 0;
-
-		if(GlobalInfo && GlobalInfo.data) {
-			GlobalInfo.data.markGameStarted();
-		}
 	},
 
 	chooseblock : function(){
