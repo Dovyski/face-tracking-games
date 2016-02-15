@@ -20,7 +20,7 @@ function getURLParamByName(theName) {
 	aRegex = new RegExp('[\\?&]' + theName + '=([^&#]*)'),
 	aResults = aRegex.exec(location.search);
 
-	return aResults === null ? '' : decodeURIComponent(aResults[1].replace(/\+/g, ' '));
+	return aResults === null ? null : decodeURIComponent(aResults[1].replace(/\+/g, ' '));
 }
 
 // Get reference to experiment manager (if any)
@@ -50,6 +50,8 @@ SetupState.prototype = {
 
 	create: function() {
 		this.stage.backgroundColor = 0xFFCC99;
+
+		this.adjustConstantsFromConfig();
 
 		if(GlobalInfo.experiment || getURLParamByName('face') == 'false') {
 			// We are in an experiment. No need to show information about data collection, it has
@@ -102,6 +104,22 @@ SetupState.prototype = {
 		if(this.mReady && GlobalInfo.expression.getEmotions().length > 0) {
 			// Yes, it is. Time to start the game.
 			this.state.start('menu');
+		}
+	},
+
+	adjustConstantsFromConfig: function() {
+		var aName,
+			aConfig,
+			aOld;
+
+		for(aName in Constants) {
+			aConfig = getURLParamByName(aName);
+
+			if(aConfig != null) {
+				aOld = Constants[aName];
+				Constants[aName] = aConfig;
+				console.log('Constants.' + aName + ' changed from "' + aOld + '" to "' + aConfig + '"');
+			}
 		}
 	}
 };
