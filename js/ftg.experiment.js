@@ -12,6 +12,7 @@
      this.mRestTime;
      this.mEnableFaceTracking;
      this.mFinished;
+     this.mData;
      this.mBipSound;
      this.mTanSound;
      this.mCalmSound;
@@ -52,6 +53,8 @@ FTG.Experiment.prototype.init = function() {
     this.mCalmSound = document.getElementById('calm');
     this.mSorting = this.mUid ? this.mUid % this.mGamesSorting.length : 0;
     this.mFinished = false;
+
+    this.mData = new FTG.Collector();
 
     this.mRestTime *= 60 * 1000;
 
@@ -120,6 +123,7 @@ FTG.Experiment.prototype.startNewGame = function() {
 
         console.log('[Experiment] New game about to start: ' + aGame.name + ' (id=' + aGame.id + ')');
         this.playBipSound();
+        this.mData.logMilestone(this.mUid, aGame.id, 'experiment_game_start');
 
         // Add the game iframe and ajust its src property (prevent chache issues)
         $('#info').html('<iframe id="game" style="width: ' + aGame.width + 'px; height: ' + aGame.height + 'px;"></iframe>');
@@ -181,6 +185,7 @@ FTG.Experiment.prototype.concludeCurrentGame = function() {
 
     console.log('[Experiment] Current game (' + aGame.name + ', id=' + aGame.id + ') was concluded.');
     this.playTanSound();
+    this.mData.logMilestone(this.mUid, aGame.id, 'experiment_game_end');
 
     $('#info').html(
         '<div class="questionnaire">' +
@@ -206,6 +211,7 @@ FTG.Experiment.prototype.rest = function() {
         aId;
 
     console.log('[Experiment] Resting for ' + (this.mRestTime/1000) + ' seconds...');
+    this.mData.logMilestone(this.mUid, -1, 'experiment_rest_start');
 
     this.enableCalmMusic(true);
     $('#info').html('<div class="rest-container"><div><h1>Please, relax.</h1><p>Next game will start in a moment...</p></div></div>');
@@ -229,6 +235,7 @@ FTG.Experiment.prototype.finish = function() {
 
     console.log('[Experiment] Finishing up. Last chance to ask anything.');
     this.playTanSound();
+    this.mData.logMilestone(this.mUid, -1, 'experiment_final_questions_start');
 
     $('#info').html(
         '<div class="questionnaire">' +
@@ -253,6 +260,8 @@ FTG.Experiment.prototype.finish = function() {
 FTG.Experiment.prototype.sendSubjectHome = function() {
     console.log('[Experiment] The party is over! Last one to leave turn off the lights.');
     $('#info').html('<div class="rest-container"><div><h1>The end!</h1><p>You are good to go. Thank you for helping us help us all! :)</p></div></div>');
+
+    this.mData.logMilestone(this.mUid, -1, 'experiment_end');
 };
 
 FTG.Experiment.prototype.getCurrentGame = function() {
