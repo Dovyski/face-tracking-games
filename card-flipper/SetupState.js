@@ -51,7 +51,9 @@ SetupState.prototype = {
 	create: function() {
 		this.stage.backgroundColor = 0xFFCC99;
 
-		this.adjustConstantsFromConfig();
+		if(typeof Constants === 'object') {
+			this.adjustConstantsFromConfig();
+		}
 
 		if(GlobalInfo.experiment || getURLParamByName('face') == 'false') {
 			// We are in an experiment. No need to show information about data collection, it has
