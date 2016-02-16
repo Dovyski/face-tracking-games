@@ -14,6 +14,7 @@ var PlayState = function() {
 	var mQuestion;			// Info about the current question
 	var mQuestionCounter;	// How many questions so far.
 	var mMatchTime;			// Remaining time for the match
+	var mMatchStartTime;	// When the match started
 	var mIsThinking;		// Informs if the player is in a thinking part of the game (e.g. card analysis)
 	var mHealth;			// Available health points.
 	var mDifficultyIndex;	// Regulates the game difficulty.
@@ -63,6 +64,7 @@ var PlayState = function() {
 		mQuestionTime = getDifficulty().QUESTION_DURATION;
 		mQuestionTimer = 0;
 		mMatchTime = Constants.GAME_MATCH_DURATION;
+		mMatchStartTime = Date.now();
 		mHealth = Constants.GAME_HEALTH_MAX;
 		mSfxNewQuestion = Game.add.audio('sfx-new-question', Constants.SFX_VOLUME);
 		mIsThinking = false;
@@ -77,12 +79,18 @@ var PlayState = function() {
 		Game.add.existing(mTutorial);
 	};
 
+	this.getTimeSinceMatchStarted = function() {
+		return Date.now() - mMatchStartTime;
+	};
+
 	this.update = function() {
 		var aElapsed = Game.time.elapsedMS,
 			aOldDifficultyIndex;
 
 		aOldDifficultyIndex = mDifficultyIndex;
-		updateDifficultiIndex();
+		if(mTutorial == null) {
+			updateDifficultiIndex();
+		}
 
 		if(aOldDifficultyIndex != mDifficultyIndex) {
 			console.log('Difficulty has changed to ' + mDifficultyIndex);
@@ -115,7 +123,7 @@ var PlayState = function() {
 		}
 
 		// Update match time
-		mMatchTime -= aElapsed;
+		mMatchTime = Constants.GAME_MATCH_DURATION - this.getTimeSinceMatchStarted();
 
 		if(mMatchTime <= 0 || mHealth <= 0) {
 			// Match is over!
@@ -260,6 +268,7 @@ var PlayState = function() {
 				mTutorial = null;
 
 				// Reset match timer to ignore time spent during tutorial
+				mMatchStartTime = Date.now();
 				mMatchTime = Constants.GAME_MATCH_DURATION;
 				updateDifficultiIndex();
 
