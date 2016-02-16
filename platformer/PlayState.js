@@ -8,6 +8,7 @@ PlayState = function() {
 		mLevel,
 		mPlayer,
 		mMatchTime,			// Remaining time for the match
+		mMatchStartTime,	// When the match started
 		mDustEmitter,
 		mDifficultyIndex,
 		mSfxHeal,
@@ -44,6 +45,7 @@ PlayState = function() {
 		mDifficultyIndex = 0;
 
 		// Init misc stuff
+		mMatchStartTime = Date.now();
 		mMatchTime = Constants.GAME_MATCH_DURATION;
 		this.game.add.existing(mLevel.getForeground());
 
@@ -58,6 +60,10 @@ PlayState = function() {
 		this.game.sound.setDecodedCallback([mSfxMusic], function() {
 			mSfxMusic.play();
 		}, this);
+	};
+
+	this.getTimeSinceMatchStarted = function() {
+		return Date.now() - mMatchStartTime;
 	};
 
 	this.updateTimeAndTracking = function() {
@@ -80,7 +86,7 @@ PlayState = function() {
 		}
 
 		// Update match time
-		mMatchTime -= this.game.time.elapsedMS;
+		mMatchTime = Constants.GAME_MATCH_DURATION - this.getTimeSinceMatchStarted();
 
 		if(mMatchTime <= 0 || mPlayer.getHealth() <= 0) {
 			// Match is over!
@@ -99,9 +105,11 @@ PlayState = function() {
 			aOldDifficultyIndex,
 			aPlayerObstacle;
 
+		this.updateTimeAndTracking();
+
 		// Calculate the difficulty index based on the game duration
 		aOldDifficultyIndex = mDifficultyIndex;
-		mDifficultyIndex = (1 - mMatchTime / Constants.GAME_MATCH_DURATION) * Constants.DIFFICULTY.length;
+		mDifficultyIndex = (Constants.GAME_MATCH_DURATION - mMatchTime) / (Constants.GAME_MATCH_DURATION / Constants.DIFFICULTY.length);
 		mDifficultyIndex |= 0; // cast to int
 
 		if(aOldDifficultyIndex != mDifficultyIndex) {
@@ -111,8 +119,6 @@ PlayState = function() {
 				GlobalInfo.data.log({a: 'difficulty', v: mDifficultyIndex}, true);
 			}
 		}
-
-		this.updateTimeAndTracking();
 
 		aKeyboard = this.game.input.keyboard;
 
