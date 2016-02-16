@@ -253,10 +253,6 @@ var PlayState = function() {
 			mTutorial.activate();
 
 		} else {
-			// No, the player already saw the tutorial.
-			// Let's go on with the show then.
-			flipRandomCardsUp();
-
 			// Is the tutorial active?
 			if(mTutorial != null) {
 				// Yeah, it is. Remove it because it's game time!
@@ -265,10 +261,15 @@ var PlayState = function() {
 
 				// Reset match timer to ignore time spent during tutorial
 				mMatchTime = Constants.GAME_MATCH_DURATION;
+				updateDifficultiIndex();
 
 				// Log start of the game
 				GlobalInfo.data.logMilestone(GlobalInfo.user, GlobalInfo.game, 'game_start');
 			}
+
+			// No, the player already saw the tutorial.
+			// Let's go on with the show then.
+			flipRandomCardsUp();
 		}
 
 		mIsThinking = true;
