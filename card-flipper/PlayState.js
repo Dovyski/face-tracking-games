@@ -166,7 +166,7 @@ var PlayState = function() {
 	}
 
 	var updateDifficultiIndex = function() {
-		mDifficultyIndex = (1 - mMatchTime / Constants.GAME_MATCH_DURATION) * Constants.DIFFICULTY.length;
+		mDifficultyIndex = (Constants.GAME_MATCH_DURATION - mMatchTime) / (Constants.GAME_MATCH_DURATION / Constants.DIFFICULTY.length);
 		mDifficultyIndex |= 0; // cast to int
 	};
 
