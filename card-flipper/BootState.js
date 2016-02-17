@@ -13,6 +13,5 @@ var BootState = function() {
 
 		Game.load.image('loading-background', 'assets/loading_background.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 		Game.load.image('loading-fill', 'assets/loading_fill.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
-		Game.load.image('loading-dot', 'assets/loading_dot.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
 	};
 };
