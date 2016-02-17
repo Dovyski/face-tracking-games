@@ -11,6 +11,7 @@
      this.mCurrentGame;
      this.mRestTime;
      this.mEnableFaceTracking;
+     this.mDebug;
      this.mFinished;
      this.mData;
      this.mBipSound;
@@ -48,6 +49,7 @@ FTG.Experiment.prototype.init = function() {
     this.mCurrentGame = -1; // TODO: get from URL.
     this.mRestTime = FTG.Utils.getURLParamByName('rest') || 3;
     this.mEnableFaceTracking = FTG.Utils.getURLParamByName('face') || false;
+    this.mDebug = FTG.Utils.getURLParamByName('debug') || false;
     this.mBipSound = document.getElementById('bip');
     this.mTanSound = document.getElementById('tan');
     this.mCalmSound = document.getElementById('calm');
@@ -135,12 +137,14 @@ FTG.Experiment.prototype.startNewGame = function() {
         $('#info').html('<iframe id="game" style="width: ' + aGame.width + 'px; height: ' + aGame.height + 'px;"></iframe>');
         document.getElementById('game').src = this.generateGameURL(aGame);
 
-        // TODO: remove this block
-        $('#info').append('<button>Conclude</button>');
-        var aSelf = this;
-        $('#info button').click(function() {
-            aSelf.concludeCurrentGame();
-        });
+        if(this.mDebug) {
+            var aSelf = this;
+
+            $('#info').append('<button id="conclude">Conclude</button>');
+            $('#conclude').click(function() {
+                aSelf.concludeCurrentGame();
+            });
+        }
 
     } else {
         console.log('[Experiment] No more games to play, finishing now');
