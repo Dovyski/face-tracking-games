@@ -50,6 +50,7 @@ SetupState.prototype = {
 
 	create: function() {
 		this.stage.backgroundColor = 0xFFCC99;
+		this.game.stage.disableVisibilityChange = true; // Prevent pause when browser window loses focus
 
 		if(typeof Constants === 'object') {
 			this.adjustConstantsFromConfig();
