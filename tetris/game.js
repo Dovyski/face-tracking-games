@@ -258,7 +258,7 @@ Game.PlayGame.prototype = {
 				if(this.focusblock.wallcollide(oldsquares,'down')==true) {
 					this.game.state.start('Lose');
 				} else {
-					GlobalInfo.data.log({event: 'newBlock', t: this.nextblocktype, b: this.getboardsnapshot()}, true);
+					GlobalInfo.data.log({a: 'newBlock', t: this.nextblocktype, b: this.getboardsnapshot()}, true);
 
 					if(ENABLE_DATA_LOG) {
 						// Force data send to prevent losing information regarding the board configuration
@@ -317,7 +317,7 @@ Game.PlayGame.prototype = {
 			if(force_down - this.game.time.now > force_down_max_time * 2) {
 				//force_down = 0;
 			}
-			GlobalInfo.data.log({event: 'keyDown'});
+			GlobalInfo.data.log({a: 'keyDown'});
 		}
 
 		else {
