@@ -18,9 +18,9 @@
      this.mCalmSound;
 
      this.mGames = [
-         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1524, height: 768},
-         {id: 2, name: 'tetris', url: '../tetris/', width: 1024, height: 800},
-         {id: 3, name: 'platformer', url: '../platformer/', width: 1024, height: 768}
+         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1300, height: 975},
+         {id: 2, name: 'tetris', url: '../tetris/', width: 640, height: 960},
+         {id: 3, name: 'platformer', url: '../platformer/', width: 1300, height: 975}
      ];
 
      this.mGamesSorting = [

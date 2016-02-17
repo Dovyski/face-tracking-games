@@ -52,6 +52,9 @@ SetupState.prototype = {
 		this.stage.backgroundColor = 0xFFCC99;
 		this.game.stage.disableVisibilityChange = true; // Prevent pause when browser window loses focus
 
+		// Scale the game to fill the whole screen, keeping the aspect ratio.
+		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
 		if(typeof Constants === 'object') {
 			this.adjustConstantsFromConfig();
 		}
