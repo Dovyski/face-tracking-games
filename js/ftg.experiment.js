@@ -62,6 +62,11 @@ FTG.Experiment.prototype.init = function() {
 
     console.log('[Experiment] Init with user uid:' + this.mUid + ', rest: ' + this.mRestTime + ', facial tracking: ' + this.mEnableFaceTracking + ', sorting: ' + this.mSorting + ' [' + this.mGamesSorting[this.mSorting].join(',') + ']');
 
+    // Warn the user before leaving the page
+    window.onbeforeunload = function() {
+        return 'You did something that will stop the study before it is over. Please, click "Stay on this Page" to resume your study.';
+    };
+
     if(this.mUid == null) {
         alert('User id not informed! Append ?user=DDD to the URL.');
     } else {
