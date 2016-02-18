@@ -119,7 +119,7 @@ FTG.Experiment.prototype.greetings = function() {
 };
 
 FTG.Experiment.prototype.generateGameURL = function(theGameInfo) {
-    return theGameInfo.url + '?user=' + this.mUid + '&game=' + theGameInfo.id + '&rand=' + Math.random() + '&face=' + this.mEnableFaceTracking;
+    return theGameInfo.url + '?user=' + this.mUid + '&game=' + theGameInfo.id + '&rand=' + Math.random() + '&face=' + this.mEnableFaceTracking + '&MUSIC_VOLUME=0.3&SFX_VOLUME=0.4';
 };
 
 FTG.Experiment.prototype.startNewGame = function() {
@@ -269,7 +269,7 @@ FTG.Experiment.prototype.finish = function() {
 
 FTG.Experiment.prototype.sendSubjectHome = function() {
     console.log('[Experiment] The party is over! Last one to leave turn off the lights.');
-    $('#info').html('<div class="rest-container"><div><h1>The end!</h1><p>You are good to go. Thank you for helping us help us all! :)</p></div></div>');
+    $('#info').html('<div class="rest-container"><div><h1>The end!</h1><p>You are good to go. Thank you for helping us help you help us all! :)</p></div></div>');
 
     this.mData.logMilestone(this.mUid, -1, 'experiment_end');
 };
