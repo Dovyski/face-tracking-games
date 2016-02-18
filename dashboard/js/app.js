@@ -2,41 +2,61 @@ var APP = new function() {
     var mSelf = this;
 
     this.generateSideMenu = function() {
-        $.ajax({
-            method: 'POST',
-            url: '../backend/menu.php',
-            dataType: 'json'
-        })
-        .done(function(theInfo) {
+        $('#main-menu').empty();
+
+        this.generateSessionsMenu();
+        this.generateExperimentsMenu();
+    };
+
+    this.generateSessionsMenu = function() {
+        var aOut;
+
+        aOut =
+            '<li>' +
+                '<a><i class="fa fa-bar-chart-o"></i> Sessions <span class="fa fa-chevron-down"></span></a>' +
+                '<ul class="nav child_menu" style="display: none">' +
+                    '<li><a href="javascript:void(0)" class="action-link">Active</a></li>' +
+                '</ul>' +
+            '</li>';
+
+        $('#sidebar-menu').append('<ul class="nav side-menu">' + aOut + '</ul>');
+
+        $('#sidebar-menu a.action-link').click(function() {
+            APP.loadData($(this).data('subject'), $(this).data('game'));
+        });
+    };
+
+    this.generateExperimentsMenu = function() {
+        var aSelf = this;
+
+        this.loadData({method: 'experiments'}, function(theInfo) {
             var aOut = '',
                 j,
-                aGame,
+                aInfo,
                 i;
 
-            for(j in theInfo) {
-                aGame = theInfo[j];
+            aOut += '<ul class="nav side-menu"><li><a><i class="fa fa-bar-chart-o"></i> Subjects <span class="fa fa-chevron-down"></span></a>' +
+                    '<ul class="nav child_menu" style="display: none;">';
 
-                aOut += '<li><a><i class="fa fa-bar-chart-o"></i> '+ aGame.name +' <span class="fa fa-chevron-down"></span></a>' +
-                        '<ul class="nav child_menu" style="display: none">';
-
-                for(i = 0; i < aGame.subjects.length; i++) {
-                    aOut += '<li><a href="javascript:void(0)" data-subject="' + aGame.subjects[i] + '" data-game="' + aGame.id + '" class="subject-link">'+ aGame.subjects[i] +'</a></li>';
-                }
-
-                aOut += '</ul></li>';
+            for(i = 0; i < theInfo.data.length; i++) {
+                aInfo = theInfo.data[i];
+                aOut += '<li><a href="javascript:void(0)" data-subject="' + aInfo.uuid + '" class="subject-link">'+ aInfo.uuid + '<br />' + aInfo.timestamp +'</a></li>';
             }
 
-            $('#side-menu').html(aOut);
+            aOut += '</ul></li></ul>';
 
-            $('#side-menu a.subject-link').click(function() {
-                APP.loadData($(this).data('subject'), $(this).data('game'));
+            $('#sidebar-menu').append(aOut);
+
+            $('#sidebar-menu a.subject-link').click(function() {
+                aSelf.showExperimentData($(this).data('subject'));
             });
 
             customUpdateSidebarMenu();
-        })
-        .fail(function() {
-            $('#side-menu').html('|ops!');
         });
+    };
+
+    this.showExperimentData = function(theSubject) {
+        $('#data-area').html(theSubject);
     };
 
     this.createCharts = function(theInfo) {
@@ -75,16 +95,15 @@ var APP = new function() {
         $('#' + theLegendId).html(aChart.generateLegend());
     };
 
-    this.loadData = function(theSubjectId, theGameId) {
+    this.loadData = function(theData, theCallback) {
         $.ajax({
             method: 'POST',
-            url: '../backend/report.php',
+            url: '../backend/index.php',
             dataType: 'json',
-            data: {uid: theSubjectId, game: theGameId},
+            data: theData,
         })
         .done(function(theInfo) {
-            mSelf.createCharts(theInfo);
-
+            theCallback(theInfo);
         })
         .fail(function() {
             $('#facial-tracking').html('Unable to load data!');

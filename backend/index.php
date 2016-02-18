@@ -16,13 +16,13 @@ $aDb = new PDO('sqlite:' . DB_FILE);
 $aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 try {
-	if($aUser == 0 || $aGame == 0) {
-		throw new Exception('Empty UID or game id.');
-	}
-
 	switch($aMethod) {
 		case 'tracking':
 		case 'answer':
+			if($aUser == 0 || $aGame == 0) {
+				throw new Exception('Empty UID or game id.');
+			}
+
 			$aTable = $aMethod == 'tracking' ? 'logs' : 'questionnaires';
 			$aData = isset($_REQUEST['data']) ? $_REQUEST['data'] : '';
 
@@ -40,6 +40,33 @@ try {
 
 			$aStmt->execute();
 			$aRet['success'] = true;
+			break;
+
+		case 'experiments':
+			$aStmt = $aDb->prepare("SELECT uuid, timestamp FROM logs WHERE fk_game = -1 AND data LIKE '%experiment_hr_start%'");
+			$aStmt->execute();
+
+			$aData = array();
+
+			while($aRow = $aStmt->fetch(PDO::FETCH_OBJ)) {
+				$aData[] = $aRow;
+			}
+
+			$aRet = array('success' => true, 'data' => $aData);
+			break;
+
+		case 'experiment':
+			$aStmt = $aDb->prepare("SELECT uuid, timestamp FROM logs WHERE uuid = :uuid fk_game = -1 AND data LIKE '%experiment_hr_start%'");
+			$aStmt->bindParam(':uuid', $aUser);
+			$aStmt->execute();
+
+			$aData = array();
+
+			while($aRow = $aStmt->fetch(PDO::FETCH_OBJ)) {
+				$aData[] = $aRow;
+			}
+
+			$aRet = array('success' => true, 'data' => $aData);
 			break;
 
 		default:
