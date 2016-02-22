@@ -1,4 +1,6 @@
-var APP = new function() {
+var APP = APP || {};
+
+APP = function() {
     var mSelf = this;
 
     this.generateSideMenu = function() {
@@ -56,43 +58,22 @@ var APP = new function() {
     };
 
     this.showExperimentData = function(theSubject) {
-        $('#data-area').html(theSubject);
-    };
+        var aViewer;
 
-    this.createCharts = function(theInfo) {
-        $('#subject-id').html('<strong>' + theInfo.uuid + '</strong> <small>' + theInfo.date + '</small>');
+        this.loadData({method: 'experiment', user: theSubject}, function(theData) {
+            var aViewer;
 
-        this.createChart(theInfo.emotions, 'facial-tracking', 'facial-tracking-legend');
-        this.createChart(theInfo.scores, 'score-tracking', 'score-tracking-legend');
-    };
+            if(theData.success) {
+                aViewer = new APP.ExperimentViewer(theData.data);
 
-    this.createChart = function(theData, theContainerId, theLegendId) {
-        var aCtx,
-            aContainer,
-            aCanvas,
-            aChart;
+                aViewer.showHeartRate();
+                aViewer.showStressfulAreas();
+                aViewer.render('data-area');
 
-        // Get canvas context for chart drawing
-        $('#' + theContainerId).empty();
-        aContainer = document.getElementById(theContainerId);
-        aCanvas = document.createElement('canvas');
-        aCtx = aCanvas.getContext("2d");
-
-        aContainer.appendChild(aCanvas);
-
-        theData.labelsFilter = function (theIndex) {
-            //return true if this index should be filtered out
-            return (theIndex + 1) % 10 !== 0;
-        };
-
-        // Create chart
-        aChart = new Chart(aCtx).LineAlt(theData, {
-            responsive: true,
-            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"width: 30px; height: 10px; background-color:<%=datasets[i].strokeColor%>\">&nbsp;&nbsp;&nbsp;</span> <%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+            } else {
+                console.error('Something wrong');
+            }
         });
-
-        // Generate a legend
-        $('#' + theLegendId).html(aChart.generateLegend());
     };
 
     this.loadData = function(theData, theCallback) {
@@ -115,5 +96,5 @@ var APP = new function() {
 };
 
 $(function () {
-    APP.generateSideMenu();
+    new APP().generateSideMenu();
 });
