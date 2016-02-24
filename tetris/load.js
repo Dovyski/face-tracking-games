@@ -25,6 +25,7 @@ Game.Load.prototype = {
 		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
 		this.load.spritesheet('play','assets/play.png',100,80);
+		this.load.spritesheet('next','assets/next.png',100,80);
 		this.load.image('pause','assets/Pause.png');
 		this.load.image('reset','assets/refresh.png');
 		this.load.image('lose','assets/lose.png');

@@ -86,11 +86,11 @@ Game.LoseScreen.prototype = {
 
 		this.game.world.bounds.height = 600;
 
-		this.lose = this.game.add.text(this.game.world.centerX,this.game.world.centerY,'Game over.\nClick the "Play" button above\n to continue', { font: "24px Arial", fill: "#fff", align: "center" });
+		this.lose = this.game.add.text(this.game.world.centerX,this.game.world.centerY,'Game over.\nClick the "Next" button above\n to continue', { font: "24px Arial", fill: "#fff", align: "center" });
 
 		this.lose.anchor.setTo(0.5,0.5);
 
-		this.playbutton = this.add.button(this.game.world.centerX, 40, 'play',this.playclicked,this,1,0,2);
+		this.playbutton = this.add.button(this.game.world.centerX, 40, 'next',this.playclicked,this,1,0,2);
 
 		this.playbutton.anchor.setTo(0.5,0.5);
 
