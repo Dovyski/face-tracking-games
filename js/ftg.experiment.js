@@ -135,7 +135,7 @@ FTG.Experiment.prototype.startNewGame = function() {
         aGame = this.getCurrentGame();
 
         console.log('[Experiment] New game about to start: ' + aGame.name + ' (id=' + aGame.id + ')');
-        this.playBipSound();
+        this.playTanSound();
         this.mData.logMilestone(this.mUid, aGame.id, 'experiment_game_start');
 
         // Add the game iframe and ajust its src property (prevent chache issues)
