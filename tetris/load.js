@@ -21,9 +21,6 @@ Game.Load.prototype = {
 		this.preloadtext = this.add.text(this.game.world.centerX,this.game.world.centerY,"Loading..."+this.load.progress+"%",{ font: "20px Arial", fill: "#ff0044", align: "center" });
 		this.preloadtext.anchor.setTo(0.5,0.5);
 
-		// Scale the game to fill the whole screen, keeping the aspect ratio.
-		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-
 		this.load.spritesheet('play','assets/play.png',100,80);
 		this.load.spritesheet('next','assets/next.png',100,80);
 		this.load.image('pause','assets/Pause.png');

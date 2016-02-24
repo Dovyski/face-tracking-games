@@ -279,6 +279,8 @@ Game.PlayGame.prototype = {
 
 			if(this.game.time.now>change_move_time){
 
+			GlobalInfo.data.log({a: 'keyRight'}, true);
+
 			if(this.focusblock.wallcollide(oldsquares,'right')!=true)	this.focusblock.move('right');
 
 			change_move_time = this.game.time.now + 100;
@@ -291,6 +293,8 @@ Game.PlayGame.prototype = {
 
 			if(this.game.time.now>change_move_time){
 
+			GlobalInfo.data.log({a: 'keyLeft'}, true);
+
 			if(this.focusblock.wallcollide(oldsquares,'left')!=true)	this.focusblock.move('left');
 
 			change_move_time = this.game.time.now + 100;
@@ -302,6 +306,8 @@ Game.PlayGame.prototype = {
 		if(KEYUP.downDuration(50)){
 
 			if(this.game.time.now>change_rot_time){
+
+				GlobalInfo.data.log({a: 'keyRotate'}, true);
 
 				if(this.focusblock.rotatecollide(oldsquares)!=true)		this.focusblock.rotate();
 
@@ -317,7 +323,8 @@ Game.PlayGame.prototype = {
 			if(force_down - this.game.time.now > force_down_max_time * 2) {
 				//force_down = 0;
 			}
-			GlobalInfo.data.log({a: 'keyDown'});
+
+			GlobalInfo.data.log({a: 'keyDown'}, true);
 		}
 
 		else {
