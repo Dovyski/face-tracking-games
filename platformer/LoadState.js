@@ -29,7 +29,7 @@ var LoadState = function() {
 		this.game.load.spritesheet('dust', 'assets/dust.png', 64, 40); // ansimuz, Public domain, http://opengameart.org/content/animated-explosions
 		this.game.load.image('water', 'assets/water.png');  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.spritesheet('clouds', 'assets/clouds.png', 192, 60);  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
-		this.game.load.image('tutorial', 'assets/tutorial.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
+		this.game.load.image('tutorial', 'assets/tutorial.png?1'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
 		this.game.load.image('key-up', 'assets/key-up.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
 		this.game.load.image('key-s', 'assets/key-s.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
 		this.game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
