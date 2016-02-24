@@ -160,6 +160,8 @@ Player.prototype.run = function() {
 
 Player.prototype.jump = function() {
     if(this.mTouchingFloor) {
+        GlobalInfo.data.log({a: 'jump'}, true);
+
         this.run(); // to prevent any dash rotation/animation
         this.animations.play('jump');
         this.mVelocity.y = -15;
@@ -169,6 +171,8 @@ Player.prototype.jump = function() {
 
 Player.prototype.dash = function() {
     if(!this.dashing && this.mTouchingFloor) {
+        GlobalInfo.data.log({a: 'dash'}, true);
+
         this.dashing = true;
         this.animations.play('dash');
         this.body.setSize(50, 30, 0, 0);
