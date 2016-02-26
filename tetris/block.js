@@ -10,7 +10,7 @@ Block = function(game,x,y,type,color,scale){
 
 	this.blocktype = type;
 
-	this.blockcolor = color;
+	this.blockcolor = this.choosecolor(type);
 
 	this.game = game;
 
@@ -25,6 +25,18 @@ Block = function(game,x,y,type,color,scale){
 var md = 15;
 
 Block.prototype = {
+	choosecolor : function(type){
+		switch (type) {
+			case 'o': return 0;
+			case 't': return 1;
+			case 'l' : return 2;
+			case 'j' : return 3;
+			case 'i' : return 4;
+			case 's': return 5;
+			case 'z': return 6;
+			default: return 0;
+		}
+	},
 
 	setupsquares : function(){
 		var md = (width * this.scale ) / 2;
