@@ -21,6 +21,9 @@ Game.Load.prototype = {
 		this.preloadtext = this.add.text(this.game.world.centerX,this.game.world.centerY,"Loading..."+this.load.progress+"%",{ font: "20px Arial", fill: "#ff0044", align: "center" });
 		this.preloadtext.anchor.setTo(0.5,0.5);
 
+		this.load.audio('music','assets/music.ogg'); // CC-BY-3.0 http://opengameart.org/content/crystal-cave-mysterious-ambience-seamless-loop
+		this.load.audio('sfx-snap','assets/mouseclick.ogg'); // CC-0 http://opengameart.org/content/mouse-click
+
 		this.load.spritesheet('play','assets/play.png',100,80);
 		this.load.spritesheet('next','assets/next.png',100,80);
 		this.load.image('pause','assets/Pause.png');

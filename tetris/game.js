@@ -38,6 +38,9 @@ var GAME_SEED = 1234;
 
 var force_down_max_time = MAX_VELOCITY;
 
+var mSfxMusic;
+var mSfxSnap;
+
 Game.PlayGame.prototype = {
 
 	create : function(){
@@ -87,6 +90,14 @@ Game.PlayGame.prototype = {
 		squaresinrow.length = 0;
 
 		score = 0;
+
+		mSfxSnap = this.game.add.audio('sfx-snap');
+		mSfxMusic = this.game.add.audio('music', 0.5, true);
+
+		// Start title music as soon as possible
+		this.game.sound.setDecodedCallback([mSfxMusic], function() {
+			mSfxMusic.play();
+		}, this);
 	},
 
 	chooseblock : function(){
@@ -231,9 +242,11 @@ Game.PlayGame.prototype = {
 
 		{
 
-			if(this.focusblock.wallcollide(oldsquares,'down')!=true)	this.focusblock.move('down');
+			if(this.focusblock.wallcollide(oldsquares,'down')!=true) {
+				this.focusblock.move('down');
 
-			else{
+			} else {
+				mSfxSnap.play();
 
 				for(var i=0;i<4;i++){
 
@@ -256,7 +269,10 @@ Game.PlayGame.prototype = {
 				this.nextblock = new Block(this.game, 600, 271,this.nextblocktype,this.nextblockcolor,0.7);
 
 				if(this.focusblock.wallcollide(oldsquares,'down')==true) {
+					mSfxMusic.stop();
+					mSfxMusic.destroy();
 					this.game.state.start('Lose');
+
 				} else {
 					GlobalInfo.data.log({a: 'newBlock', t: this.nextblocktype, b: this.getboardsnapshot()}, true);
 
