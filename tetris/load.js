@@ -18,6 +18,8 @@ Game.Load = function(game){
 Game.Load.prototype = {
 	preload : function(){
 		this.stage.backgroundColor = "#000";
+		this.game.stage.disableVisibilityChange = true; // Prevent pause when browser window loses focus
+		
 		this.preloadtext = this.add.text(this.game.world.centerX,this.game.world.centerY,"Loading..."+this.load.progress+"%",{ font: "20px Arial", fill: "#ff0044", align: "center" });
 		this.preloadtext.anchor.setTo(0.5,0.5);
 
