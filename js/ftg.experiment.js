@@ -19,9 +19,9 @@
      this.mCalmSound;
 
      this.mGames = [
-         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1300, height: 975},
-         {id: 2, name: 'tetris', url: '../tetris/', width: 640, height: 960},
-         {id: 3, name: 'platformer', url: '../platformer/', width: 1300, height: 975}
+         {id: 1, name: 'card-flipper', url: '../card-flipper/', width: 1300, height: 975, paddingLeft: 300},
+         {id: 2, name: 'tetris', url: '../tetris/', width: 640, height: 960, paddingLeft: 600},
+         {id: 3, name: 'platformer', url: '../platformer/', width: 1300, height: 975, paddingLeft: 300}
      ];
 
      this.mGamesSorting = [
@@ -139,7 +139,7 @@ FTG.Experiment.prototype.startNewGame = function() {
         this.mData.logMilestone(this.mUid, aGame.id, 'experiment_game_start');
 
         // Add the game iframe and ajust its src property (prevent chache issues)
-        $('#info').html('<iframe id="game" style="width: ' + aGame.width + 'px; height: ' + aGame.height + 'px;"></iframe>');
+        $('#info').html('<iframe id="game" style="width: ' + aGame.width + 'px; height: ' + aGame.height + 'px; padding-left: ' + aGame.paddingLeft + 'px;"></iframe>');
         document.getElementById('game').src = this.generateGameURL(aGame);
 
         if(this.mDebug) {
