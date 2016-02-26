@@ -13,6 +13,7 @@ var Hud = function () {
     var mDialogQuestion;
     var mLabelLookFor;
     var mLabelTrash;
+    var mTextScore;
     var mSfxWrong;
     var mSfxRight;
 
@@ -51,11 +52,14 @@ Hud.prototype.init = function() {
     mTurnTimeBar        = new ProgressBar(50, 18, 550, 15, {line: 0xE86A17, fill: 0xEC8745});
     mTurnTimeBackground.addChild(mTurnTimeBar);
 
+    mTextScore          = new Phaser.Text(Game, mHealthBar.x + mHealthBar.width + 50, mHealthBar.y + 30, 'Score: 0', {fontSize: 26, fill: '#000'});
+
     mQuestionCard.disableInteractions(); // prevent hud card to be clicked
 
     this.add(mDialogQuestion);
     this.add(mHealthBar);
     this.add(mTurnTimeBackground);
+    this.add(mTextScore);
 
     this.add(mRightWrongIcons);
 
@@ -99,6 +103,7 @@ Hud.prototype.refresh = function() {
     mQuestionCard.frame = aQuestion;
 
     mHealthBar.setPercentage(aState.getHealthPercentage());
+    mTextScore.text = "Score: " + aScore.right;
 };
 
 Hud.prototype.highlightNewQuestion = function() {
