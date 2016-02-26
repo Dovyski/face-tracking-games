@@ -39,6 +39,12 @@ if(aExperiment.instance) {
 	console.log('Game is running in experiment mode (user: ' + GlobalInfo.user + ', game: ' + GlobalInfo.game + ')');
 }
 
+// Disable mouse right-click (prevent problems during the experiment)
+document.addEventListener('contextmenu', function(theEvent) {
+    theEvent.preventDefault();
+	return false;
+}, false);
+
 var SetupState = function(theGame) {
 };
 

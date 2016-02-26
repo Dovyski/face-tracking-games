@@ -67,6 +67,12 @@ FTG.Experiment.prototype.init = function() {
         return 'You did something that will stop the study before it is over. Please, click "Stay on this Page" to resume your study.';
     };
 
+    // Disable mouse right-click (prevent problems during the experiment)
+    document.addEventListener('contextmenu', function(theEvent) {
+        theEvent.preventDefault();
+    	return false;
+    }, false);
+
     if(this.mUid == null) {
         alert('User id not informed! Append ?user=DDD to the URL.');
     } else {
