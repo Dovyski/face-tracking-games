@@ -77,6 +77,16 @@ var PlayState = function() {
 
 		mTutorial = new Tutorial();
 		Game.add.existing(mTutorial);
+
+		//this.game.input.mouse.capture = true;
+		this.game.input.mouse.mouseDownCallback = this.handleMouseEvents;
+		this.game.input.mouse.mouseUpCallback = this.handleMouseEvents;
+	};
+
+	this.handleMouseEvents = function(theEvent) {
+		if(GlobalInfo && GlobalInfo.data) {
+			GlobalInfo.data.log({a: theEvent.type, x: this.input.x, y: this.input.y}, true);
+		}
 	};
 
 	this.getTimeSinceMatchStarted = function() {
