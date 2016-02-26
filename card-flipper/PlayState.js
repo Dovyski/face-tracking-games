@@ -212,16 +212,17 @@ var PlayState = function() {
 
 	var flipRandomCardsUp = function() {
 		var aCard,
-		 	i,
+		 	i = 0,
 			aTotal = getDifficulty().CARDS_FLIPS_TURN;
 
-		for(i = 0; i < aTotal; i++) {
-			aCard = mCards.getRandom();
+		do {
+			aCard = mCards.children[Game.rnd.integerInRange(0, mCards.children.length - 1)];
 
 			if(aCard) {
 				aCard.flip();
+				i++;
 			}
-		}
+		} while (i < aTotal);
 	};
 
 	var penalizeStillFlippedUpCards = function() {
