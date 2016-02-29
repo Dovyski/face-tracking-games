@@ -40,6 +40,8 @@ var force_down_max_time = MAX_VELOCITY;
 
 var mSfxMusic;
 var mSfxSnap;
+var mSfxMove;
+var mSfxRotate;
 
 Game.PlayGame.prototype = {
 
@@ -93,10 +95,14 @@ Game.PlayGame.prototype = {
 
 		mSfxSnap = this.game.add.audio('sfx-snap');
 		mSfxMusic = this.game.add.audio('music', 0.5, true);
+		mSfxMove = this.game.add.audio('sfx-move');
+		mSfxRotate = this.game.add.audio('sfx-rotate');
+
+		mSfxMusic.volume = 0.05;
 
 		// Start title music as soon as possible
 		this.game.sound.setDecodedCallback([mSfxMusic], function() {
-			mSfxMusic.play();
+			//mSfxMusic.play();
 		}, this);
 	},
 
@@ -244,6 +250,7 @@ Game.PlayGame.prototype = {
 
 			if(this.focusblock.wallcollide(oldsquares,'down')!=true) {
 				this.focusblock.move('down');
+				mSfxMove.play();
 
 			} else {
 				mSfxSnap.play();
@@ -325,7 +332,10 @@ Game.PlayGame.prototype = {
 
 				GlobalInfo.data.log({a: 'keyRotate'}, true);
 
-				if(this.focusblock.rotatecollide(oldsquares)!=true)		this.focusblock.rotate();
+				if(this.focusblock.rotatecollide(oldsquares)!=true) {
+					mSfxRotate.play();
+					this.focusblock.rotate();
+				}
 
 				change_rot_time = this.game.time.now + 100;
 
