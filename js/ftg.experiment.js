@@ -87,6 +87,7 @@ FTG.Experiment.prototype.init = function() {
 FTG.Experiment.prototype.enableCalmMusic = function(theStatus) {
     if(theStatus) {
         this.mCalmSound.loop = true;
+        this.mCalmSound.currentTime = 0;
         this.mCalmSound.play();
     } else {
         this.mCalmSound.pause();
