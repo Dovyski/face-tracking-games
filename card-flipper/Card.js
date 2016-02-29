@@ -57,12 +57,12 @@ Card.prototype.randomize = function() {
     this.mNextType = -1;
 };
 
-Card.prototype.flip = function() {
+Card.prototype.flip = function(theFrame) {
     if(this.isFlippedUp()) {
         this.flipDown();
 
     } else {
-        this.flipUp();
+        this.flipUp(theFrame);
     }
 };
 

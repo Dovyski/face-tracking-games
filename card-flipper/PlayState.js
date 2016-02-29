@@ -213,13 +213,28 @@ var PlayState = function() {
 	var flipRandomCardsUp = function() {
 		var aCard,
 		 	i = 0,
-			aTotal = getDifficulty().CARDS_FLIPS_TURN;
+			aTotal = getDifficulty().CARDS_FLIPS_TURN,
+			aIsFirst,
+			aIsLast;
 
 		do {
 			aCard = mCards.children[Game.rnd.integerInRange(0, mCards.children.length - 1)];
 
 			if(aCard) {
-				aCard.flip();
+				aIsFirst = i == 0;
+				aIsLast  = i == aTotal - 1;
+
+				if(aIsFirst) {
+					// At least the first card must be poisonous
+					aCard.flip(mQuestion);
+				} else if(aIsLast) {
+					// Last card should never be poisonous
+					aCard.flip(generateQuestionValue(mQuestion));
+				} else {
+					// It's a card in between. Nothing special about it.
+					aCard.flip();
+				}
+
 				i++;
 			}
 		} while (i < aTotal);
@@ -295,9 +310,20 @@ var PlayState = function() {
 		mIsThinking = true;
 	};
 
+	var generateQuestionValue = function(theNotThisOne) {
+		var aValue;
+
+		do {
+			aValue = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1)
+
+		} while(aValue == theNotThisOne);
+
+		return aValue;
+	};
+
 	var generateNewQuestion = function() {
 		mIsThinking = false;
-		mQuestion = Game.rnd.integerInRange(1, Constants.CARDS_COLORS - 1);
+		mQuestion = generateQuestionValue();
 
 		mHud.refresh();
 		mHud.highlightNewQuestion();
