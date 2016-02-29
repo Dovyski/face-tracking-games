@@ -53,12 +53,16 @@ PlayState = function() {
 		this.game.add.existing(mHud);
 
 		// SFX and music
-		mSfxHeal = this.game.add.audio('sfx-heart', Constants.SFX_VOLUME);
+		mSfxHeal = this.game.add.audio('sfx-heart');
 		mSfxMusic = this.game.add.audio('sfx-music', Constants.MUSIC_VOLUME, true);
+
+		mSfxHeal.volume = Constants.SFX_VOLUME;
+		mSfxMusic.volume = Constants.MUSIC_VOLUME;
 
 		// Start title music as soon as possible
 		this.game.sound.setDecodedCallback([mSfxMusic], function() {
 			mSfxMusic.play();
+
 		}, this);
 	};
 
