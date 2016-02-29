@@ -29,9 +29,9 @@ Player.prototype.constructor = Player;
 // Public methods
 
 Player.prototype.init = function() {
-    this.animations.add('run', [0, 1, 2, 3, 4, 5], 10, true);
-    this.animations.add('jump', [6, 7, 8, 8, 9, 10], 5, true);
-    this.animations.add('dash', [11], 5, true);
+    this.animations.add('run', [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
+    this.animations.add('jump', [6], 5, true);
+    this.animations.add('dash', [8], 5, true);
 
     this.game.physics.enable(this, Phaser.Physics.ARCADE);
     this.body.collideWorldBounds = true;
@@ -131,23 +131,23 @@ Player.prototype.processMoveOnSlope = function(theSlope) {
     if(theSlope.key == 'slope-up') {
         if(aScale <= 0.5) {
             this.run();
-            this.y = theSlope.y - (theSlope.height / 2 + aScale * theSlope.height * 0.7);
+            this.y = theSlope.y - (theSlope.height / 2 + aScale * theSlope.height * 0.6);
         } else {
             this.y = theSlope.y - this.body.height;
         }
     } else {
         if(aScale <= 0.6) {
             this.run();
-            this.y = theSlope.y - theSlope.height / 2 - 40 + aScale * (theSlope.height / 2);
+            this.y = theSlope.y - theSlope.height / 2 - 10 + aScale * (theSlope.height / 2);
         } else {
-            this.y = theSlope.y - 60;
+            this.y = theSlope.y - 40;
         }
     }
 };
 
 Player.prototype.run = function() {
     if(this.animations.currentAnim.name != "run") {
-        this.body.setSize(20, 120, 30, 0);
+        this.body.setSize(20, 105, 30, 0);
         this.anchor.set(0);
         this.angle = 0;
         this.animations.play('run');

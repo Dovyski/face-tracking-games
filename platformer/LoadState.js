@@ -20,7 +20,7 @@ var LoadState = function() {
 		this.game.load.image('pixel', 'assets/pixel.png'); // By Fernando Bevilacqua, public domain
 
 		// Assets from external authors
-		this.game.load.spritesheet('player', 'assets/player.png', 74, 128); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
+		this.game.load.spritesheet('player', 'assets/player.png?1', 84, 110); // Jan124, OGA-BY 3.0, http://opengameart.org/content/pixel-dinosaurs
 		this.game.load.image('platform', 'assets/platform.png?1'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('slope-up', 'assets/slope-up.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.image('slope-down', 'assets/slope-down.png'); // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
@@ -29,7 +29,7 @@ var LoadState = function() {
 		this.game.load.spritesheet('dust', 'assets/dust.png', 64, 40); // ansimuz, Public domain, http://opengameart.org/content/animated-explosions
 		this.game.load.image('water', 'assets/water.png');  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
 		this.game.load.spritesheet('clouds', 'assets/clouds.png', 192, 60);  // Contributors, CC-BY 3.0, http://opengameart.org/content/open-pixel-platformer-tiles-sprites
-		this.game.load.image('tutorial', 'assets/tutorial.png?1'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
+		this.game.load.image('tutorial', 'assets/tutorial.png?2'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
 		this.game.load.image('key-up', 'assets/key-up.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
 		this.game.load.image('key-s', 'assets/key-s.png'); // xelu, Public Domain, http://opengameart.org/content/free-keyboard-and-controllers-prompts-pack
 		this.game.load.image('heart', 'assets/heart.png'); // UI pack, by Kenney Vleugels (www.kenney.nl), CC0, http://www.kenney.nl
