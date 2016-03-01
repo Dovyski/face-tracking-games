@@ -17,14 +17,20 @@ APP = function() {
             '<li>' +
                 '<a><i class="fa fa-bar-chart-o"></i> Sessions <span class="fa fa-chevron-down"></span></a>' +
                 '<ul class="nav child_menu" style="display: none">' +
-                    '<li><a href="javascript:void(0)" class="action-link">Active</a></li>' +
+                    '<li><a href="javascript:void(0)" class="action-link" data-action="active">Active</a></li>' +
                 '</ul>' +
             '</li>';
 
         $('#sidebar-menu').append('<ul class="nav side-menu">' + aOut + '</ul>');
 
         $('#sidebar-menu a.action-link').click(function() {
-            APP.loadData($(this).data('subject'), $(this).data('game'));
+            var aAction = $(this).data('action'),
+                aMonitor;
+
+            if(aAction == 'active') {
+                aMonitor = new APP.Monitor('main-area');
+                aMonitor.run();
+            }
         });
     };
 
@@ -58,8 +64,6 @@ APP = function() {
     };
 
     this.showExperimentData = function(theSubject) {
-        var aViewer;
-
         this.loadData({method: 'experiment', user: theSubject}, function(theData) {
             var aViewer;
 
