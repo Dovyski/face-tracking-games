@@ -131,7 +131,7 @@ FTG.Experiment.prototype.greetings = function() {
 };
 
 FTG.Experiment.prototype.generateGameURL = function(theGameInfo) {
-    return theGameInfo.url + '?user=' + this.mUid + '&game=' + theGameInfo.id + '&rand=' + Math.random() + '&face=' + this.mEnableFaceTracking + '&MUSIC_VOLUME=0.3&SFX_VOLUME=0.4';
+    return theGameInfo.url + '?user=' + this.mUid + '&game=' + theGameInfo.id + '&rand=' + Math.random() + '&face=' + this.mEnableFaceTracking;
 };
 
 FTG.Experiment.prototype.startNewGame = function() {
