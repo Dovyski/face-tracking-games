@@ -57,4 +57,13 @@
              {value: 5, label: '(Very end)'}
          ]
      },
+     {
+         text: 'Did you understand how to play the game properly?',
+         hide: true,
+         options: [
+             {value: 2, label: 'Yes'},
+             {value: 1, label: 'Yes, but I was a bit confused'},
+             {value: 0, label: 'No'}
+         ]
+     },
  ];
