@@ -98,6 +98,10 @@ Game.PlayGame.prototype = {
 		mSfxMove = this.game.add.audio('sfx-move');
 		mSfxRotate = this.game.add.audio('sfx-rotate');
 
+		mSfxSnap.volume = 0.4;
+		mSfxMove.volume = 0.5;
+		mSfxRotate.volume = 0.5;
+
 		mSfxMusic.volume = 0.05;
 
 		// Start title music as soon as possible

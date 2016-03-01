@@ -13,8 +13,8 @@ var Constants = new function() {
 
 	this.PLAYER_POSITION_X		= 0.15; 	// Relative to screen width, percentage of player's position (from the left).
 
-	this.MUSIC_VOLUME			= 0.1;
-	this.SFX_VOLUME				= 0.3;
+	this.MUSIC_VOLUME			= 0.05;
+	this.SFX_VOLUME				= 0.2;
 
 	this.DIFFICULTY	= [						// Controls the difficulty of the game. Each entry means a piece of time
 		{ // 0

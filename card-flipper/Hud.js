@@ -63,8 +63,10 @@ Hud.prototype.init = function() {
 
     this.add(mRightWrongIcons);
 
-    mSfxWrong = Game.add.audio('sfx-wrong', Constants.SFX_VOLUME);
-    mSfxRight = Game.add.audio('sfx-right', Constants.SFX_VOLUME);
+    mSfxWrong = Game.add.audio('sfx-wrong');
+    mSfxRight = Game.add.audio('sfx-right');
+    mSfxWrong.volume = Constants.SFX_VOLUME;
+    mSfxRight.volume = Constants.SFX_VOLUME;
 };
 
 Hud.prototype.makeMonsterLookSickForAWhile = function() {
