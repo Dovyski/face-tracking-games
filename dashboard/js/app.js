@@ -11,7 +11,8 @@ APP = function() {
     };
 
     this.generateSessionsMenu = function() {
-        var aOut;
+        var aOut,
+            aSelf = this;
 
         aOut =
             '<li>' +
@@ -28,7 +29,7 @@ APP = function() {
                 aMonitor;
 
             if(aAction == 'active') {
-                aMonitor = new APP.Monitor('main-area');
+                aMonitor = new APP.Monitor('main-area', aSelf);
                 aMonitor.run();
             }
         });
@@ -80,7 +81,7 @@ APP = function() {
         });
     };
 
-    this.loadData = function(theData, theCallback) {
+    this.loadData = function(theData, theCallback, theCallbackContext) {
         $.ajax({
             method: 'POST',
             url: '../backend/index.php',
@@ -88,7 +89,7 @@ APP = function() {
             data: theData,
         })
         .done(function(theInfo) {
-            theCallback(theInfo);
+            theCallback.call(theCallbackContext || this, theInfo);
         })
         .fail(function() {
             $('#facial-tracking').html('Unable to load data!');

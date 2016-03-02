@@ -1,18 +1,46 @@
 var APP = APP || {};
 
-APP.Monitor = function(theContainerId) {
+APP.Monitor = function(theContainerId, theApp) {
     this.mContainerId = theContainerId;
+    this.mApp = theApp;
     this.mIntervalId = -1;
+    this.mSession = null;
 };
 
 APP.Monitor.prototype.run = function() {
     this.buildLayoutStructure();
 
-    this.mIntervalId = setInterval(this.update, 1000);
+    // Load info about active sessions
+    this.mApp.loadData({method: 'active'}, function(theData) {
+        if(theData.success) {
+            this.mSession = theData.data[0];
+            this.mIntervalId = setInterval(this.update, 1000, this);
+        }
+    }, this);
 };
 
-APP.Monitor.prototype.update = function() {
-    $('#data-area').html('asaas' + Math.random());
+APP.Monitor.prototype.stop = function() {
+    clearInterval(this.mIntervalId);
+};
+
+APP.Monitor.prototype.update = function(theMonitor) {
+    var aConfig = {
+        method: 'monitor',
+        user: theMonitor.mSession.uuid
+    };
+
+    theMonitor.mApp.loadData(aConfig, function(theData) {
+        var i,
+            aOut = '';
+        if(theData.success) {
+            for(var i = 0; i < theData.data.length; i++) {
+                console.log(theData.data[i]);
+                aOut += theData.data[i].timestamp + ': ' + theData.data[i].data + '<br />';
+            }
+
+            $('#data-area').html(aOut);
+        }
+    }, theMonitor);
 };
 
 APP.Monitor.prototype.buildLayoutStructure = function() {
