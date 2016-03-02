@@ -14,7 +14,7 @@ APP.Monitor.prototype.run = function() {
     // Load info about active sessions
     this.mApp.loadData({method: 'active'}, function(theData) {
         if(theData.success) {
-            this.mSession = theData.data[0];
+            this.mSession = theData.data[theData.data.length - 1];
             this.mIntervalId = setInterval(this.update, 1000, this);
         }
     }, this);
@@ -25,6 +25,10 @@ APP.Monitor.prototype.stop = function() {
 };
 
 APP.Monitor.prototype.update = function(theMonitor) {
+    if(theMonitor.mSession == null) {
+        return;
+    }
+
     var aConfig = {
         method: 'monitor',
         user: theMonitor.mSession.uuid
@@ -43,6 +47,8 @@ APP.Monitor.prototype.update = function(theMonitor) {
             if(this.mLastReceivedInfo) {
                 aOut += this.getTimeSinceBegining(this.mLastReceivedInfo.timestamp) + ': ' + JSON.stringify(this.mLastReceivedInfo.data) + '<br />';
             }
+
+            aOut = 'User: ' + this.mSession.uuid + '<br/>' + aOut;
 
             $('#data-area').html(aOut);
         }

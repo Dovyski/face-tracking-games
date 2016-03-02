@@ -25,14 +25,19 @@ APP = function() {
         $('#sidebar-menu').append('<ul class="nav side-menu">' + aOut + '</ul>');
 
         $('#sidebar-menu a.action-link').click(function() {
-            var aAction = $(this).data('action'),
-                aMonitor;
+            var aAction = $(this).data('action');
 
             if(aAction == 'active') {
-                aMonitor = new APP.Monitor('main-area', aSelf);
-                aMonitor.run();
+                aSelf.showActiveSession();
             }
         });
+    };
+
+    this.showActiveSession = function() {
+        var aMonitor;
+
+        aMonitor = new APP.Monitor('main-area', this);
+        aMonitor.run();
     };
 
     this.generateExperimentsMenu = function() {
@@ -101,5 +106,12 @@ APP = function() {
 };
 
 $(function () {
-    new APP().generateSideMenu();
+    var aApp;
+
+    aApp = new APP();
+    aApp.generateSideMenu();
+
+    if(FTG.Utils.getURLParamByName('active')) {
+        aApp.showActiveSession();
+    }
 });
