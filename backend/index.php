@@ -70,7 +70,7 @@ try {
 			break;
 
 		case 'monitor':
-			$aTime = time() - 60;
+			$aTime = time() - 30;
 
 			$aStmt = $aDb->prepare("SELECT * FROM logs WHERE uuid = :uuid AND timestamp >= :time");
 			$aStmt->bindParam(':uuid', $aUser);
