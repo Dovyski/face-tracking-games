@@ -41,12 +41,20 @@ APP.Monitor.prototype.update = function(theMonitor) {
             }
 
             if(this.mLastReceivedInfo) {
-                aOut += this.mLastReceivedInfo.timestamp + ': ' + JSON.stringify(this.mLastReceivedInfo.data) + '<br />';
+                aOut += this.getTimeSinceBegining(this.mLastReceivedInfo.timestamp) + ': ' + JSON.stringify(this.mLastReceivedInfo.data) + '<br />';
             }
 
             $('#data-area').html(aOut);
         }
     }, theMonitor);
+};
+
+APP.Monitor.prototype.getTimeSinceBegining = function(theCurrentTimestamp) {
+    var aTime = theCurrentTimestamp - this.mSession.timestamp;
+    var aMinutes = Math.floor(aTime / 60);
+    var aSeconds = aTime - aMinutes * 60;
+
+    return (aMinutes < 10 ? '0' + aMinutes : aMinutes) + ':' + (aSeconds < 10 ? '0' + aSeconds : aSeconds);
 };
 
 APP.Monitor.prototype.buildLayoutStructure = function() {
