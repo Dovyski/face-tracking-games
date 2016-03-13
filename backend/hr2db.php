@@ -62,12 +62,12 @@ if(count($aExperiment) > 1) {
 $aTimestampStart = $aExperiment[0]['timestamp'] + 0;
 
 foreach($aData as $aRow) {
-    $aHR = $aRow['hr'];
-    $aRelativeTime = $aRow['time'] + 0;
-    $aTime = $aTimestampStart + $aRelativeTime;
+    $aHR            = $aRow['hr'];
+    $aRelativeTime  = $aRow['time'] + 0;
+    $aTime          = $aTimestampStart + $aRelativeTime;
+    $aJsonData      = '[{"t":' . $aTime .'000,"d":"{\"hr\":' . $aHR . '}"}';
 
-    echo $aHR . "," . $aTime ."\n";
-    //$aDb->query("INSERT INTO logs (fk_game, timestamp, uuid, data) VALUES (-1, ".time().", '".$aSubjectId."', '".."')");
+    $aDb->query("INSERT INTO logs (fk_game, timestamp, uuid, data) VALUES (-1, ".$aTime.", '".$aSubjectId."', '".$aJsonData."')");
 }
 
 echo "All done!\n";
