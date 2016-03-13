@@ -65,7 +65,7 @@ foreach($aData as $aRow) {
     $aHR            = $aRow['hr'];
     $aRelativeTime  = $aRow['time'] + 0;
     $aTime          = $aTimestampStart + $aRelativeTime;
-    $aJsonData      = '[{"t":' . $aTime .'000,"d":"{\"hr\":' . $aHR . '}"}';
+    $aJsonData      = '[{"t":' . $aTime .'000,"d":"{\"hr\":' . $aHR . '}"}]';
 
     $aDb->query("INSERT INTO logs (fk_game, timestamp, uuid, data) VALUES (-1, ".$aTime.", '".$aSubjectId."', '".$aJsonData."')");
 }
