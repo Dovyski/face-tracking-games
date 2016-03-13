@@ -62,7 +62,7 @@ if(count($aExperiment) > 1) {
 $aTimestampStart = $aExperiment[0]['timestamp'] + 0;
 
 foreach($aData as $aRow) {
-    $aHR            = $aRow['hr'];
+    $aHR            = $aRow['hr'] == '' ? 0 : $aRow['hr'];
     $aRelativeTime  = $aRow['time'] + 0;
     $aTime          = $aTimestampStart + $aRelativeTime;
     $aJsonData      = '[{"t":' . $aTime .'000,"d":"{\"hr\":' . $aHR . '}"}]';
