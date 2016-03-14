@@ -12,37 +12,55 @@ if (php_sapi_name() != 'cli') {
     exit();
 }
 
-if($argc < 4) {
+if($argc < 2) {
     echo "Usage: \n";
-    echo " php analyze.php <firstSubjectId> <lastSubjectId> [options]\n\n";
+    echo " php analyze.php [<subjectId>|<firstId>:<lastId>] [options]\n\n";
     echo "Options:\n";
-    echo " --report      Prints a report of the provided subjects.\n";
-    echo " --csv <file>  Outputs all data as a CSV into file <file>.\n";
+    echo " --report      Prints the processing as a report.\n";
+    echo " --csv <file>  Saves the processing as an CSV file defined by <file>.\n";
     exit(1);
 }
 
-$aSubjectIdStart = $argv[1];
-$aSubjectIdEnd = $argv[2];
-$aFormat = $argv[3];
+$aSubjectIdStart = 0;
+$aSubjectIdEnd = 0;
+
+if(strpos($argv[1], ':') !== false) {
+    $aValues = explode(':', $argv[1]);
+
+    if(count($aValues) != 2) {
+        echo 'Invalid subject range "'.$argv[1].'". It should be "start:end", e.g. 400:418.' . "\n";
+        exit(2);
+    }
+
+    $aSubjectIdStart = $aValues[0];
+    $aSubjectIdEnd = $aValues[1];
+
+} else {
+    $aSubjectIdStart = $argv[1];
+    $aSubjectIdEnd = $argv[1];
+}
+
+// If nothing is specified, assume this is a report
+$aFormat = isset($argv[2]) ? $argv[2] : '--report';
 
 $aIsReport = $aFormat == '--report';
 $aIsCSV = $aFormat == '--csv';
 $aCSVFile = 'out.csv';
 
 if($aIsCSV) {
-    if(!isset($argv[4])) {
+    if(!isset($argv[3])) {
         echo 'Option --csv requires a file.' . "\n";
         exit(2);
 
     } else {
-        $aCSVFile = $argv[4];
+        $aCSVFile = $argv[3];
     }
 }
 
 $aDb = new PDO('sqlite:' . DB_FILE);
 $aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$aGroupingAmount = 15;
+$aGroupingAmount = 15; // size of the group when calculating grouped mean for HR entries.
 $aSubjects = array();
 
 for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
@@ -92,9 +110,8 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
             printSetAsCSV($aRest['hr']);
             echo "\n";
         }
-
-        echo "\n";
     }
+    echo "\n";
 }
 
 if($aIsCSV) {
@@ -143,7 +160,7 @@ if($aIsCSV) {
 
     fclose($aFile);
 
-    echo "\nCSV data successfuly saved to file '".$aCSVFile."'\n";
+    echo "\nCSV data successfuly saved to file \"".$aCSVFile."\".\n";
 }
 
 ?>
