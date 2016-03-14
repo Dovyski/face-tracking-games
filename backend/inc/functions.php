@@ -168,7 +168,38 @@ function crunchNumbers($theSubjectData, $theGroupingAmount = 15) {
         $theSubjectData['rests'][$aKey]['hr-mean'] = $aMeans['mean'];
     }
 
+    $theSubjectData['baseline'] = calculateBaseline($theSubjectData);
+    $theSubjectData = calculateVariationsFromBaseline($theSubjectData, $theSubjectData['baseline']);
+
     return $theSubjectData;
+}
+
+function calculateVariationsFromBaseline($theSubjectData, $theBaseline) {
+    foreach($theSubjectData['games'] as $aKey => $aGame) {
+        $aValues = array();
+
+        foreach($aGame['hr-means'] as $aEntry) {
+            $aValues[] = $aEntry - $theBaseline;
+        }
+
+        $theSubjectData['games'][$aKey]['hr-means-baseline'] = $aValues;
+    }
+
+    return $theSubjectData;
+}
+
+// Baseline is the average heart rate during the rest periods.
+function calculateBaseline($theSubjectData) {
+    $aSum = $theSubjectData['rests'][0]['hr-mean'] + $theSubjectData['rests'][1]['hr-mean'];
+    $aRet = $aSum / 2.0;
+
+    return $aRet;
+}
+
+function printSetAsCSV($theValus) {
+    foreach($theValus as $aKey => $aValue) {
+        echo $aKey . "," . sprintf('%.2f', $aValue) . "\n";
+    }
 }
 
 ?>

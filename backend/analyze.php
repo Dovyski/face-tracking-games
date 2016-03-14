@@ -35,16 +35,27 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
     $aData = getSubjectData($aDb, $i);
     $aStats = crunchNumbers($aData, $aGroupingAmount);
 
-    echo "\nExperiment results\n";
+    echo "\nSubject results\n";
+    echo '----------------------------------------------------' . "\n";
+    echo 'HR baseline: ' . $aStats['baseline'] ."\n";
+    $j = 1;
+    foreach($aStats['rests'] as $aRest) {
+        echo 'HR mean (rest #'.$j++.'): ' . $aRest['hr-mean'] ."\n";
+    }
+
+    echo "\nExperiment details\n";
     echo '----------------------------------------------------' . "\n";
 
     foreach($aStats['games'] as $aGame) {
         echo 'Action: playing ' . $aGame['name'] . ' (id='.$aGame['id'].')'."\n";
         echo 'HR mean: ' . $aGame['hr-mean'] ."\n";
         echo 'HR mean (every '.$aGroupingAmount.' seconds):'."\n";
-        print_r($aGame['hr-means']);
-        echo 'HR: ' ."\n";
-        print_r($aGame['hr']);
+        printSetAsCSV($aGame['hr-means']);
+        echo "\nHR mean baseline (every ".$aGroupingAmount." seconds): \n";
+        printSetAsCSV($aGame['hr-means-baseline']);
+        echo "\nHR: \n";
+        printSetAsCSV($aGame['hr']);
+        echo "\n";
     }
 
     $j = 1;
@@ -52,9 +63,10 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
         echo 'Action: resting #' . $j++ ."\n";
         echo 'HR mean: ' . $aRest['hr-mean'] ."\n";
         echo 'HR mean (every '.$aGroupingAmount.' seconds):'."\n";
-        print_r($aRest['hr-means']);
-        echo 'HR: ' ."\n";
-        print_r($aRest['hr']);
+        printSetAsCSV($aRest['hr-means']);
+        echo "\nHR: \n";
+        printSetAsCSV($aRest['hr']);
+        echo "\n";
     }
 
     echo "\n";
