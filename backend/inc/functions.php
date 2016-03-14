@@ -98,7 +98,9 @@ function getSubjectData($thePDO, $theSubjectId) {
             }
 
         } else {
-            echo "Warning: unable to parse data ".$aRow['data']."\n";
+            if($aRow['data'] != '[]') {
+                echo "Warning: unable to parse data ".$aRow['data']."\n";
+            }
         }
     }
 
