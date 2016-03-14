@@ -99,12 +99,27 @@ function getSubjectData($thePDO, $theSubjectId) {
 
         } else {
             if($aRow['data'] != '[]') {
-                echo "Warning: unable to parse data ".$aRow['data']."\n";
+                echo "  Warning: unable to parse data ".$aRow['data']."\n";
             }
         }
     }
 
     return $aStats;
+}
+
+// Checks for wrong values, such as zero, one-value spikes, etc.
+function sanitizeHRValues($theValues) {
+    $aRet = array();
+
+    foreach($theValues as $aHR) {
+        if($aHR <= 0 || $aHR == '') {
+            echo '  Warning: suspicious HR value ' . $aHR . " removed from set.\n";
+        } else {
+            $aRet[] = $aHR;
+        }
+    }
+
+    return $aRet;
 }
 
 function calculateMeans($theValues, $theGroupingAmount = 15) {
@@ -138,14 +153,16 @@ function calculateMeans($theValues, $theGroupingAmount = 15) {
 // Calculates all sorts of means from the provided subject data,
 function crunchNumbers($theSubjectData, $theGroupingAmount = 15) {
     foreach($theSubjectData['games'] as $aKey => $aGame) {
-        $aMeans = calculateMeans($aGame['hr'], $theGroupingAmount);
+        echo 'Analyzing game ' . $aGame['name'] . "\n";
+        $aMeans = calculateMeans(sanitizeHRValues($aGame['hr']), $theGroupingAmount);
 
         $theSubjectData['games'][$aKey]['hr-means'] = $aMeans['means'];
         $theSubjectData['games'][$aKey]['hr-mean'] = $aMeans['mean'];
     }
 
     foreach($theSubjectData['rests'] as $aKey => $aRest) {
-        $aMeans = calculateMeans($aRest['hr'], $theGroupingAmount);
+        echo 'Analyzing rest #' . $aKey . "\n";
+        $aMeans = calculateMeans(sanitizeHRValues($aRest['hr']), $theGroupingAmount);
 
         $theSubjectData['rests'][$aKey]['hr-means'] = $aMeans['means'];
         $theSubjectData['rests'][$aKey]['hr-mean'] = $aMeans['mean'];

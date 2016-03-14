@@ -12,39 +12,52 @@ if (php_sapi_name() != 'cli') {
     exit();
 }
 
-if($argc != 2) {
+if($argc != 3) {
     echo "Usage: \n";
-    echo "  php analyze.php <subjectId>\n";
+    echo "  php analyze.php <firstSubjectId> <lastSubjectId>\n";
     exit(1);
 }
 
-$aSubjectId = $argv[1];
+$aSubjectIdStart = $argv[1];
+$aSubjectIdEnd = $argv[2];
 $aGroupingAmount = 15;
 
 $aDb = new PDO('sqlite:' . DB_FILE);
 $aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-for($i = 400; $i < 401; $i++) {
-    $aData = getSubjectData($aDb, $aSubjectId);
+for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
+    echo 'Subject: ' . $i . "\n";
+    echo '*********************************************************************' . "\n";
+
+    echo "Analysis\n";
+    echo '----------------------------------------------------' . "\n";
+
+    $aData = getSubjectData($aDb, $i);
     $aStats = crunchNumbers($aData, $aGroupingAmount);
 
-    echo 'Subject: ' . $i . "\n";
-    echo '----------------------------------------' . "\n";
+    echo "\nExperiment results\n";
+    echo '----------------------------------------------------' . "\n";
 
     foreach($aStats['games'] as $aGame) {
-        echo 'Period: playing game ' . $aGame['name'] . ' (id='.$aGame['id'].')'."\n";
+        echo 'Action: playing ' . $aGame['name'] . ' (id='.$aGame['id'].')'."\n";
         echo 'HR mean: ' . $aGame['hr-mean'] ."\n";
         echo 'HR mean (every '.$aGroupingAmount.' seconds):'."\n";
         print_r($aGame['hr-means']);
+        echo 'HR: ' ."\n";
+        print_r($aGame['hr']);
     }
 
     $j = 1;
     foreach($aStats['rests'] as $aRest) {
-        echo 'Period: resting #' . $j++ ."\n";
+        echo 'Action: resting #' . $j++ ."\n";
         echo 'HR mean: ' . $aRest['hr-mean'] ."\n";
         echo 'HR mean (every '.$aGroupingAmount.' seconds):'."\n";
         print_r($aRest['hr-means']);
+        echo 'HR: ' ."\n";
+        print_r($aRest['hr']);
     }
+
+    echo "\n";
 }
 
 ?>
