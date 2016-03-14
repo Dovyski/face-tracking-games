@@ -19,12 +19,32 @@ if($argc != 2) {
 }
 
 $aSubjectId = $argv[1];
+$aGroupingAmount = 15;
 
 $aDb = new PDO('sqlite:' . DB_FILE);
 $aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$aStats = getSubjectData($aDb, $aSubjectId);
+for($i = 400; $i < 401; $i++) {
+    $aData = getSubjectData($aDb, $aSubjectId);
+    $aStats = crunchNumbers($aData, $aGroupingAmount);
 
-print_r($aStats);
+    echo 'Subject: ' . $i . "\n";
+    echo '----------------------------------------' . "\n";
+
+    foreach($aStats['games'] as $aGame) {
+        echo 'Period: playing game ' . $aGame['name'] . ' (id='.$aGame['id'].')'."\n";
+        echo 'HR mean: ' . $aGame['hr-mean'] ."\n";
+        echo 'HR mean (every '.$aGroupingAmount.' seconds):'."\n";
+        print_r($aGame['hr-means']);
+    }
+
+    $j = 1;
+    foreach($aStats['rests'] as $aRest) {
+        echo 'Period: resting #' . $j++ ."\n";
+        echo 'HR mean: ' . $aRest['hr-mean'] ."\n";
+        echo 'HR mean (every '.$aGroupingAmount.' seconds):'."\n";
+        print_r($aRest['hr-means']);
+    }
+}
 
 ?>

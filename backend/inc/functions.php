@@ -105,4 +105,51 @@ function getSubjectData($thePDO, $theSubjectId) {
     return $aStats;
 }
 
+function calculateMeans($theValues, $theGroupingAmount = 15) {
+    $aRet = array();
+    $aSumAllValues = 0;
+
+    $aCount = 0;
+    $aSum = 0;
+    $aHRMeans = array();
+
+    foreach($theValues as $aHR) {
+        $aSumAllValues += $aHR;
+        $aSum += $aHR;
+        $aCount++;
+
+        if($aCount == $theGroupingAmount) {
+            $aMean = (double) $aSum / $aCount;
+            $aCount = 0;
+            $aSum = 0;
+
+            $aHRMeans[] = $aMean;
+        }
+    }
+
+    $aRet['means'] = $aHRMeans;
+    $aRet['mean'] = (double) $aSumAllValues / count($theValues);
+
+    return $aRet;
+}
+
+// Calculates all sorts of means from the provided subject data,
+function crunchNumbers($theSubjectData, $theGroupingAmount = 15) {
+    foreach($theSubjectData['games'] as $aKey => $aGame) {
+        $aMeans = calculateMeans($aGame['hr'], $theGroupingAmount);
+
+        $theSubjectData['games'][$aKey]['hr-means'] = $aMeans['means'];
+        $theSubjectData['games'][$aKey]['hr-mean'] = $aMeans['mean'];
+    }
+
+    foreach($theSubjectData['rests'] as $aKey => $aRest) {
+        $aMeans = calculateMeans($aRest['hr'], $theGroupingAmount);
+
+        $theSubjectData['rests'][$aKey]['hr-means'] = $aMeans['means'];
+        $theSubjectData['rests'][$aKey]['hr-mean'] = $aMeans['mean'];
+    }
+
+    return $theSubjectData;
+}
+
 ?>
