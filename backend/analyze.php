@@ -60,8 +60,9 @@ if($aIsCSV) {
 $aDb = new PDO('sqlite:' . DB_FILE);
 $aDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$aGroupingAmount = 15; // size of the group when calculating grouped mean for HR entries.
+$aGroupingAmount = 60; // size of the group when calculating grouped mean for HR entries.
 $aSubjects = array();
+$aGames = findGames($aDb);
 
 for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
     echo 'Subject: ' . $i . "\n";
@@ -110,8 +111,53 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
             printSetAsCSV($aRest['hr']);
             echo "\n";
         }
+
+        echo "\nQuestionnaire details\n";
+        echo '----------------------------------------------------' . "\n";
+        foreach($aStats['questionnaires'] as $aGameQuestionnaire) {
+            echo $aGameQuestionnaire['game'] . ": \n";
+
+            foreach($aGameQuestionnaire['data'] as $aEntry) {
+                echo $aEntry->q . ', ' . $aEntry->a . ', ' . $aEntry->al . "\n";
+            }
+            echo "\n";
+        }
     }
     echo "\n";
+}
+
+if($aIsReport) {
+    echo "Questionnaire stats for subjects (N=".count($aSubjects).")\n";
+    echo "*********************************************************************\n";
+
+    $aGame = array();
+    $aGameId = -1;
+    foreach($aSubjects as $aId => $aInfo) {
+        foreach($aInfo['questionnaires'] as $aGameQuestionnaire) {
+            $aGameId = $aGameQuestionnaire['id'];
+
+            if(!isset($aGame[$aGameId])) {
+                $aGame[$aGameId] = array();
+            }
+
+            foreach($aGameQuestionnaire['data'] as $aEntry) {
+                if(!isset($aGame[$aGameId][$aEntry->q])) {
+                    $aGame[$aGameId][$aEntry->q] = array();
+                }
+                $aGame[$aGameId][$aEntry->q][] = (int)$aEntry->a;
+            }
+        }
+    }
+
+    foreach($aGame as $aId => $aQuestions) {
+        echo (isset($aGames[$aId]) ? "Game ".$aGames[$aId]." (id=" . $aId . ")" : "Demographics") . "\n";
+
+        foreach($aQuestions as $aQuestion => $aAnswers) {
+            echo " MEAN: ".sprintf('%.2f', (double) array_sum($aAnswers) / count($aAnswers))." --> " . $aQuestion;
+            echo "  Answers: [".implode(',', $aAnswers)."]\n";
+        }
+        echo "\n";
+    }
 }
 
 if($aIsCSV) {
