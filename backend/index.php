@@ -6,6 +6,7 @@
  */
 
 require_once(dirname(__FILE__) . '/config.php');
+require_once(dirname(__FILE__) . '/inc/functions.php');
 
 $aUser 	 = isset($_REQUEST['user']) ? $_REQUEST['user'] : 0;
 $aGame 	 = isset($_REQUEST['game']) ? $_REQUEST['game'] : 0;
@@ -56,17 +57,17 @@ try {
 			break;
 
 		case 'experiment':
-			$aStmt = $aDb->prepare("SELECT uuid, timestamp FROM logs WHERE uuid = :uuid fk_game = -1 AND data LIKE '%experiment_hr_start%'");
-			$aStmt->bindParam(':uuid', $aUser);
-			$aStmt->execute();
+			ob_start();
+			$aGroupingAmount = 60;
+			$aData = getSubjectData($aDb, $aUser);
+			$aStats = crunchNumbers($aData, $aGroupingAmount);
+			$aLog = ob_get_contents();
+			ob_end_clean();
 
-			$aData = array();
+			$aStats['logs'] = $aLog;
+			$aStats['grouping'] = $aGroupingAmount;
 
-			while($aRow = $aStmt->fetch(PDO::FETCH_OBJ)) {
-				$aData[] = $aRow;
-			}
-
-			$aRet = array('success' => true, 'data' => $aData);
+			$aRet = array('success' => true, 'data' => $aStats);
 			break;
 
 		case 'monitor':

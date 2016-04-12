@@ -71,15 +71,26 @@ APP = function() {
 
     this.showExperimentData = function(theSubject) {
         this.loadData({method: 'experiment', user: theSubject}, function(theData) {
-            var aViewer;
+            var aViewer,
+                i,
+                aGame,
+                aId,
+                aGames;
 
             if(theData.success) {
-                aViewer = new APP.ExperimentViewer(theData.data);
+                $('#data-area').empty();
+                aGames = theData.data.games;
+                
+                for(i = 0; i < aGames.length; i++) {
+                    aId = 'game' + aGames[i].id;
+                    $('#data-area').append('<div id="' + aId + '"></div>');
 
-                aViewer.showHeartRate();
-                aViewer.showStressfulAreas();
-                aViewer.render('data-area');
+                    aViewer = new APP.ExperimentViewer(aGames[i]);
 
+                    aViewer.showHeartRate();
+                    aViewer.showStressfulAreas();
+                    aViewer.render(aId);
+                }
             } else {
                 console.error('Something wrong');
             }

@@ -9,7 +9,7 @@ APP.ExperimentViewer = function(theData) {
             zoomType: 'x'
         },
         title: {
-            text: 'USD to EUR exchange rate over time'
+            text: this.mRawData.name
         },
         subtitle: {
             text: document.ontouchstart === undefined ?
@@ -17,13 +17,13 @@ APP.ExperimentViewer = function(theData) {
         },
         xAxis: {
             title: {
-                text: 'Exchange rate'
+                text: 'Time'
             },
             type: 'datetime'
         },
         yAxis: {
             title: {
-                text: 'Exchange rate'
+                text: 'Data'
             }
         },
         legend: {
@@ -46,15 +46,22 @@ APP.ExperimentViewer = function(theData) {
 
         series: [{
             type: 'area',
-            name: 'USD to EUR',
+            name: 'HR',
             data: this.mChartData
         }]
     };
 };
 
 APP.ExperimentViewer.prototype.showHeartRate = function() {
-    for(var i = 0; i < this.mRawData.length; i++) {
-        this.mChartData.push([this.mRawData[i].timestamp, Math.random()]);
+    var aHr,
+        i,
+        aStart;
+
+    aHr = this.mRawData.hr;
+    aStart = this.mRawData.start;
+
+    for(i = 0; i < aHr.length; i++) {
+        this.mChartData.push([i * 1000, aHr[i]]);
     }
 };
 
