@@ -153,8 +153,10 @@ if($aIsReport) {
         echo (isset($aGames[$aId]) ? "Game ".$aGames[$aId]." (id=" . $aId . ")" : "Demographics") . "\n";
 
         foreach($aQuestions as $aQuestion => $aAnswers) {
-            echo " MEAN: ".sprintf('%.2f', (double) array_sum($aAnswers) / count($aAnswers))." --> " . $aQuestion;
-            echo "  Answers: [".implode(',', $aAnswers)."]\n";
+            echo $aQuestion . "\n";
+            echo " Answers (MEAN = ".sprintf('%.2f', (double) array_sum($aAnswers) / count($aAnswers))."):\n";
+            echo "  " . implode("\n  ", $aAnswers);
+            echo "\n";
         }
         echo "\n";
     }
