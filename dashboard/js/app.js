@@ -94,6 +94,7 @@ APP = function() {
                     aViewer.showStressReport();
                     aViewer.showBoredomReport();
                     aViewer.showEnjoymentArea();
+                    aViewer.showHRBaseline();
                     aViewer.render(aId);
                 }
             } else {

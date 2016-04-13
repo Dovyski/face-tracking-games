@@ -124,6 +124,17 @@ APP.ExperimentViewer.prototype.showBoredomReport = function() {
     });
 };
 
+APP.ExperimentViewer.prototype.showHRBaseline = function() {
+    var aValue = this.mRawData.baseline;
+
+    this.mChartConfig.series.push({
+        type: 'spline',
+        name: 'HR baseline',
+        color: '#8C00FF',
+        data: [[0, aValue], [this.mChartData.length * 1000, aValue]]
+    });
+};
+
 APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
     var aAnswer = this.mRawData.questionnaires[this.mIndex].data[4].a | 0,
         aLabel = this.mRawData.questionnaires[this.mIndex].data[4].al,
