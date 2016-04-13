@@ -73,7 +73,7 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                             $aStats['games'][] = array(
                                 'id' => $aRow['fk_game'],
                                 'name'=> $theGames[$aRow['fk_game']],
-                                'hr' => $aHREntries,
+                                'hr' => sanitizeHRValues($aHREntries, $theGames[$aRow['fk_game']]),
                                 'start' => $aTimeStarted,
                                 'end' => (int)($aItem->t / 1000.0)
                             );
@@ -89,7 +89,7 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                         case 'experiment_game_start':
                             if($aInRest) {
                                 $aStats['rests'][] = array(
-                                    'hr' => $aHREntries,
+                                    'hr' => sanitizeHRValues($aHREntries, 'Rest of a Subject'),
                                     'start' => $aTimeStarted,
                                     'end' => $aRow['timestamp']
                                 );
@@ -167,12 +167,12 @@ function getSubjectData($thePDO, $theSubjectId) {
 }
 
 // Checks for wrong values, such as zero, one-value spikes, etc.
-function sanitizeHRValues($theValues) {
+function sanitizeHRValues($theValues, $theWhere = '') {
     $aRet = array();
 
     foreach($theValues as $aHR) {
         if($aHR <= 0 || $aHR == '') {
-            echo '  Warning: suspicious HR value ' . $aHR . " removed from set.\n";
+            echo '  Warning: suspicious HR value ' . $aHR . " removed from set " . $theWhere . ".\n";
         } else {
             $aRet[] = $aHR;
         }
