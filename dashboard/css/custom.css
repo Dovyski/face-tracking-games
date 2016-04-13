@@ -6347,3 +6347,14 @@ ul.notifications {
 .line-legend {
     list-style-type: none;
 }
+
+
+.chart-controls {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.chart-controls label {
+    margin-right: 40px;
+    color: #404040;
+}

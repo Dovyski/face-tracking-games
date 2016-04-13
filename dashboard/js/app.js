@@ -85,7 +85,7 @@ APP = function() {
                 aGames = theData.data.games;
 
                 for(i = 0; i < aGames.length; i++) {
-                    aId = 'game' + aGames[i].id;
+                    aId = 'game' + i;
                     $('#data-area').append('<div id="' + aId + '"></div>');
 
                     aViewer = new APP.ExperimentViewer(i, theData.data);

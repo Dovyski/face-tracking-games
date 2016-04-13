@@ -4,7 +4,7 @@ APP.ExperimentViewer = function(theIndex, theData) {
     this.mIndex = theIndex;
     this.mRawData = theData;
     this.mGame = this.mRawData.games[this.mIndex];
-    this.mChartData = [];
+    this.mChart = null;
 
     this.mChartConfig = {
         chart: {
@@ -21,7 +21,7 @@ APP.ExperimentViewer = function(theIndex, theData) {
         },
         yAxis: {
             title: {
-                text: 'Data'
+                text: 'HR value'
             }
         },
         legend: {
@@ -41,26 +41,28 @@ APP.ExperimentViewer = function(theIndex, theData) {
                 threshold: null
             }
         },
-
-        series: [{
-            type: 'area',
-            name: 'HR',
-            data: this.mChartData
-        }]
+        series: []
     };
 };
 
 APP.ExperimentViewer.prototype.showHeartRate = function() {
     var aHr,
         i,
-        aStart;
+        aStart,
+        aData = [];
 
     aHr = this.mGame.hr;
     aStart = this.mGame.start;
 
     for(i = 0; i < aHr.length; i++) {
-        this.mChartData.push([i * 1000, aHr[i]]);
+        aData.push([i * 1000, aHr[i]]);
     }
+
+    this.mChartConfig.series.push({
+        type: 'area',
+        name: 'HR',
+        data: aData
+    });
 };
 
 APP.ExperimentViewer.prototype.showStressReport = function() {
@@ -68,7 +70,7 @@ APP.ExperimentViewer.prototype.showStressReport = function() {
 
     this.mChartConfig.series.push({
         type: 'line',
-        name: 'Value',
+        name: 'Self-reported stress',
         color: '#FF0000',
         data: [
             {
@@ -81,7 +83,7 @@ APP.ExperimentViewer.prototype.showStressReport = function() {
                 name: 'Stress at end',
                 color: '#FF0000',
                 y: aQuestionnaire[3].a / 5 * 100,  // TODO: turn magic number into a constant
-                x: (this.mChartData.length - 8) * 1000
+                x: (this.mGame.hr.length - 8) * 1000
             }
         ],
         dataLabels : {
@@ -103,7 +105,7 @@ APP.ExperimentViewer.prototype.showBoredomReport = function() {
 
     this.mChartConfig.series.push({
         type: 'line',
-        name: 'Value',
+        name: 'Self-reported boredom',
         color: '#00FF00',
         data: [
             {
@@ -116,7 +118,7 @@ APP.ExperimentViewer.prototype.showBoredomReport = function() {
                 name: 'Boredom at end',
                 color: '#00FF00',
                 y: aQuestionnaire[2].a / 5 * 100,  // TODO: turn magic number into a constant
-                x: (this.mChartData.length - 8) * 1000
+                x: (this.mGame.hr.length - 8) * 1000
             }
         ],
         dataLabels : {
@@ -140,7 +142,7 @@ APP.ExperimentViewer.prototype.showHRBaseline = function() {
         type: 'spline',
         name: 'HR baseline',
         color: '#8C00FF',
-        data: [[0, aValue], [this.mChartData.length * 1000, aValue]]
+        data: [[0, aValue], [this.mGame.hr.length * 1000, aValue]]
     });
 };
 
@@ -199,5 +201,33 @@ APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
 };
 
 APP.ExperimentViewer.prototype.render = function(theContainerId) {
-    $('#' + theContainerId).highcharts(this.mChartConfig);
+    var aChart,
+        i,
+        aId,
+        aSelf = this,
+        aOut = '';
+
+    aId = 'chart' + this.mIndex;
+    $('#' + theContainerId).append('<div id="' + aId + '"></div>');
+
+    this.mChartConfig.chart.renderTo = aId;
+    this.mChart = new Highcharts.Chart(this.mChartConfig);
+
+    for(i = 0; i < this.mChart.series.length; i++) {
+        aId = 'c' + i + this.mIndex;
+        aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-serie="'+ i +'" data-index="' + this.mIndex + '" checked="checked"><label for="' + aId + '">' + this.mChart.series[i].name +'</label>';
+    }
+
+    $('#' + theContainerId).append('<div class="chart-controls">' + aOut + '</div>');
+
+    $('.chart-controls input').off().on('change', function() {
+        var aChart = $('#chart' + $(this).data('index')).highcharts();
+        var aSerie = aChart.series[$(this).data('serie')];
+
+        if(aSerie.visible) {
+            aSerie.hide();
+        } else {
+            aSerie.show();
+        }
+    });
 };
