@@ -58,14 +58,14 @@ try {
 
 		case 'experiment':
 			ob_start();
-			$aGroupingAmount = 60;
+			$aGrouping = isset($_REQUEST['grouping']) ? $_REQUEST['grouping'] : 60;
 			$aData = getSubjectData($aDb, $aUser);
-			$aStats = crunchNumbers($aData, $aGroupingAmount);
+			$aStats = crunchNumbers($aData, $aGrouping);
 			$aLog = ob_get_contents();
 			ob_end_clean();
 
 			$aStats['logs'] = $aLog;
-			$aStats['grouping'] = $aGroupingAmount;
+			$aStats['grouping'] = $aGrouping;
 
 			$aRet = array('success' => true, 'data' => $aStats);
 			break;

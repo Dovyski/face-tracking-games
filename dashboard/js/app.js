@@ -3,6 +3,9 @@ var APP = APP || {};
 APP = function() {
     var mSelf = this;
 
+    this.grouping = 60;
+    this.subject = 0;
+
     this.generateSideMenu = function() {
         $('#main-menu').empty();
 
@@ -71,7 +74,9 @@ APP = function() {
     };
 
     this.showExperimentData = function(theSubject) {
-        this.loadData({method: 'experiment', user: theSubject}, function(theData) {
+        this.subject = theSubject;
+
+        this.loadData({method: 'experiment', user: theSubject, grouping: this.grouping}, function(theData) {
             var aViewer,
                 i,
                 aGame,
@@ -121,13 +126,24 @@ APP = function() {
 
         });
     };
+
+    this.init = function() {
+        var aSelf = this;
+
+        this.generateSideMenu();
+
+        $('#grouping').on('change', function() {
+            aSelf.grouping = $(this).val();
+            aSelf.showExperimentData(aSelf.subject);
+        });
+    }
 };
 
 $(function () {
     var aApp;
 
     aApp = new APP();
-    aApp.generateSideMenu();
+    aApp.init();
 
     if(FTG.Utils.getURLParamByName('active')) {
         aApp.showActiveSession();
