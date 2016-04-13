@@ -32,12 +32,12 @@ APP.ExperimentViewer = function(theIndex, theData) {
                 dataLabels : {
                     enabled : true,
                     formatter : function() {
-                        return this.y / 10;  // TODO: turn magic number into a constant
+                        return this.y / 100 * 5;  // TODO: turn magic number into a constant
                     }
                 },
                 tooltip: {
                     pointFormatter: function () {
-                        return '<strong>' + (this.y / 10) + '</strong>';  // TODO: turn magic number into a constant
+                        return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
                     }
                 }
             },
@@ -87,13 +87,13 @@ APP.ExperimentViewer.prototype.showStressfulAreas = function() {
             {
                 name: 'Stress at beginning',
                 color: '#FF0000',
-                y: (aQuestionnaire[1].a | 0) * 10, // TODO: turn magic number into a constant
+                y: aQuestionnaire[1].a / 5 * 100, // TODO: turn magic number into a constant
                 x: 5000
             },
             {
                 name: 'Stress at end',
                 color: '#FF0000',
-                y: (aQuestionnaire[3].a | 0) * 10,  // TODO: turn magic number into a constant
+                y: aQuestionnaire[3].a / 5 * 100,  // TODO: turn magic number into a constant
                 x: (this.mChartData.length - 8) * 1000
             }
         ]
@@ -111,13 +111,13 @@ APP.ExperimentViewer.prototype.showBoringAreas = function() {
             {
                 name: 'Boredom at beginning',
                 color: '#00FF00',
-                y: (aQuestionnaire[0].a | 0) * 10,
+                y: aQuestionnaire[0].a / 5 * 100,  // TODO: turn magic number into a constant
                 x: 5000
             },
             {
                 name: 'Boredom at end',
                 color: '#00FF00',
-                y: (aQuestionnaire[2].a | 0) * 10,
+                y: aQuestionnaire[2].a / 5 * 100,  // TODO: turn magic number into a constant
                 x: (this.mChartData.length - 8) * 1000
             }
         ]
