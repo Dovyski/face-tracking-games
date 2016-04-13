@@ -49,6 +49,7 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
     $aInRest = false;
     $aInGame = false;
     $aHREntries = array();
+    $aActionEntries = array();
 
     foreach($theSubjectRawGameData as $aRow) {
         $aData = json_decode($aRow['data']);
@@ -65,6 +66,7 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                             if(!$aInGame) {
                                 $aInGame = true;
                                 $aHREntries = array();
+                                $aActionEntries = array();
                                 $aTimeStarted = (int)($aItem->t / 1000.0);
                             }
                             break;
@@ -74,6 +76,7 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                                 'id' => $aRow['fk_game'],
                                 'name'=> $theGames[$aRow['fk_game']],
                                 'hr' => sanitizeHRValues($aHREntries, $theGames[$aRow['fk_game']]),
+                                'actions' => $aActionEntries,
                                 'start' => $aTimeStarted,
                                 'end' => (int)($aItem->t / 1000.0)
                             );
@@ -83,6 +86,7 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                         case 'experiment_rest_start':
                             $aInRest = true;
                             $aHREntries = array();
+                            $aActionEntries = array();
                             $aTimeStarted = $aRow['timestamp'];
                             break;
 
@@ -104,8 +108,18 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                     if(property_exists($aEntry, 'hr')) {
                         // It's a HR entry
                         $aHREntries[] = $aEntry->hr;
+
                     } else {
                         // It's a game entry (action, hit, etc)
+                        if(property_exists($aEntry, 'a')) {
+                            if(strpos($aEntry->a, 'mouse') === false &&
+                               strpos($aEntry->a, 'key')   === false &&
+                               strpos($aEntry->a, 'jump')  === false &&
+                               strpos($aEntry->a, 'dash')  === false) {
+
+                                $aActionEntries[] = array('action' => $aEntry->a, 'timestamp' => $aItem->t);
+                            }
+                        }
                     }
                 }
             }
