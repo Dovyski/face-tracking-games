@@ -76,7 +76,7 @@ APP.ExperimentViewer.prototype.showHeartRate = function() {
     }
 };
 
-APP.ExperimentViewer.prototype.showStressfulAreas = function() {
+APP.ExperimentViewer.prototype.showStressReport = function() {
     var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
 
     this.mChartConfig.series.push({
@@ -100,7 +100,7 @@ APP.ExperimentViewer.prototype.showStressfulAreas = function() {
     });
 };
 
-APP.ExperimentViewer.prototype.showBoringAreas = function() {
+APP.ExperimentViewer.prototype.showBoredomReport = function() {
     var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
 
     this.mChartConfig.series.push({
@@ -122,6 +122,26 @@ APP.ExperimentViewer.prototype.showBoringAreas = function() {
             }
         ]
     });
+};
+
+APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
+    var aAnswer = this.mRawData.questionnaires[this.mIndex].data[4].a | 0,
+        aLabel = this.mRawData.questionnaires[this.mIndex].data[4].al,
+        aTotal,
+        aPart;
+
+    aTotal = this.mGame.end - this.mGame.start;
+    aPart = aTotal / 5;
+    aAnswer--;
+
+    this.mChartConfig.xAxis.plotBands = [{
+        color: 'pink',
+        from: aAnswer * aPart * 1000,
+        to: (aAnswer * aPart + aPart) * 1000,
+        label: {
+            text: '<strong>Enjoyed the most</strong><br>' + aLabel
+        }
+    }];
 };
 
 APP.ExperimentViewer.prototype.render = function(theContainerId) {

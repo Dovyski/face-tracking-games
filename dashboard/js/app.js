@@ -91,8 +91,9 @@ APP = function() {
                     aViewer = new APP.ExperimentViewer(i, theData.data);
 
                     aViewer.showHeartRate();
-                    aViewer.showStressfulAreas();
-                    aViewer.showBoringAreas();
+                    aViewer.showStressReport();
+                    aViewer.showBoredomReport();
+                    aViewer.showEnjoymentArea();
                     aViewer.render(aId);
                 }
             } else {
