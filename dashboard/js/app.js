@@ -101,6 +101,8 @@ APP = function() {
                     aViewer.showEnjoymentArea();
                     aViewer.showHRBaseline();
                     aViewer.showBaselinedHRMeans();
+                    aViewer.showInGameActions();
+                    aViewer.showInGameEvents();
                     aViewer.render(aId);
                 }
             } else {

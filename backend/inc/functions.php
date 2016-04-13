@@ -117,7 +117,11 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                                strpos($aEntry->a, 'jump')  === false &&
                                strpos($aEntry->a, 'dash')  === false) {
 
-                                $aActionEntries[] = array('action' => $aEntry->a, 'timestamp' => $aItem->t);
+                                $aActionEntries[] = array(
+                                    'action' => $aEntry->a,
+                                    'value' => getInGameActionValueFromLabel($aEntry->a),
+                                    'timestamp' => $aItem->t
+                                );
                             }
                         }
                     }
@@ -132,6 +136,23 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
     }
 
     return $aStats;
+}
+
+function getInGameActionValueFromLabel($theLabel) {
+    $aValues = array(
+        'newBlock' => 25,
+        'scored' => 50,
+        'collectable' => 50,
+        'overcome' => 50,
+        'hurt' => 0,
+        'difficulty' => 25,
+        'question' => 25,
+        'right' => 50,
+        'wrong' => 0,
+        'miss' => 0
+    );
+
+    return $aValues[$theLabel];
 }
 
 function collectQuestionaireStats($theSubjectRawQuestionnaireData, $theGames) {

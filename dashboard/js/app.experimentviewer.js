@@ -17,7 +17,8 @@ APP.ExperimentViewer = function(theIndex, theData) {
             title: {
                 text: 'Time'
             },
-            type: 'datetime'
+            type: 'datetime',
+            plotLines: []
         },
         yAxis: {
             title: {
@@ -178,6 +179,55 @@ APP.ExperimentViewer.prototype.showBaselinedHRMeans = function() {
             xDateFormat: 'HR variation:'
         }
     });
+};
+
+APP.ExperimentViewer.prototype.showInGameActions = function() {
+    var i,
+        aSeriesData = [],
+        aTime;
+
+    for(i = 0; i < this.mGame.actions.length; i++) {
+        aTime = (this.mGame.actions[i].timestamp/1000 - this.mGame.start) * 1000;
+
+        if(this.mGame.actions[i].action != 'question' && this.mGame.actions[i].action != 'newBlock') {
+            aSeriesData.push({
+                x: aTime,
+                y: this.mGame.actions[i].value,
+                name: this.mGame.actions[i].action,
+                color: '#FF00FF'
+            });
+        }
+    }
+
+    this.mChartConfig.series.push({
+        type: 'spline',
+        name: 'In-game actions',
+        color: '#FF8800',
+        data: aSeriesData,
+        tooltip: {
+            pointFormatter: function () {
+                return ' ';
+            },
+        }
+    });
+};
+
+APP.ExperimentViewer.prototype.showInGameEvents = function() {
+    var i,
+        aTime;
+
+    for(i = 0; i < this.mGame.actions.length; i++) {
+        aTime = (this.mGame.actions[i].timestamp/1000 - this.mGame.start) * 1000;
+
+        if(this.mGame.actions[i].action == 'question' || this.mGame.actions[i].action == 'newBlock' || this.mGame.actions[i].action == 'difficulty') {
+            this.mChartConfig.xAxis.plotLines.push({
+                color: '#FF00FF',
+                dashStyle: 'longdashdot',
+                value: aTime,
+                width: 1
+            });
+        }
+    }
 };
 
 APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
