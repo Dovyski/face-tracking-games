@@ -3,7 +3,7 @@ var APP = APP || {};
 APP = function() {
     var mSelf = this;
 
-    this.grouping = 60;
+    this.grouping = 20;
     this.subject = 0;
 
     this.generateSideMenu = function() {
@@ -131,6 +131,8 @@ APP = function() {
         var aSelf = this;
 
         this.generateSideMenu();
+
+        $('#grouping').val(this.grouping);
 
         $('#grouping').on('change', function() {
             aSelf.grouping = $(this).val();
