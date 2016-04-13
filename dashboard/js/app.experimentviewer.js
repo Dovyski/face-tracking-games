@@ -1,7 +1,9 @@
 var APP = APP || {};
 
-APP.ExperimentViewer = function(theData) {
+APP.ExperimentViewer = function(theIndex, theData) {
+    this.mIndex = theIndex;
     this.mRawData = theData;
+    this.mGame = this.mRawData.games[this.mIndex];
     this.mChartData = [];
 
     this.mChartConfig = {
@@ -9,11 +11,7 @@ APP.ExperimentViewer = function(theData) {
             zoomType: 'x'
         },
         title: {
-            text: this.mRawData.name
-        },
-        subtitle: {
-            text: document.ontouchstart === undefined ?
-                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            text: this.mGame.name
         },
         xAxis: {
             title: {
@@ -30,6 +28,19 @@ APP.ExperimentViewer = function(theData) {
             enabled: false
         },
         plotOptions: {
+            line : {
+                dataLabels : {
+                    enabled : true,
+                    formatter : function() {
+                        return this.y / 10;  // TODO: turn magic number into a constant
+                    }
+                },
+                tooltip: {
+                    pointFormatter: function () {
+                        return '<strong>' + (this.y / 10) + '</strong>';  // TODO: turn magic number into a constant
+                    }
+                }
+            },
             area: {
                 marker: {
                     radius: 1
@@ -57,8 +68,8 @@ APP.ExperimentViewer.prototype.showHeartRate = function() {
         i,
         aStart;
 
-    aHr = this.mRawData.hr;
-    aStart = this.mRawData.start;
+    aHr = this.mGame.hr;
+    aStart = this.mGame.start;
 
     for(i = 0; i < aHr.length; i++) {
         this.mChartData.push([i * 1000, aHr[i]]);
@@ -66,18 +77,51 @@ APP.ExperimentViewer.prototype.showHeartRate = function() {
 };
 
 APP.ExperimentViewer.prototype.showStressfulAreas = function() {
-    this.mChartConfig.xAxis.plotBands = [{
-        color: 'orange', // Color value
-        from: 3, // Start of the plot band
-        to: 4 // End of the plot band
-    }];
+    var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
 
-    this.mChartConfig.xAxis.plotLines = [{
-        color: 'red', // Color value
-        dashStyle: 'longdashdot', // Style of the plot line. Default to solid
-        value: 3, // Value of where the line will appear
-        width: 2 // Width of the line
-    }];
+    this.mChartConfig.series.push({
+        type: 'line',
+        name: 'Value',
+        color: '#FF0000',
+        data: [
+            {
+                name: 'Stress at beginning',
+                color: '#FF0000',
+                y: (aQuestionnaire[1].a | 0) * 10, // TODO: turn magic number into a constant
+                x: 5000
+            },
+            {
+                name: 'Stress at end',
+                color: '#FF0000',
+                y: (aQuestionnaire[3].a | 0) * 10,  // TODO: turn magic number into a constant
+                x: (this.mChartData.length - 8) * 1000
+            }
+        ]
+    });
+};
+
+APP.ExperimentViewer.prototype.showBoringAreas = function() {
+    var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
+
+    this.mChartConfig.series.push({
+        type: 'line',
+        name: 'Value',
+        color: '#00FF00',
+        data: [
+            {
+                name: 'Boredom at beginning',
+                color: '#00FF00',
+                y: (aQuestionnaire[0].a | 0) * 10,
+                x: 5000
+            },
+            {
+                name: 'Boredom at end',
+                color: '#00FF00',
+                y: (aQuestionnaire[2].a | 0) * 10,
+                x: (this.mChartData.length - 8) * 1000
+            }
+        ]
+    });
 };
 
 APP.ExperimentViewer.prototype.render = function(theContainerId) {

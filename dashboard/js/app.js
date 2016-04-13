@@ -54,7 +54,7 @@ APP = function() {
 
             for(i = 0; i < theInfo.data.length; i++) {
                 aInfo = theInfo.data[i];
-                aOut += '<li><a href="javascript:void(0)" data-subject="' + aInfo.uuid + '" class="subject-link">'+ aInfo.uuid + '<br />' + aInfo.timestamp +'</a></li>';
+                aOut += '<li><a href="javascript:void(0)" data-subject="' + aInfo.uuid + '" class="subject-link">'+ aInfo.uuid +'</a></li>';
             }
 
             aOut += '</ul></li></ul>';
@@ -66,6 +66,7 @@ APP = function() {
             });
 
             customUpdateSidebarMenu();
+            aSelf.showExperimentData(409);
         });
     };
 
@@ -79,16 +80,19 @@ APP = function() {
 
             if(theData.success) {
                 $('#data-area').empty();
+                $('#data-title').html('Subject: ' + theSubject);
+
                 aGames = theData.data.games;
-                
+
                 for(i = 0; i < aGames.length; i++) {
                     aId = 'game' + aGames[i].id;
                     $('#data-area').append('<div id="' + aId + '"></div>');
 
-                    aViewer = new APP.ExperimentViewer(aGames[i]);
+                    aViewer = new APP.ExperimentViewer(i, theData.data);
 
                     aViewer.showHeartRate();
                     aViewer.showStressfulAreas();
+                    aViewer.showBoringAreas();
                     aViewer.render(aId);
                 }
             } else {
