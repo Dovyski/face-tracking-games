@@ -95,6 +95,7 @@ APP = function() {
                     aViewer.showBoredomReport();
                     aViewer.showEnjoymentArea();
                     aViewer.showHRBaseline();
+                    aViewer.showBaselinedHRMeans();
                     aViewer.render(aId);
                 }
             } else {

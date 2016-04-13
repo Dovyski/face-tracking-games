@@ -28,19 +28,6 @@ APP.ExperimentViewer = function(theIndex, theData) {
             enabled: false
         },
         plotOptions: {
-            line : {
-                dataLabels : {
-                    enabled : true,
-                    formatter : function() {
-                        return this.y / 100 * 5;  // TODO: turn magic number into a constant
-                    }
-                },
-                tooltip: {
-                    pointFormatter: function () {
-                        return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
-                    }
-                }
-            },
             area: {
                 marker: {
                     radius: 1
@@ -96,7 +83,18 @@ APP.ExperimentViewer.prototype.showStressReport = function() {
                 y: aQuestionnaire[3].a / 5 * 100,  // TODO: turn magic number into a constant
                 x: (this.mChartData.length - 8) * 1000
             }
-        ]
+        ],
+        dataLabels : {
+            enabled : true,
+            formatter : function() {
+                return this.y / 100 * 5;  // TODO: turn magic number into a constant
+            }
+        },
+        tooltip: {
+            pointFormatter: function () {
+                return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
+            }
+        }
     });
 };
 
@@ -120,7 +118,18 @@ APP.ExperimentViewer.prototype.showBoredomReport = function() {
                 y: aQuestionnaire[2].a / 5 * 100,  // TODO: turn magic number into a constant
                 x: (this.mChartData.length - 8) * 1000
             }
-        ]
+        ],
+        dataLabels : {
+            enabled : true,
+            formatter : function() {
+                return this.y / 100 * 5;  // TODO: turn magic number into a constant
+            }
+        },
+        tooltip: {
+            pointFormatter: function () {
+                return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
+            }
+        }
     });
 };
 
@@ -132,6 +141,40 @@ APP.ExperimentViewer.prototype.showHRBaseline = function() {
         name: 'HR baseline',
         color: '#8C00FF',
         data: [[0, aValue], [this.mChartData.length * 1000, aValue]]
+    });
+};
+
+APP.ExperimentViewer.prototype.showBaselinedHRMeans = function() {
+    var i,
+        aSeriesData = [],
+        aTotal,
+        aPart,
+        aScale = 5;
+
+    aTotal = (this.mGame.end - this.mGame.start) * 1000;
+    aPart = aTotal / this.mGame['hr-means-baseline'].length;
+
+    for(i = 0; i < this.mGame['hr-means-baseline'].length; i++) {
+        aSeriesData.push([aPart * i + aPart / 2, this.mGame['hr-means-baseline'][i] * aScale]);
+    }
+
+    this.mChartConfig.series.push({
+        type: 'spline',
+        name: 'HR variation relative to baseline',
+        color: '#FFFF00',
+        data: aSeriesData,
+        dataLabels : {
+            enabled : false,
+            formatter : function() {
+                return this.y / aScale;
+            }
+        },
+        tooltip: {
+            pointFormatter: function () {
+                return '<strong>' + (this.y / aScale) + '</strong>';
+            },
+            xDateFormat: 'HR variation:'
+        }
     });
 };
 
