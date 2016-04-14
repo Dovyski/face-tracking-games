@@ -241,7 +241,7 @@ APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
     aAnswer--;
 
     this.mChartConfig.xAxis.plotBands = [{
-        color: 'pink',
+        color: '#E3FFE0',
         from: aAnswer * aPart * 1000,
         to: (aAnswer * aPart + aPart) * 1000,
         label: {
@@ -250,18 +250,11 @@ APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
     }];
 };
 
-APP.ExperimentViewer.prototype.render = function(theContainerId) {
-    var aChart,
-        i,
+APP.ExperimentViewer.prototype.renderChartControlOptions = function(theContainerId) {
+    var i,
         aId,
         aSelf = this,
         aOut = '';
-
-    aId = 'chart' + this.mIndex;
-    $('#' + theContainerId).append('<div id="' + aId + '"></div>');
-
-    this.mChartConfig.chart.renderTo = aId;
-    this.mChart = new Highcharts.Chart(this.mChartConfig);
 
     for(i = 0; i < this.mChart.series.length; i++) {
         aId = 'c' + i + this.mIndex;
@@ -280,4 +273,15 @@ APP.ExperimentViewer.prototype.render = function(theContainerId) {
             aSerie.show();
         }
     });
+};
+
+APP.ExperimentViewer.prototype.render = function(theContainerId) {
+    var aId = 'chart' + this.mIndex;
+
+    $('#' + theContainerId).append('<div id="' + aId + '"></div>');
+
+    this.mChartConfig.chart.renderTo = aId;
+    this.mChart = new Highcharts.Chart(this.mChartConfig);
+
+    this.renderChartControlOptions(theContainerId);
 };
