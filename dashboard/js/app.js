@@ -82,7 +82,8 @@ APP.Main = function() {
 
         // Clear any previously existent experiment viewers
         aSelf.viewers.length = 0;
-        $('#data-area').empty();
+        $('#data-title').empty();
+        $('#data-area').empty().html('Loading data... <i class="fa fa-spin fa-circle-o-notch"></i>');
 
         this.loadData({method: 'experiment', user: theSubject, grouping: this.grouping}, function(theData) {
             var aViewer,
@@ -93,6 +94,7 @@ APP.Main = function() {
 
             if(theData.success) {
                 $('#data-title').html('Subject: ' + theSubject);
+                $('#data-area').empty();
 
                 aGames = theData.data.games;
 
@@ -102,8 +104,7 @@ APP.Main = function() {
 
                     aViewer = new APP.ExperimentViewer(i, theData.data);
                     aSelf.viewers.push(aViewer);
-                    aViewer.showEverything();
-                    aViewer.render(aId);
+                    aViewer.init(aId);
                 }
             } else {
                 $('#data-area').html('Something wrong');

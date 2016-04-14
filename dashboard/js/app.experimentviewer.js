@@ -46,12 +46,13 @@ APP.ExperimentViewer = function(theIndex, theData) {
     };
 };
 
-APP.ExperimentViewer.prototype.showHeartRate = function() {
+APP.ExperimentViewer.prototype.showHeartRate = function(theRedraw) {
     var aHr,
         i,
         aStart,
         aData = [];
 
+    theRedraw = theRedraw == undefined ? true : theRedraw;
     aHr = this.mGame.hr;
     aStart = this.mGame.start;
 
@@ -59,17 +60,19 @@ APP.ExperimentViewer.prototype.showHeartRate = function() {
         aData.push([i * 1000, aHr[i]]);
     }
 
-    this.mChartConfig.series.push({
+    this.mChart.addSeries({
         type: 'area',
         name: 'HR',
         data: aData
-    });
+    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showStressReport = function() {
+APP.ExperimentViewer.prototype.showStressReport = function(theRedraw) {
     var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
 
-    this.mChartConfig.series.push({
+    theRedraw = theRedraw == undefined ? true : theRedraw;
+
+    this.mChart.addSeries({
         type: 'line',
         name: 'Self-reported stress',
         color: '#FF0000',
@@ -98,13 +101,15 @@ APP.ExperimentViewer.prototype.showStressReport = function() {
                 return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
             }
         }
-    });
+    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showBoredomReport = function() {
+APP.ExperimentViewer.prototype.showBoredomReport = function(theRedraw) {
     var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
 
-    this.mChartConfig.series.push({
+    theRedraw = theRedraw == undefined ? true : theRedraw;
+
+    this.mChart.addSeries({
         type: 'line',
         name: 'Self-reported boredom',
         color: '#00FF00',
@@ -133,21 +138,23 @@ APP.ExperimentViewer.prototype.showBoredomReport = function() {
                 return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
             }
         }
-    });
+    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showHRBaseline = function() {
+APP.ExperimentViewer.prototype.showHRBaseline = function(theRedraw) {
     var aValue = this.mRawData.baseline;
 
-    this.mChartConfig.series.push({
+    theRedraw = theRedraw == undefined ? true : theRedraw;
+
+    this.mChart.addSeries({
         type: 'spline',
         name: 'HR baseline',
         color: '#8C00FF',
         data: [[0, aValue], [this.mGame.hr.length * 1000, aValue]]
-    });
+    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showBaselinedHRMeans = function() {
+APP.ExperimentViewer.prototype.showBaselinedHRMeans = function(theRedraw) {
     var i,
         aSeriesData = [],
         aTotal,
@@ -161,7 +168,7 @@ APP.ExperimentViewer.prototype.showBaselinedHRMeans = function() {
         aSeriesData.push([aPart * i + aPart / 2, this.mGame['hr-means-baseline'][i] * aScale]);
     }
 
-    this.mChartConfig.series.push({
+    this.mChart.addSeries({
         type: 'spline',
         name: 'HR variation relative to baseline',
         color: '#FFFF00',
@@ -178,13 +185,15 @@ APP.ExperimentViewer.prototype.showBaselinedHRMeans = function() {
             },
             xDateFormat: 'HR variation:'
         }
-    });
+    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showInGameActions = function() {
+APP.ExperimentViewer.prototype.showInGameActions = function(theRedraw) {
     var i,
         aSeriesData = [],
         aTime;
+
+    theRedraw = theRedraw == undefined ? true : theRedraw;
 
     for(i = 0; i < this.mGame.actions.length; i++) {
         aTime = (this.mGame.actions[i].timestamp/1000 - this.mGame.start) * 1000;
@@ -199,7 +208,7 @@ APP.ExperimentViewer.prototype.showInGameActions = function() {
         }
     }
 
-    this.mChartConfig.series.push({
+    this.mChart.addSeries({
         type: 'spline',
         name: 'In-game actions',
         color: '#FF8800',
@@ -209,12 +218,14 @@ APP.ExperimentViewer.prototype.showInGameActions = function() {
                 return ' ';
             },
         }
-    });
+    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showInGameEvents = function() {
+APP.ExperimentViewer.prototype.showInGameEvents = function(theRedraw) {
     var i,
         aTime;
+
+    theRedraw = theRedraw == undefined ? true : theRedraw;
 
     for(i = 0; i < this.mGame.actions.length; i++) {
         aTime = (this.mGame.actions[i].timestamp/1000 - this.mGame.start) * 1000;
@@ -231,11 +242,13 @@ APP.ExperimentViewer.prototype.showInGameEvents = function() {
     }
 };
 
-APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
+APP.ExperimentViewer.prototype.showEnjoymentArea = function(theRedraw) {
     var aAnswer = this.mRawData.questionnaires[this.mIndex].data[4].a | 0,
         aLabel = this.mRawData.questionnaires[this.mIndex].data[4].al,
         aTotal,
         aPart;
+
+    theRedraw = theRedraw == undefined ? true : theRedraw;
 
     aTotal = this.mGame.end - this.mGame.start;
     aPart = aTotal / 5;
@@ -276,40 +289,27 @@ APP.ExperimentViewer.prototype.handleChartOptionChange = function(theEvent) {
         } else {
             aSerie.show();
         }
-    } else if(aType == 'plotLine') {
+
+    } else if(aType == 'plotLine' || aType == 'plotBand') {
         if(theEvent.target.checked) {
             if(aLabel == 'events') {
                 aSelf.showInGameEvents();
-            }
-        } else {
-            for(i = 0; i < aSelf.mGame.actions.length; i++) {
-                aSelf.mChart.xAxis[0].removePlotLine('events' + i);
-            }
-        }
-
-    } else if(aType == 'plotBand') {
-        if(theEvent.target.checked) {
-            if(aLabel == 'enjoy') {
+            } else if(aLabel == 'enjoy') {
                 aSelf.showEnjoymentArea();
             }
         } else {
-            aSelf.mChart.xAxis[0].removePlotBand(aLabel);
+            if(aLabel == 'events') {
+                for(i = 0; i < aSelf.mGame.actions.length; i++) {
+                    aSelf.mChart.xAxis[0].removePlotLine('events' + i);
+                }
+            } else if(aLabel == 'enjoy') {
+                aSelf.mChart.xAxis[0].removePlotBand(aLabel);
+            }
         }
     }
 };
 
-APP.ExperimentViewer.prototype.showEverything = function() {
-    this.showHeartRate();
-    this.showStressReport();
-    this.showBoredomReport();
-    //this.showEnjoymentArea();
-    this.showHRBaseline();
-    this.showBaselinedHRMeans();
-    this.showInGameActions();
-    //this.showInGameEvents();
-};
-
-APP.ExperimentViewer.prototype.renderChartControlOptions = function(theContainerId) {
+APP.ExperimentViewer.prototype.initChartControlOptions = function(theContainerId) {
     var i,
         aId,
         aSelf = this,
@@ -330,7 +330,7 @@ APP.ExperimentViewer.prototype.renderChartControlOptions = function(theContainer
     $('.chart-controls input').off().on('change', this.handleChartOptionChange);
 };
 
-APP.ExperimentViewer.prototype.render = function(theContainerId) {
+APP.ExperimentViewer.prototype.init = function(theContainerId) {
     var aId = 'chart' + this.mIndex;
 
     $('#' + theContainerId).append('<div id="' + aId + '"></div>');
@@ -338,5 +338,16 @@ APP.ExperimentViewer.prototype.render = function(theContainerId) {
     this.mChartConfig.chart.renderTo = aId;
     this.mChart = new Highcharts.Chart(this.mChartConfig);
 
-    this.renderChartControlOptions(theContainerId);
+    this.showHeartRate(false);
+    this.showStressReport(false);
+    this.showBoredomReport(false);
+    this.showEnjoymentArea(false);
+    this.showHRBaseline(false);
+    this.showBaselinedHRMeans(false);
+    this.showInGameActions(false);
+    this.showInGameEvents(false);
+
+    this.mChart.redraw(false);
+
+    this.initChartControlOptions(theContainerId);
 };
