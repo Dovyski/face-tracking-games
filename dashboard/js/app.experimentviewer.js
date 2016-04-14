@@ -220,11 +220,12 @@ APP.ExperimentViewer.prototype.showInGameEvents = function() {
         aTime = (this.mGame.actions[i].timestamp/1000 - this.mGame.start) * 1000;
 
         if(this.mGame.actions[i].action == 'question' || this.mGame.actions[i].action == 'newBlock' || this.mGame.actions[i].action == 'difficulty') {
-            this.mChartConfig.xAxis.plotLines.push({
+            this.mChart.xAxis[0].addPlotLine({
                 color: '#FF00FF',
                 dashStyle: 'longdashdot',
                 value: aTime,
-                width: 1
+                width: 1,
+                id: 'events' + i
             });
         }
     }
@@ -240,14 +241,72 @@ APP.ExperimentViewer.prototype.showEnjoymentArea = function() {
     aPart = aTotal / 5;
     aAnswer--;
 
-    this.mChartConfig.xAxis.plotBands = [{
+    this.mChart.xAxis[0].addPlotBand({
         color: '#E3FFE0',
         from: aAnswer * aPart * 1000,
         to: (aAnswer * aPart + aPart) * 1000,
         label: {
             text: '<strong>Enjoyed the most</strong><br>' + aLabel
+        },
+        id: 'enjoy'
+    });
+};
+
+APP.ExperimentViewer.prototype.handleChartOptionChange = function(theEvent) {
+    var aChart,
+        aType,
+        aLabel,
+        aSerie,
+        aIndex,
+        aSelf;
+
+    // Get information regarding the viewer that triggered this click
+    aIndex = $(this).data('index');
+    aSelf  = APP.instance.getExperimentViewerByIndex(aIndex);
+    aChart = aSelf.mChart;
+
+    aType  = $(this).data('type');
+    aLabel = $(this).data('label');
+
+    if(aType == 'serie') {
+        aSerie = aChart.series[aLabel];
+
+        if(aSerie.visible) {
+            aSerie.hide();
+        } else {
+            aSerie.show();
         }
-    }];
+    } else if(aType == 'plotLine') {
+        if(theEvent.target.checked) {
+            if(aLabel == 'events') {
+                aSelf.showInGameEvents();
+            }
+        } else {
+            for(i = 0; i < aSelf.mGame.actions.length; i++) {
+                aSelf.mChart.xAxis[0].removePlotLine('events' + i);
+            }
+        }
+
+    } else if(aType == 'plotBand') {
+        if(theEvent.target.checked) {
+            if(aLabel == 'enjoy') {
+                aSelf.showEnjoymentArea();
+            }
+        } else {
+            aSelf.mChart.xAxis[0].removePlotBand(aLabel);
+        }
+    }
+};
+
+APP.ExperimentViewer.prototype.showEverything = function() {
+    this.showHeartRate();
+    this.showStressReport();
+    this.showBoredomReport();
+    //this.showEnjoymentArea();
+    this.showHRBaseline();
+    this.showBaselinedHRMeans();
+    this.showInGameActions();
+    //this.showInGameEvents();
 };
 
 APP.ExperimentViewer.prototype.renderChartControlOptions = function(theContainerId) {
@@ -258,21 +317,17 @@ APP.ExperimentViewer.prototype.renderChartControlOptions = function(theContainer
 
     for(i = 0; i < this.mChart.series.length; i++) {
         aId = 'c' + i + this.mIndex;
-        aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-serie="'+ i +'" data-index="' + this.mIndex + '" checked="checked"><label for="' + aId + '">' + this.mChart.series[i].name +'</label>';
+        aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-type="serie" data-label="'+ i +'" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">' + this.mChart.series[i].name +'</label>';
     }
 
+    aId = 'events' + this.mIndex;
+    aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-type="plotLine" data-label="events" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">In-game events</label>';
+
+    aId = 'enjoy' + this.mIndex;
+    aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-type="plotBand" data-label="enjoy" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">Enjoyment area</label>';
+
     $('#' + theContainerId).append('<div class="chart-controls">' + aOut + '</div>');
-
-    $('.chart-controls input').off().on('change', function() {
-        var aChart = $('#chart' + $(this).data('index')).highcharts();
-        var aSerie = aChart.series[$(this).data('serie')];
-
-        if(aSerie.visible) {
-            aSerie.hide();
-        } else {
-            aSerie.show();
-        }
-    });
+    $('.chart-controls input').off().on('change', this.handleChartOptionChange);
 };
 
 APP.ExperimentViewer.prototype.render = function(theContainerId) {

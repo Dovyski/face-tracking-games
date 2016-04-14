@@ -1,10 +1,13 @@
 var APP = APP || {};
 
-APP = function() {
+APP.instance = null;
+
+APP.Main = function() {
     var mSelf = this;
 
     this.grouping = 20;
     this.subject = 0;
+    this.viewers = [];
 
     this.generateSideMenu = function() {
         $('#main-menu').empty();
@@ -74,7 +77,12 @@ APP = function() {
     };
 
     this.showExperimentData = function(theSubject) {
+        var aSelf = this;
         this.subject = theSubject;
+
+        // Clear any previously existent experiment viewers
+        aSelf.viewers.length = 0;
+        $('#data-area').empty();
 
         this.loadData({method: 'experiment', user: theSubject, grouping: this.grouping}, function(theData) {
             var aViewer,
@@ -84,7 +92,6 @@ APP = function() {
                 aGames;
 
             if(theData.success) {
-                $('#data-area').empty();
                 $('#data-title').html('Subject: ' + theSubject);
 
                 aGames = theData.data.games;
@@ -94,21 +101,18 @@ APP = function() {
                     $('#data-area').append('<div id="' + aId + '"></div>');
 
                     aViewer = new APP.ExperimentViewer(i, theData.data);
-
-                    aViewer.showHeartRate();
-                    aViewer.showStressReport();
-                    aViewer.showBoredomReport();
-                    aViewer.showEnjoymentArea();
-                    aViewer.showHRBaseline();
-                    aViewer.showBaselinedHRMeans();
-                    aViewer.showInGameActions();
-                    aViewer.showInGameEvents();
+                    aSelf.viewers.push(aViewer);
+                    aViewer.showEverything();
                     aViewer.render(aId);
                 }
             } else {
-                console.error('Something wrong');
+                $('#data-area').html('Something wrong');
             }
         });
+    };
+
+    this.getExperimentViewerByIndex = function(theIndex) {
+        return this.viewers[theIndex];
     };
 
     this.loadData = function(theData, theCallback, theCallbackContext) {
@@ -144,12 +148,10 @@ APP = function() {
 };
 
 $(function () {
-    var aApp;
-
-    aApp = new APP();
-    aApp.init();
+    APP.instance = new APP.Main();
+    APP.instance.init();
 
     if(FTG.Utils.getURLParamByName('active')) {
-        aApp.showActiveSession();
+        APP.instance.showActiveSession();
     }
 });
