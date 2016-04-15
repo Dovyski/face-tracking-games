@@ -259,13 +259,11 @@ APP.ExperimentViewer.prototype.hrBaselinedMeans = function(theStatus, theRedraw)
 
     aSerie = this.mChart.get(aId);
 
-    if(aSerie) {
-        // Series exists.
-        this.setSerieVisibility(aSerie, theStatus);
+    if(theStatus) {
+        if(aSerie) {
+            this.setSerieVisibility(aSerie, true);
 
-    } else {
-        // Serie does not exist.
-        if(theStatus) {
+        } else {
             aTotal = (this.mGame.end - this.mGame.start) * 1000;
             aPart = aTotal / this.mGame['hr-means-baseline'].length;
 
@@ -295,6 +293,24 @@ APP.ExperimentViewer.prototype.hrBaselinedMeans = function(theStatus, theRedraw)
 
             this.addChartController({id: aId, name: 'HR baselined means'});
         }
+
+        this.mChart.yAxis[0].removePlotLine(aId);
+        this.mChart.yAxis[0].addPlotLine({
+            id: aId,
+            value: 0,
+            color: '#000',
+            dashStyle: 'shortdash',
+            width: 3,
+            label: {
+                text: 'Equal to baseline'
+            }
+        }, theRedraw);
+
+    } else {
+        if(aSerie) {
+            this.setSerieVisibility(aSerie, false);
+        }
+        this.mChart.yAxis[0].removePlotLine(aId);
     }
 };
 
