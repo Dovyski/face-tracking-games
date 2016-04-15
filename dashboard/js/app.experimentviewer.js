@@ -4,6 +4,7 @@ APP.ExperimentViewer = function(theIndex, theData) {
     this.mIndex = theIndex;
     this.mRawData = theData;
     this.mGame = this.mRawData.games[this.mIndex];
+    this.mQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
     this.mChart = null;
     this.mChartControlers = [];
     this.mChartControlPresets = {
@@ -20,7 +21,7 @@ APP.ExperimentViewer = function(theIndex, theData) {
             zoomType: 'x'
         },
         title: {
-            text: this.mGame.name
+            text: this.mGame.name + ' (understood? ' + this.mQuestionnaire[5].al + ')'
         },
         xAxis: {
             title: {

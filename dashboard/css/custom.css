@@ -6358,3 +6358,18 @@ ul.notifications {
     margin-right: 40px;
     color: #404040;
 }
+
+.demographics {
+    border: 1px solid #e3e3e3;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.demographics th {
+    background-color: #efefef;
+    padding: 5px;
+}
+
+.demographics td {
+    padding: 4px;
+}

@@ -96,6 +96,7 @@ APP.Main = function() {
                 $('#data-title').html('Subject: ' + theSubject);
                 $('#data-area').empty();
 
+                aSelf.showSubjectDemographicInfo('data-area', theData.data);
                 aGames = theData.data.games;
 
                 for(i = 0; i < aGames.length; i++) {
@@ -110,6 +111,23 @@ APP.Main = function() {
                 $('#data-area').html('Something wrong');
             }
         });
+    };
+
+    this.showSubjectDemographicInfo = function(theContainerId, theData) {
+        var aOut = '',
+            aInfo,
+            i;
+
+        aInfo = theData.questionnaires[3].data;
+
+        aOut += '<table border="1" class="demographics">';
+        aOut += '<tr><th style="width: 70%;">Question</th><th style="width: 30%">Answer</th></tr>';
+        for(i = 0; i < aInfo.length; i++) {
+            aOut += '<tr><td>' + aInfo[i].q + '</td><td>' + aInfo[i].al + ' (' + aInfo[i].a + ')</td></tr>';
+        }
+        aOut += '</table>';
+
+        $('#' + theContainerId).append('<div id="demographics">' + aOut + '</div>');
     };
 
     this.getExperimentViewerByIndex = function(theIndex) {
