@@ -5,6 +5,7 @@ APP.ExperimentViewer = function(theIndex, theData) {
     this.mRawData = theData;
     this.mGame = this.mRawData.games[this.mIndex];
     this.mChart = null;
+    this.mChartControlers = [];
 
     this.mChartConfig = {
         chart: {
@@ -46,285 +47,416 @@ APP.ExperimentViewer = function(theIndex, theData) {
     };
 };
 
-APP.ExperimentViewer.prototype.showHeartRate = function(theRedraw) {
+
+
+APP.ExperimentViewer.prototype.setSerieVisibility = function(theSerie, theVisibility) {
+    if(!theSerie) {
+        return;
+    }
+
+    if(theVisibility) {
+        theSerie.show();
+    } else {
+        theSerie.hide();
+    }
+};
+
+APP.ExperimentViewer.prototype.addChartController = function(theInfo) {
+    var i,
+        aAlreadyExists = false;
+
+    for(i = 0; i < this.mChartControlers.length; i++) {
+        if(this.mChartControlers[i].id == theInfo.id) {
+            aAlreadyExists = true;
+            break;
+        }
+    }
+
+    if(!aAlreadyExists) {
+        this.mChartControlers.push(theInfo);
+    }
+}
+
+APP.ExperimentViewer.prototype.heartRate = function(theStatus, theRedraw) {
     var aHr,
         i,
         aStart,
+        aSerie,
+        aId = 'heartRate',
         aData = [];
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
-    aHr = this.mGame.hr;
-    aStart = this.mGame.start;
+    theStatus = theStatus == undefined ? true : theStatus;
 
-    for(i = 0; i < aHr.length; i++) {
-        aData.push([i * 1000, aHr[i]]);
+    aSerie = this.mChart.get(aId);
+
+    if(aSerie) {
+        // Series exists.
+        this.setSerieVisibility(aSerie, theStatus);
+
+    } else {
+        // Serie does not exist.
+        if(theStatus) {
+            aHr = this.mGame.hr;
+            aStart = this.mGame.start;
+
+            for(i = 0; i < aHr.length; i++) {
+                aData.push([i * 1000, aHr[i]]);
+            }
+
+            this.mChart.addSeries({
+                type: 'area',
+                name: 'HR',
+                data: aData,
+                id: aId
+            }, theRedraw);
+
+            this.addChartController({id: aId, name: 'HR'});
+        }
     }
-
-    this.mChart.addSeries({
-        type: 'area',
-        name: 'HR',
-        data: aData
-    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showStressReport = function(theRedraw) {
-    var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
+APP.ExperimentViewer.prototype.stressReport = function(theStatus, theRedraw) {
+    var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data,
+        aId = 'stressReport';
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
+    theStatus = theStatus == undefined ? true : theStatus;
 
-    this.mChart.addSeries({
-        type: 'line',
-        name: 'Self-reported stress',
-        color: '#FF0000',
-        data: [
-            {
-                name: 'Stress at beginning',
+    aSerie = this.mChart.get(aId);
+
+    if(aSerie) {
+        // Series exists.
+        this.setSerieVisibility(aSerie, theStatus);
+
+    } else {
+        // Serie does not exist.
+        if(theStatus) {
+            this.mChart.addSeries({
+                id: aId,
+                type: 'line',
+                name: 'Self-reported stress',
                 color: '#FF0000',
-                y: aQuestionnaire[1].a / 5 * 100, // TODO: turn magic number into a constant
-                x: 5000
-            },
-            {
-                name: 'Stress at end',
-                color: '#FF0000',
-                y: aQuestionnaire[3].a / 5 * 100,  // TODO: turn magic number into a constant
-                x: (this.mGame.hr.length - 8) * 1000
-            }
-        ],
-        dataLabels : {
-            enabled : true,
-            formatter : function() {
-                return this.y / 100 * 5;  // TODO: turn magic number into a constant
-            }
-        },
-        tooltip: {
-            pointFormatter: function () {
-                return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
-            }
+                data: [
+                    {
+                        name: 'Stress at beginning',
+                        color: '#FF0000',
+                        y: aQuestionnaire[1].a / 5 * 100, // TODO: turn magic number into a constant
+                        x: 5000
+                    },
+                    {
+                        name: 'Stress at end',
+                        color: '#FF0000',
+                        y: aQuestionnaire[3].a / 5 * 100,  // TODO: turn magic number into a constant
+                        x: (this.mGame.hr.length - 8) * 1000
+                    }
+                ],
+                dataLabels : {
+                    enabled : true,
+                    formatter : function() {
+                        return this.y / 100 * 5;  // TODO: turn magic number into a constant
+                    }
+                },
+                tooltip: {
+                    pointFormatter: function () {
+                        return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
+                    }
+                }
+            }, theRedraw);
+
+            this.addChartController({id: aId, name: 'Stress'});
         }
-    }, theRedraw);
+    }
 };
 
-APP.ExperimentViewer.prototype.showBoredomReport = function(theRedraw) {
-    var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data;
+APP.ExperimentViewer.prototype.boredomReport = function(theStatus, theRedraw) {
+    var aQuestionnaire = this.mRawData.questionnaires[this.mIndex].data,
+        aId = 'boredomReport';
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
+    theStatus = theStatus == undefined ? true : theStatus;
 
-    this.mChart.addSeries({
-        type: 'line',
-        name: 'Self-reported boredom',
-        color: '#00FF00',
-        data: [
-            {
-                name: 'Boredom at beginning',
+    aSerie = this.mChart.get(aId);
+
+    if(aSerie) {
+        // Series exists.
+        this.setSerieVisibility(aSerie, theStatus);
+
+    } else {
+        // Serie does not exist.
+        if(theStatus) {
+            this.mChart.addSeries({
+                id: aId,
+                type: 'line',
+                name: 'Self-reported boredom',
                 color: '#00FF00',
-                y: aQuestionnaire[0].a / 5 * 100,  // TODO: turn magic number into a constant
-                x: 5000
-            },
-            {
-                name: 'Boredom at end',
-                color: '#00FF00',
-                y: aQuestionnaire[2].a / 5 * 100,  // TODO: turn magic number into a constant
-                x: (this.mGame.hr.length - 8) * 1000
-            }
-        ],
-        dataLabels : {
-            enabled : true,
-            formatter : function() {
-                return this.y / 100 * 5;  // TODO: turn magic number into a constant
-            }
-        },
-        tooltip: {
-            pointFormatter: function () {
-                return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
-            }
+                data: [
+                    {
+                        name: 'Boredom at beginning',
+                        color: '#00FF00',
+                        y: aQuestionnaire[0].a / 5 * 100,  // TODO: turn magic number into a constant
+                        x: 5000
+                    },
+                    {
+                        name: 'Boredom at end',
+                        color: '#00FF00',
+                        y: aQuestionnaire[2].a / 5 * 100,  // TODO: turn magic number into a constant
+                        x: (this.mGame.hr.length - 8) * 1000
+                    }
+                ],
+                dataLabels : {
+                    enabled : true,
+                    formatter : function() {
+                        return this.y / 100 * 5;  // TODO: turn magic number into a constant
+                    }
+                },
+                tooltip: {
+                    pointFormatter: function () {
+                        return '<strong>' + (this.y / 100 * 5) + '</strong>';  // TODO: turn magic number into a constant
+                    }
+                }
+            }, theRedraw);
+
+            this.addChartController({id: aId, name: 'Boredom'});
         }
-    }, theRedraw);
+    }
 };
 
-APP.ExperimentViewer.prototype.showHRBaseline = function(theRedraw) {
-    var aValue = this.mRawData.baseline;
+APP.ExperimentViewer.prototype.hrBaseline = function(theStatus, theRedraw) {
+    var aValue = this.mRawData.baseline,
+        aId = 'hrBaseline';
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
+    theStatus = theStatus == undefined ? true : theStatus;
 
-    this.mChart.addSeries({
-        type: 'spline',
-        name: 'HR baseline',
-        color: '#8C00FF',
-        data: [[0, aValue], [this.mGame.hr.length * 1000, aValue]]
-    }, theRedraw);
+    aSerie = this.mChart.get(aId);
+
+    if(aSerie) {
+        // Series exists.
+        this.setSerieVisibility(aSerie, theStatus);
+
+    } else {
+        // Serie does not exist.
+        if(theStatus) {
+            this.mChart.addSeries({
+                id: aId,
+                type: 'spline',
+                name: 'HR baseline',
+                color: '#8C00FF',
+                data: [[0, aValue], [this.mGame.hr.length * 1000, aValue]]
+            }, theRedraw);
+
+            this.addChartController({id: aId, name: 'HR baseline'});
+        }
+    }
 };
 
-APP.ExperimentViewer.prototype.showBaselinedHRMeans = function(theRedraw) {
+APP.ExperimentViewer.prototype.hrBaselinedMeans = function(theStatus, theRedraw) {
     var i,
         aSeriesData = [],
         aTotal,
         aPart,
-        aScale = 5;
+        aScale = 5,
+        aId = 'hrBaselinedMeans';
 
-    aTotal = (this.mGame.end - this.mGame.start) * 1000;
-    aPart = aTotal / this.mGame['hr-means-baseline'].length;
+    theRedraw = theRedraw == undefined ? true : theRedraw;
+    theStatus = theStatus == undefined ? true : theStatus;
 
-    for(i = 0; i < this.mGame['hr-means-baseline'].length; i++) {
-        aSeriesData.push([aPart * i + aPart / 2, this.mGame['hr-means-baseline'][i] * aScale]);
-    }
+    aSerie = this.mChart.get(aId);
 
-    this.mChart.addSeries({
-        type: 'spline',
-        name: 'HR variation relative to baseline',
-        color: '#FFFF00',
-        data: aSeriesData,
-        dataLabels : {
-            enabled : false,
-            formatter : function() {
-                return this.y / aScale;
+    if(aSerie) {
+        // Series exists.
+        this.setSerieVisibility(aSerie, theStatus);
+
+    } else {
+        // Serie does not exist.
+        if(theStatus) {
+            aTotal = (this.mGame.end - this.mGame.start) * 1000;
+            aPart = aTotal / this.mGame['hr-means-baseline'].length;
+
+            for(i = 0; i < this.mGame['hr-means-baseline'].length; i++) {
+                aSeriesData.push([aPart * i + aPart / 2, this.mGame['hr-means-baseline'][i] * aScale]);
             }
-        },
-        tooltip: {
-            pointFormatter: function () {
-                return '<strong>' + (this.y / aScale) + '</strong>';
-            },
-            xDateFormat: 'HR variation:'
+
+            this.mChart.addSeries({
+                id: aId,
+                type: 'spline',
+                name: 'HR variation relative to baseline',
+                color: '#FFFF00',
+                data: aSeriesData,
+                dataLabels : {
+                    enabled : false,
+                    formatter : function() {
+                        return this.y / aScale;
+                    }
+                },
+                tooltip: {
+                    pointFormatter: function () {
+                        return '<strong>' + (this.y / aScale) + '</strong>';
+                    },
+                    xDateFormat: 'HR variation:'
+                }
+            }, theRedraw);
+
+            this.addChartController({id: aId, name: 'HR baselined means'});
         }
-    }, theRedraw);
+    }
 };
 
-APP.ExperimentViewer.prototype.showInGameActions = function(theRedraw) {
+APP.ExperimentViewer.prototype.isInGameAction = function(theName) {
+    return theName != 'question' && theName != 'newBlock';
+};
+
+APP.ExperimentViewer.prototype.isInGameEvent = function(theName) {
+    return theName == 'question' || theName == 'newBlock' || theName == 'difficulty';
+};
+
+APP.ExperimentViewer.prototype.inGameActions = function(theStatus, theRedraw) {
     var i,
         aSeriesData = [],
-        aTime;
+        aTime,
+        aActions,
+        aId = 'inGameActions';
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
+    theStatus = theStatus == undefined ? true : theStatus;
+    aActions  = this.mGame.actions;
 
-    for(i = 0; i < this.mGame.actions.length; i++) {
-        aTime = (this.mGame.actions[i].timestamp/1000 - this.mGame.start) * 1000;
+    aSerie = this.mChart.get(aId);
 
-        if(this.mGame.actions[i].action != 'question' && this.mGame.actions[i].action != 'newBlock') {
-            aSeriesData.push({
-                x: aTime,
-                y: this.mGame.actions[i].value,
-                name: this.mGame.actions[i].action,
-                color: '#FF00FF'
-            });
+    if(aSerie) {
+        // Series exists.
+        this.setSerieVisibility(aSerie, theStatus);
+
+    } else {
+        // Serie does not exist.
+        if(theStatus) {
+            for(i = 0; i < aActions.length; i++) {
+                aTime = (aActions[i].timestamp/1000 - this.mGame.start) * 1000;
+
+                if(this.isInGameAction(aActions.action)) {
+                    aSeriesData.push({
+                        x: aTime,
+                        y: aActions[i].value,
+                        name: aActions[i].action,
+                        color: '#FF00FF'
+                    });
+                }
+            }
+
+            this.mChart.addSeries({
+                id: aId,
+                type: 'spline',
+                name: 'In-game actions',
+                color: '#FF8800',
+                data: aSeriesData,
+                tooltip: {
+                    pointFormatter: function () {
+                        return ' ';
+                    },
+                }
+            }, theRedraw);
+
+            this.addChartController({id: aId, name: 'In-game actions'});
         }
     }
-
-    this.mChart.addSeries({
-        type: 'spline',
-        name: 'In-game actions',
-        color: '#FF8800',
-        data: aSeriesData,
-        tooltip: {
-            pointFormatter: function () {
-                return ' ';
-            },
-        }
-    }, theRedraw);
 };
 
-APP.ExperimentViewer.prototype.showInGameEvents = function(theRedraw) {
+APP.ExperimentViewer.prototype.inGameEvents = function(theStatus, theRedraw) {
     var i,
-        aTime;
+        aTime,
+        aActions,
+        aId = 'inGameEvents',
+        aExists = false;
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
+    theStatus = theStatus == undefined ? true : theStatus;
+    aActions  = this.mGame.actions;
 
-    for(i = 0; i < this.mGame.actions.length; i++) {
-        aTime = (this.mGame.actions[i].timestamp/1000 - this.mGame.start) * 1000;
+    if(theStatus) {
 
-        if(this.mGame.actions[i].action == 'question' || this.mGame.actions[i].action == 'newBlock' || this.mGame.actions[i].action == 'difficulty') {
-            this.mChart.xAxis[0].addPlotLine({
-                color: '#FF00FF',
-                dashStyle: 'longdashdot',
-                value: aTime,
-                width: 1,
-                id: 'events' + i
-            });
+        for(i = 0; i < aActions.length; i++) {
+            aTime = (aActions[i].timestamp/1000 - this.mGame.start) * 1000;
+
+            if(this.isInGameEvent(aActions[i].action)) {
+                this.mChart.xAxis[0].addPlotLine({
+                    color: '#FF00FF',
+                    dashStyle: 'longdashdot',
+                    value: aTime,
+                    width: 1,
+                    id: 'events' + i
+                }, false);
+            }
+        }
+
+        this.addChartController({id: aId, name: 'In-game events'});
+
+    } else {
+        for(i = 0; i < aActions.length; i++) {
+            if(this.isInGameEvent(aActions[i].action)) {
+                this.mChart.xAxis[0].removePlotLine('events' + i, false);
+            }
         }
     }
+
+    this.mChart.redraw();
 };
 
-APP.ExperimentViewer.prototype.showEnjoymentArea = function(theRedraw) {
+APP.ExperimentViewer.prototype.enjoymentArea = function(theStatus, theRedraw) {
     var aAnswer = this.mRawData.questionnaires[this.mIndex].data[4].a | 0,
         aLabel = this.mRawData.questionnaires[this.mIndex].data[4].al,
         aTotal,
+        aId = 'enjoymentArea',
         aPart;
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
+    theStatus = theStatus == undefined ? true : theStatus;
 
     aTotal = this.mGame.end - this.mGame.start;
     aPart = aTotal / 5;
     aAnswer--;
 
-    this.mChart.xAxis[0].addPlotBand({
-        color: '#E3FFE0',
-        from: aAnswer * aPart * 1000,
-        to: (aAnswer * aPart + aPart) * 1000,
-        label: {
-            text: '<strong>Enjoyed the most</strong><br>' + aLabel
-        },
-        id: 'enjoy'
-    });
+    if(theStatus) {
+        this.mChart.xAxis[0].addPlotBand({
+            color: '#E3FFE0',
+            from: aAnswer * aPart * 1000,
+            to: (aAnswer * aPart + aPart) * 1000,
+            label: {
+                text: '<strong>Enjoyed the most</strong><br>' + aLabel
+            },
+            id: aId
+        });
+
+        this.addChartController({id: aId, name: 'Enjoyment area'});
+
+    } else {
+        this.mChart.xAxis[0].removePlotBand(aId, theRedraw);
+    }
 };
 
 APP.ExperimentViewer.prototype.handleChartOptionChange = function(theEvent) {
-    var aChart,
-        aType,
-        aLabel,
-        aSerie,
-        aIndex,
+    var aIndex,
+        aMethod,
         aSelf;
 
     // Get information regarding the viewer that triggered this click
     aIndex = $(this).data('index');
     aSelf  = APP.instance.getExperimentViewerByIndex(aIndex);
-    aChart = aSelf.mChart;
 
-    aType  = $(this).data('type');
-    aLabel = $(this).data('label');
-
-    if(aType == 'serie') {
-        aSerie = aChart.series[aLabel];
-
-        if(aSerie.visible) {
-            aSerie.hide();
-        } else {
-            aSerie.show();
-        }
-
-    } else if(aType == 'plotLine' || aType == 'plotBand') {
-        if(theEvent.target.checked) {
-            if(aLabel == 'events') {
-                aSelf.showInGameEvents();
-            } else if(aLabel == 'enjoy') {
-                aSelf.showEnjoymentArea();
-            }
-        } else {
-            if(aLabel == 'events') {
-                for(i = 0; i < aSelf.mGame.actions.length; i++) {
-                    aSelf.mChart.xAxis[0].removePlotLine('events' + i);
-                }
-            } else if(aLabel == 'enjoy') {
-                aSelf.mChart.xAxis[0].removePlotBand(aLabel);
-            }
-        }
-    }
+    // Call the propert function to handle the data
+    aMethod  = $(this).data('method');
+    aSelf[aMethod](theEvent.target.checked);
 };
 
 APP.ExperimentViewer.prototype.initChartControlOptions = function(theContainerId) {
     var i,
-        aId,
-        aSelf = this,
-        aOut = '';
+        aOut = '',
+        aId;
 
-    for(i = 0; i < this.mChart.series.length; i++) {
-        aId = 'c' + i + this.mIndex;
-        aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-type="serie" data-label="'+ i +'" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">' + this.mChart.series[i].name +'</label>';
+    for(i = 0; i < this.mChartControlers.length; i++) {
+        aId = this.mChartControlers[i].id + this.mIndex;
+        aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-method="' + this.mChartControlers[i].id + '" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">' + this.mChartControlers[i].name +'</label>';
     }
-
-    aId = 'events' + this.mIndex;
-    aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-type="plotLine" data-label="events" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">In-game events</label>';
-
-    aId = 'enjoy' + this.mIndex;
-    aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-type="plotBand" data-label="enjoy" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">Enjoyment area</label>';
 
     $('#' + theContainerId).append('<div class="chart-controls">' + aOut + '</div>');
     $('.chart-controls input').off().on('change', this.handleChartOptionChange);
@@ -338,14 +470,14 @@ APP.ExperimentViewer.prototype.init = function(theContainerId) {
     this.mChartConfig.chart.renderTo = aId;
     this.mChart = new Highcharts.Chart(this.mChartConfig);
 
-    this.showHeartRate(false);
-    this.showStressReport(false);
-    this.showBoredomReport(false);
-    this.showEnjoymentArea(false);
-    this.showHRBaseline(false);
-    this.showBaselinedHRMeans(false);
-    this.showInGameActions(false);
-    this.showInGameEvents(false);
+    this.heartRate(true, false);
+    this.stressReport(true, false);
+    this.boredomReport(true, false);
+    this.hrBaseline(true, false);
+    this.hrBaselinedMeans(true, false);
+    this.inGameActions(true, false);
+    this.inGameEvents(true, false);
+    this.enjoymentArea(true, false);
 
     this.mChart.redraw(false);
 
