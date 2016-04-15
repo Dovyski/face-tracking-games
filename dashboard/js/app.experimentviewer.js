@@ -11,7 +11,8 @@ APP.ExperimentViewer = function(theIndex, theData) {
         'None': [],
         'HR (complete)': ['heartRate', 'hrBaseline', 'hrBaselinedMeans'],
         'HR (basic)': ['heartRate', 'hrBaseline'],
-        'Emotions': ['stressReport', 'boredomReport', 'enjoymentArea', 'hrBaselinedMeans'],
+        'Emotions (basic)': ['stressReport', 'boredomReport', 'enjoymentArea', 'hrBaselinedMeans'],
+        'Emotions (complete)': ['stressReport', 'boredomReport', 'enjoymentArea', 'hrBaselinedMeans', 'inGameEvents'],
         'In-game (basic)': ['inGameActions', 'inGameEvents'],
         'In-game (medium)': ['heartRate', 'hrBaseline', 'hrBaselinedMeans', 'inGameActions', 'inGameEvents'],
         'In-game (complete)': ['heartRate', 'hrBaseline', 'hrBaselinedMeans', 'enjoymentArea', 'inGameActions', 'inGameEvents']
@@ -311,7 +312,7 @@ APP.ExperimentViewer.prototype.hrBaselinedMeans = function(theStatus, theRedraw)
             dashStyle: 'shortdash',
             width: 3,
             label: {
-                text: 'Equal to baseline'
+                text: 'No variation line'
             }
         }, theRedraw);
 
@@ -400,10 +401,10 @@ APP.ExperimentViewer.prototype.inGameEvents = function(theStatus, theRedraw) {
 
             if(this.isInGameEvent(aActions[i].action)) {
                 this.mChart.xAxis[0].addPlotLine({
-                    color: '#FF00FF',
-                    dashStyle: 'longdashdot',
+                    color: aActions[i].action == 'difficulty' ? '#000' : '#FF00FF',
+                    dashStyle: aActions[i].action == 'difficulty' ? 'solid' : 'longdashdot',
                     value: aTime,
-                    width: 1,
+                    width: aActions[i].action == 'difficulty' ? 2 : 1,
                     id: 'events' + i
                 }, false);
             }
