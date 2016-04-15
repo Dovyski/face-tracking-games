@@ -149,7 +149,7 @@ function getInGameActionValueFromLabel($theLabel) {
         'question' => 25,
         'right' => 50,
         'wrong' => 0,
-        'miss' => 0
+        'miss' => 25
     );
 
     return $aValues[$theLabel];

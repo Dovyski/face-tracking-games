@@ -324,7 +324,7 @@ APP.ExperimentViewer.prototype.hrBaselinedMeans = function(theStatus, theRedraw)
 };
 
 APP.ExperimentViewer.prototype.isInGameAction = function(theName) {
-    return theName != 'question' && theName != 'newBlock';
+    return theName != 'question' && theName != 'newBlock' && theName != 'difficulty';
 };
 
 APP.ExperimentViewer.prototype.isInGameEvent = function(theName) {
@@ -354,7 +354,7 @@ APP.ExperimentViewer.prototype.inGameActions = function(theStatus, theRedraw) {
             for(i = 0; i < aActions.length; i++) {
                 aTime = (aActions[i].timestamp/1000 - this.mGame.start) * 1000;
 
-                if(this.isInGameAction(aActions.action)) {
+                if(this.isInGameAction(aActions[i].action)) {
                     aSeriesData.push({
                         x: aTime,
                         y: aActions[i].value,
