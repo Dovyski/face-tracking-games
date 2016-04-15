@@ -6,7 +6,15 @@ APP.ExperimentViewer = function(theIndex, theData) {
     this.mGame = this.mRawData.games[this.mIndex];
     this.mChart = null;
     this.mChartControlers = [];
-
+    this.mChartControlPresets = {
+        'None': [],
+        'HR (complete)': ['heartRate', 'hrBaseline', 'hrBaselinedMeans'],
+        'HR (basic)': ['heartRate', 'hrBaseline'],
+        'Emotions': ['stressReport', 'boredomReport', 'enjoymentArea', 'hrBaselinedMeans'],
+        'In-game (basic)': ['inGameActions', 'inGameEvents'],
+        'In-game (medium)': ['heartRate', 'hrBaseline', 'hrBaselinedMeans', 'inGameActions', 'inGameEvents'],
+        'In-game (complete)': ['heartRate', 'hrBaseline', 'hrBaselinedMeans', 'enjoymentArea', 'inGameActions', 'inGameEvents']
+    };
     this.mChartConfig = {
         chart: {
             zoomType: 'x'
@@ -459,9 +467,36 @@ APP.ExperimentViewer.prototype.handleChartOptionChange = function(theEvent) {
     aSelf[aMethod](theEvent.target.checked);
 };
 
+APP.ExperimentViewer.prototype.handleChartPreset = function(theEvent) {
+    var aIndex,
+        aValue,
+        i,
+        aPreset,
+        aId,
+        aShouldEnable,
+        aSelf;
+
+    // Get information regarding the viewer that triggered this click
+    aIndex = $(this).data('index');
+    aSelf  = APP.instance.getExperimentViewerByIndex(aIndex);
+
+    aValue  = $(this).val();
+    aPreset = aSelf.mChartControlPresets[aValue];
+
+    for(i = 0; i < aSelf.mChartControlers.length; i++) {
+        aShouldEnable = aPreset.indexOf(aSelf.mChartControlers[i].id) != -1;
+        aId = '#' + aSelf.mChartControlers[i].id + aSelf.mIndex;
+
+        if((aShouldEnable && !$(aId).is(':checked')) || (!aShouldEnable && $(aId).is(':checked'))) {
+            $(aId).trigger('click');
+        }
+    }
+};
+
 APP.ExperimentViewer.prototype.initChartControlOptions = function(theContainerId) {
     var i,
         aOut = '',
+        aName,
         aId;
 
     for(i = 0; i < this.mChartControlers.length; i++) {
@@ -469,8 +504,15 @@ APP.ExperimentViewer.prototype.initChartControlOptions = function(theContainerId
         aOut += '<input type="checkbox" name="' + aId + '" id="' + aId + '" data-method="' + this.mChartControlers[i].id + '" data-index="' + this.mIndex + '" checked="checked" /><label for="' + aId + '">' + this.mChartControlers[i].name +'</label>';
     }
 
+    aOut += 'Select: <select name="preset" data-index="' + this.mIndex + '"><option value=""></option>';
+    for(aName in this.mChartControlPresets) {
+        aOut += '<option value="' + aName + '">' + aName + '</option>';
+    }
+    aOut += '</select>';
+
     $('#' + theContainerId).append('<div class="chart-controls">' + aOut + '</div>');
     $('.chart-controls input').off().on('change', this.handleChartOptionChange);
+    $('.chart-controls select').off().on('change', this.handleChartPreset);
 };
 
 APP.ExperimentViewer.prototype.init = function(theContainerId) {
