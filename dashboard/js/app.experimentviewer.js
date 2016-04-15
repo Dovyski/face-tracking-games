@@ -223,31 +223,26 @@ APP.ExperimentViewer.prototype.boredomReport = function(theStatus, theRedraw) {
 };
 
 APP.ExperimentViewer.prototype.hrBaseline = function(theStatus, theRedraw) {
-    var aValue = this.mRawData.baseline,
-        aId = 'hrBaseline';
+    var aId = 'hrBaseline';
 
     theRedraw = theRedraw == undefined ? true : theRedraw;
     theStatus = theStatus == undefined ? true : theStatus;
 
-    aSerie = this.mChart.get(aId);
+    if(theStatus) {
+        this.mChart.yAxis[0].addPlotLine({
+            id: aId,
+            value: this.mRawData.baseline,
+            color: '#8C00FF',
+            dashStyle: 'shortdash',
+            width: 3,
+            label: {
+                text: 'HR baseline'
+            }
+        }, theRedraw);
 
-    if(aSerie) {
-        // Series exists.
-        this.setSerieVisibility(aSerie, theStatus);
-
+        this.addChartController({id: aId, name: 'HR baseline'});
     } else {
-        // Serie does not exist.
-        if(theStatus) {
-            this.mChart.addSeries({
-                id: aId,
-                type: 'spline',
-                name: 'HR baseline',
-                color: '#8C00FF',
-                data: [[0, aValue], [this.mGame.hr.length * 1000, aValue]]
-            }, theRedraw);
-
-            this.addChartController({id: aId, name: 'HR baseline'});
-        }
+        this.mChart.yAxis[0].removePlotLine(aId);
     }
 };
 
