@@ -16,8 +16,9 @@ if($argc < 2) {
     echo "Usage: \n";
     echo " php analyze.php [<subjectId>|<firstId>:<lastId>] [options]\n\n";
     echo "Options:\n";
-    echo " --report      Prints the processing as a report.\n";
-    echo " --csv <file>  Saves the processing as an CSV file defined by <file>.\n";
+    echo " --report         Prints the processing as a report.\n";
+    echo " --csv <file>     Saves the processing as a CSV file defined by <file>.\n";
+    echo " --export <file>  Exports all HR entries as a file define by <file>.\n";
     exit(1);
 }
 
@@ -45,15 +46,16 @@ $aFormat = isset($argv[2]) ? $argv[2] : '--report';
 
 $aIsReport = $aFormat == '--report';
 $aIsCSV = $aFormat == '--csv';
-$aCSVFile = 'out.csv';
+$aIsExport = $aFormat == '--export';
+$aOutputFile = $aIsCSV ? 'out.csv' : 'out.txt';
 
-if($aIsCSV) {
+if($aIsCSV || $aIsExport) {
     if(!isset($argv[3])) {
-        echo 'Option --csv requires a file.' . "\n";
+        echo 'You need to speficy a file.' . "\n";
         exit(2);
 
     } else {
-        $aCSVFile = $argv[3];
+        $aOutputFile = $argv[3];
     }
 }
 
@@ -123,6 +125,22 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
             echo "\n";
         }
     }
+
+    if($aIsExport) {
+        $aHRStarted = getWhenHRTrackingStarted($aDb, $i);
+        $aFile = fopen($aOutputFile, 'w');
+
+        foreach($aStats['raw'] as $aLine) {
+            fwrite($aFile, $i . ',');
+            fwrite($aFile, $aLine['timestamp'] . ',');
+            fwrite($aFile, ($aLine['timestamp'] - $aHRStarted) . ',');
+            fwrite($aFile, $aLine['hr'] . ',');
+            fwrite($aFile, $aLine['label'] . "\n");
+        }
+
+        fclose($aFile);
+        echo "\nData successfuly exported to file \"".$aOutputFile."\".\n";
+    }
     echo "\n";
 }
 
@@ -164,7 +182,7 @@ if($aIsReport) {
 
 if($aIsCSV) {
     $aTotal = 0;
-    $aFile = fopen($aCSVFile, 'w');
+    $aFile = fopen($aOutputFile, 'w');
 
     fwrite($aFile, "time,");
 
@@ -208,7 +226,7 @@ if($aIsCSV) {
 
     fclose($aFile);
 
-    echo "\nCSV data successfuly saved to file \"".$aCSVFile."\".\n";
+    echo "\nCSV data successfuly saved to file \"".$aOutputFile."\".\n";
 }
 
 ?>

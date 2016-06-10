@@ -43,7 +43,7 @@ function getSubjectRawGameData($thePDO, $theSubjectId) {
 }
 
 function collectGameStats($theSubjectRawGameData, $theGames) {
-    $aStats = array('games' => array(), 'rests' => array());
+    $aStats = array('games' => array(), 'rests' => array(), 'raw' => array());
 
     $aTimeStarted = 0;
     $aInRest = false;
@@ -108,6 +108,7 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
                     if(property_exists($aEntry, 'hr')) {
                         // It's a HR entry
                         $aHREntries[] = $aEntry->hr;
+                        $aStats['raw'][] = array('timestamp' => $aRow['timestamp'], 'hr' => $aEntry->hr, 'label' => $aInRest ? 'rest' : 'game');
 
                     } else {
                         // It's a game entry (action, hit, etc)
@@ -136,6 +137,28 @@ function collectGameStats($theSubjectRawGameData, $theGames) {
     }
 
     return $aStats;
+}
+
+function getWhenHRTrackingStarted($thePDO, $theSubjectId) {
+    $aStmt = $thePDO->prepare("SELECT timestamp FROM logs WHERE uuid = :uuid AND data LIKE '%experiment_hr_start%'");
+	$aStmt->bindParam(':uuid', $theSubjectId);
+    $aStmt->execute();
+
+    $aRet = array();
+
+    while($aRow = $aStmt->fetch(PDO::FETCH_ASSOC)) {
+        $aRet[] = $aRow['timestamp'];
+    }
+
+    if($aRet == null) {
+        throw new Exception("Experiment for uuid ".$aSubjectId." has no experiment_hr_start");
+    }
+
+    if(count($aRet) > 1) {
+        throw new Exception("Experiment for uuid ".$aSubjectId." has multiple experiment_hr_start");
+    }
+
+    return (int)$aRet[0];
 }
 
 function getInGameActionValueFromLabel($theLabel) {
