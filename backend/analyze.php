@@ -18,7 +18,7 @@ if($argc < 2) {
     echo "Options:\n";
     echo " --report         Prints the processing as a report.\n";
     echo " --csv <file>     Saves the processing as a CSV file defined by <file>.\n";
-    echo " --export <file>  Exports all HR entries as a file define by <file>.\n";
+    echo " --export <file>  Exports all HR entries as a JSON file define by <file>.\n";
     exit(1);
 }
 
@@ -127,15 +127,20 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
     }
 
     if($aIsExport) {
+        $aOut = array();
         $aHRStarted = getWhenHRTrackingStarted($aDb, $i);
         $aFile = fopen($aOutputFile, 'w');
 
         foreach($aStats['raw'] as $aLine) {
-            fwrite($aFile, $i . ',');
-            fwrite($aFile, $aLine['timestamp'] . ',');
-            fwrite($aFile, ($aLine['timestamp'] - $aHRStarted) . ',');
-            fwrite($aFile, $aLine['hr'] . ',');
-            fwrite($aFile, $aLine['label'] . "\n");
+            $aOut = array(
+                'uuid'      => $i + 0,
+                'timestamp' => $aLine['timestamp'] + 0,
+                'time'      => $aLine['timestamp'] - $aHRStarted + 0,
+                'hr'        => $aLine['hr'] + 0,
+                'label'     => $aLine['label']
+            );
+
+            fwrite($aFile, json_encode($aOut) . "\n");
         }
 
         fclose($aFile);
