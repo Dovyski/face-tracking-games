@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Obtains all measurements of a given subjects, crunching all the numbers.
+ * Analyse data generating measurements for a given set of subjects. Numbers are
+ * processed in different ways, e.g. mean, etc.
  */
 
 require_once(dirname(__FILE__) . '/config.php');
@@ -18,7 +19,7 @@ if($argc < 2) {
     echo "Options:\n";
     echo " --report         Prints the processing as a report.\n";
     echo " --csv <file>     Saves the processing as a CSV file defined by <file>.\n";
-    echo " --export <file>  Exports all HR entries as a JSON file define by <file>.\n";
+    echo " --export <file>  Exports all HR entries as a file define by <file>.\n";
     exit(1);
 }
 
@@ -127,23 +128,32 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
     }
 
     if($aIsExport) {
-        $aOut = array();
         $aHRStarted = getWhenHRTrackingStarted($aDb, $i);
         $aFile = fopen($aOutputFile, 'w');
 
         foreach($aStats['raw'] as $aLine) {
-            $aOut = array(
-                'uuid'      => $i + 0,
-                'timestamp' => $aLine['timestamp'] + 0,
-                'time'      => $aLine['timestamp'] - $aHRStarted + 0,
-                'hr'        => $aLine['hr'] + 0,
-                'label'     => $aLine['label']
-            );
-
-            fwrite($aFile, json_encode($aOut) . "\n");
+            fwrite($aFile, $i . ' ');
+            fwrite($aFile, $aLine['timestamp'] . ' ');
+            fwrite($aFile, ($aLine['timestamp'] - $aHRStarted) . ' ');
+            fwrite($aFile, $aLine['hr'] . ' ');
+            fwrite($aFile, getGameLabelByTimestamp($aData, $aLine['timestamp']) . "\n");
         }
 
         fclose($aFile);
+
+        echo "\n" . 'Summary' . "\n";
+        echo '-------------------------------' . "\n";
+
+        echo 'HR measurements' . "\n";
+        echo '  Start: 0 (timestamp: ' . $aHRStarted . ')' . "\n";
+        echo '  End: '.($aLine['timestamp'] - $aHRStarted).' (timestamp: ' . $aLine['timestamp'] . ')' . "\n";
+
+        foreach($aData['games'] as $aNum => $aGame) {
+            echo 'Game #' . ($aNum + 1) . ' - ' . $aGame['name'] . "\n";
+            echo '  Start: ' . ($aGame['start'] - $aHRStarted) . ' (timestamp: ' . $aGame['start'] . ')' . "\n";
+            echo '  End: ' . ($aGame['end'] - $aHRStarted) . ' (timestamp: ' . $aGame['end'] . ')' . "\n";
+        }
+
         echo "\nData successfuly exported to file \"".$aOutputFile."\".\n";
     }
     echo "\n";

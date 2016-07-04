@@ -224,6 +224,30 @@ function getSubjectData($thePDO, $theSubjectId) {
     return $aStats;
 }
 
+function getGameLabelByTimestamp($theSubjectData, $theTimestamp) {
+    $aRet = '?';
+
+    // Check if timestamp is within a gaming session
+    foreach($theSubjectData['games'] as $aNum => $aGame) {
+        if($theTimestamp >= $aGame['start'] && $theTimestamp <= $aGame['end']) {
+            $aRet = str_replace(' ', '_', $aGame['name']);
+            break;
+        } else {
+            $aRet = 'other';
+        }
+    }
+
+    // Check timestamp within resting periods
+    foreach($theSubjectData['rests'] as $aNum => $aRest) {
+        if($theTimestamp >= $aRest['start'] && $theTimestamp <= $aRest['end']) {
+            $aRet = 'Rest_' . ($aNum + 1);
+            break;
+        }
+    }
+
+    return $aRet;
+}
+
 // Checks for wrong values, such as zero, one-value spikes, etc.
 function sanitizeHRValues($theValues, $theWhere = '') {
     $aRet = array();
