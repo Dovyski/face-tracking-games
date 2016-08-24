@@ -30,5 +30,7 @@ This paper presents an experiment aimed at empirically exploring the variations 
 
 Source code is licensed under the [BSD license](https://en.wikipedia.org/wiki/BSD_licenses).
 
+## Acknowledgement
 
+The authors would like to thank the participants and all involved personnel for their valuable contributions. This work has been performed with support from: CNPq, Conselho Nacional de Desenvolvimento Científico e Tecnológico - Brasil; University of Skövde; EU Interreg ÖKS project Game Hub Scandinavia; UFFS, Federal University of Fronteira Sul.
 
