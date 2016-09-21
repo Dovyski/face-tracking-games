@@ -343,4 +343,28 @@ function printSetAsCSV($theValus) {
     }
 }
 
+function simplifyGameName($theName) {
+    $aParts = explode(' ', $theName);
+    return strtolower($aParts[0]);
+}
+
+function writeBatFileBasedOnGroundData($theFilePath, $theData, $theSubjectId, $theHRStarted) {
+    $aFile = fopen($theFilePath, 'w');
+
+    fwrite($aFile, "@echo off\n\n");
+
+    foreach($theData['games'] as $aIndex => $aGame) {
+        $aNum = $aIndex + 1;
+
+        fwrite($aFile, 'set GAME_'.$aNum.'='.$theSubjectId.'-game'.$aNum.'-' . simplifyGameName($aGame['name']) . "\n");
+        fwrite($aFile, 'set GAME_'.$aNum.'_START='.($aGame['start'] - $theHRStarted) . "\n");
+        fwrite($aFile, 'set GAME_'.$aNum.'_END='.($aGame['end'] - $theHRStarted) . "\n");
+
+        fwrite($aFile, "\n");
+    }
+
+    fwrite($aFile, "set GROUND_START=XXX\n");
+    fclose($aFile);
+}
+
 ?>

@@ -154,7 +154,11 @@ for($i = $aSubjectIdStart; $i <= $aSubjectIdEnd; $i++) {
             echo '  End: ' . ($aGame['end'] - $aHRStarted) . ' (timestamp: ' . $aGame['end'] . ')' . "\n";
         }
 
-        echo "\nData successfuly exported to file \"".$aOutputFile."\".\n";
+        // Export a bat file that guides the execution of this ground file
+        $aOutputBatFile = $aOutputFile . '.bat';
+        writeBatFileBasedOnGroundData($aOutputBatFile, $aData, $i, $aHRStarted);
+
+        echo "\nData successfuly exported to files \"".$aOutputFile."\" and \"".$aOutputBatFile."\".\n";
     }
     echo "\n";
 }
